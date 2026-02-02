@@ -126,6 +126,9 @@ erDiagram
 
 * Acts as the source of truth for the seat
 * Enables future expansion with additional sheets
+<p align="center">
+  <img src="https://github.com/dronabopche/100-React-Projects/blob/main/LnT_Tracker/public/struct.png" alt="supabase Logo" width="300" />
+</p>
 
 ---
 
