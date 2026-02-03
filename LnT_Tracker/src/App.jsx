@@ -4,7 +4,7 @@ import { supabase } from './supabase'
 import Login from './Login'
 import HomePage from './HomePage'
 import Dashboard from './Dashboard'
-import SheetsPage from './SheetsPage'
+import RankingsPage from './RankingsPage' // Fixed: import RankingsPage
 
 function App() {
   const [session, setSession] = useState(null)
@@ -94,9 +94,9 @@ function App() {
               } 
             />
             <Route 
-              path="/sheets" 
+              path="/rankings" 
               element={
-                <SheetsPage 
+                <RankingsPage // Fixed: Using RankingsPage
                   session={session} 
                   theme={theme}
                 />

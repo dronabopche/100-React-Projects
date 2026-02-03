@@ -718,12 +718,12 @@ function HomePage({ session, onLogout, theme, toggleTheme }) {
               
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => navigate('/sheets')}
+                  onClick={() => navigate('/rankings')}
                   className={`group relative px-4 py-2 bg-gradient-to-r ${colors.button} ${colors.buttonHover} ${colors.buttonText} rounded-lg border ${colors.buttonBorder} ${colors.buttonHoverBorder} transition-all duration-300 transform hover:scale-105`}
                 >
                   <div className="flex items-center gap-2">
                     <LayoutGrid className="w-4 h-4" />
-                    <span>Sheets</span>
+                    <span>LeaderBoard</span>
                   </div>
                   <div className={`absolute inset-0 bg-gradient-to-r from-green-500/0 to-cyan-500/0 group-hover:from-green-500/10 group-hover:to-cyan-500/10 rounded-lg transition-all duration-300`}></div>
                 </button>
