@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   GLOBAL THEME VARIABLES (ONLY CHANGE COLORS HERE)
+   ========================================================= */
+
+/* Light Theme */
+:root {
+  /* 4 brand colors */
+  --brand-black: #0b0b0f;
+  --brand-yellow: #facc15;
+  --brand-purple: #6d28d9;
+  --brand-light-purple: #c4b5fd;
+
+  /* UI background + text */
+  --bg: #ffffff;
+  --text: #111827;
+
+  /* Card */
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+
+  /* Inputs */
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-focus: var(--brand-purple);
+
+  /* Buttons */
+  --btn-primary-bg: var(--brand-purple);
+  --btn-primary-hover: var(--brand-black);
+  --btn-primary-text: #ffffff;
+
+  --btn-secondary-bg: #f3f4f6;
+  --btn-secondary-hover: #e5e7eb;
+  --btn-secondary-text: #111827;
+
+  /* Table borders */
+  --table-border: var(--brand-purple);
+}
+
+/* Dark Theme */
+.dark {
+  --bg: #0b0b0f;
+  --text: #f9fafb;
+
+  --card-bg: #111827;
+  --card-border: #2a2f3a;
+
+  --input-bg: #0b0b0f;
+  --input-border: #3b4252;
+  --input-focus: var(--brand-light-purple);
+
+  --btn-primary-bg: var(--brand-purple);
+  --btn-primary-hover: #4c1d95;
+  --btn-primary-text: #ffffff;
+
+  --btn-secondary-bg: #111827;
+  --btn-secondary-hover: #1f2937;
+  --btn-secondary-text: #f9fafb;
+
+  --table-border: var(--brand-light-purple);
+}
+
+/* =========================================================
+   BASE STYLES
+   ========================================================= */
+
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color 200ms, color 200ms;
+  }
+}
+
+/* =========================================================
+   COMPONENT CLASSES (USE THESE IN JSX, NEVER TOUCH COLORS)
+   ========================================================= */
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    @apply font-medium py-2 px-6 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-primary:hover {
+    background: var(--btn-primary-hover);
+  }
+
+  .btn-secondary {
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+    @apply font-medium py-2 px-6 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-secondary:hover {
+    background: var(--btn-secondary-hover);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    @apply rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  /* Inputs */
+  .input-field {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    @apply w-full px-4 py-2 rounded-lg outline-none transition-all duration-200;
+  }
+
+  .input-field:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px var(--input-focus);
+  }
+
+  /* Brand text helpers */
+  .text-brand-purple {
+    color: var(--brand-purple);
+  }
+
+  .text-brand-yellow {
+    color: var(--brand-yellow);
+  }
+
+  .text-brand-light-purple {
+    color: var(--brand-light-purple);
+  }
+
+  .text-brand-black {
+    color: var(--brand-black);
+  }
+
+  /* Brand background helpers */
+  .bg-brand-purple {
+    background: var(--brand-purple);
+  }
+
+  .bg-brand-yellow {
+    background: var(--brand-yellow);
+  }
+
+  .bg-brand-light-purple {
+    background: var(--brand-light-purple);
+  }
+
+  .bg-brand-black {
+    background: var(--brand-black);
+  }
+}
+
+/* =========================================================
+   BOXY MODE (NO ROUNDING, CLEAN BORDERS)
+   ========================================================= */
+
+.boxy-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.boxy-button {
+  border: 1px solid var(--card-border);
+  @apply px-4 py-2 text-sm font-medium transition-colors duration-200;
+}
+
+.boxy-button:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.boxy-input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  @apply px-4 py-2 outline-none;
+}
+
+.boxy-input:focus {
+  border-color: var(--input-focus);
+}
+
+/* =========================================================
+   REMOVE ALL ROUNDING INSIDE ApiDocs ONLY
+   ========================================================= */
+
+#root .max-w-7xl * {
+  border-radius: 0 !important;
+}
+
+/* =========================================================
+   TABLE BORDERS (ApiDocs)
+   ========================================================= */
+
+#root .max-w-7xl table {
+  border-collapse: collapse;
+}
+
+#root .max-w-7xl table th,
+#root .max-w-7xl table td {
+  border: 1px solid var(--table-border);
+}
+/* Gradient flowing text (constant animation) */
+.gradient-flow-text {
+  background: linear-gradient(
+    90deg,
+    var(--brand-purple),
+    var(--brand-light-purple),
+    var(--brand-yellow),
+    var(--brand-purple)
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientFlow 4s linear infinite;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
