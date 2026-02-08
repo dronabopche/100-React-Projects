@@ -168,7 +168,29 @@ function App() {
       return [];
     }
   };
-
+  // Add this function to convert Tableau URLs to embed format
+const convertTableauUrl = (url) => {
+  if (!url) return "";
+  
+  // If it's already an embed URL, return as-is
+  if (url.includes("embed=y")) {
+    return url;
+  }
+  
+  // If it's a Tableau public URL, convert to embed format
+  if (url.includes("tableau.com")) {
+    // Extract the base URL without query parameters
+    const urlObj = new URL(url);
+    const basePath = urlObj.pathname;
+    
+    // Build embed URL
+    const embedUrl = `https://public.tableau.com${basePath}?:embed=y&:showVizHome=no&:host_url=https%3A%2F%2Fpublic.tableau.com%2F&:embed_code_version=3&:tabs=no&:toolbar=yes&:animate_transition=yes&:display_static_image=no&:display_spinner=no&:display_overlay=yes&:display_count=yes&:language=en-US&publish=yes&:loadOrderID=0`;
+    
+    return embedUrl;
+  }
+  
+  return url;
+};
   // ===== NOTEBOOK RENDER HELPERS =====
 
   const getTextFromCellSource = (source) => {
@@ -476,22 +498,27 @@ function App() {
                 </div>
 
                 <div
-                  style={{
-                    border: `1px solid ${currentTheme.border}`,
-                    margin: "8px 0",
-                  }}
-                >
-                  <iframe
-                    src={selectedProject.tabula_url}
-                    title={`Visualization: ${selectedProject.title}`}
-                    style={{
-                      width: "100%",
-                      height: "400px",
-                      display: "block",
-                      border: "none",
-                    }}
-                  />
-                </div>
+  style={{
+    border: `1px solid ${currentTheme.border}`,
+    margin: "8px 0",
+  }}
+>
+  <iframe
+    src={convertTableauUrl(selectedProject.tabula_url)}
+    title={`Visualization: ${selectedProject.title}`}
+    style={{
+      width: "100%",
+      height: "400px",
+      display: "block",
+      border: "none",
+    }}
+    onError={(e) => {
+      console.error("Failed to load Tableau visualization");
+      e.target.style.display = "none";
+      // Optionally show an error message
+    }}
+  />
+</div>
 
                 <div
                   style={{
