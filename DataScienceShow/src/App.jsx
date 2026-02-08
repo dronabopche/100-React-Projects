@@ -61,8 +61,8 @@ function App() {
 
   // Fetch notebook when selected project changes
   useEffect(() => {
-    if (selectedProject?.html_code_link) {
-      fetchNotebook(selectedProject.html_code_link);
+    if (selectedProject?.ipynb_url) {
+      fetchNotebook(selectedProject.ipynb_url);
     } else {
       setNotebookContent(null);
       setNotebookError(null);
@@ -550,9 +550,9 @@ function App() {
                     </a>
                   )}
 
-                  {selectedProject.html_code_link && (
+                  {selectedProject.ipynb_url && (
                     <a
-                      href={selectedProject.html_code_link}
+                      href={selectedProject.ipynb_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
@@ -569,7 +569,7 @@ function App() {
                     >
                       <strong style={{ fontSize: "14px" }}>Notebook</strong>
                       <span style={{ fontSize: "11px", opacity: 0.8 }}>
-                        {selectedProject.html_code_link.split("/").pop()}
+                        {selectedProject.ipynb_url.split("/").pop()}
                       </span>
                     </a>
                   )}
@@ -694,7 +694,7 @@ function App() {
               </div>
 
               {/* NOTEBOOK PREVIEW (MOVED TO BOTTOM) */}
-              {selectedProject.html_code_link && (
+              {selectedProject.ipynb_url && (
                 <div style={baseStyles.box}>
                   <div
                     style={{
@@ -732,7 +732,7 @@ function App() {
 
                     <div style={{ display: "flex", gap: "8px" }}>
                       <button
-                        onClick={() => fetchNotebook(selectedProject.html_code_link)}
+                        onClick={() => fetchNotebook(selectedProject.ipynb_url)}
                         style={{
                           padding: "6px 12px",
                           border: `1px solid ${currentTheme.border}`,
@@ -747,7 +747,7 @@ function App() {
                       </button>
 
                       <a
-                        href={selectedProject.html_code_link}
+                        href={selectedProject.ipynb_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -901,7 +901,7 @@ function App() {
 
                     <div style={{ flex: 1 }}>
                       {project.title}
-                      {project.html_code_link && (
+                      {project.ipynb_url && (
                         <div
                           style={{
                             fontSize: "10px",
