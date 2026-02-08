@@ -967,13 +967,13 @@ function App() {
         >
           <div>
             <p style={{ margin: "0 0 3px 0" }}>Data Science Portfolio v1.0</p>
-            <p style={{ margin: 0 }}>Notebook Preview (No Execution)</p>
+            <p style={{ margin: 0 }}>By Drona Bopche</p>
           </div>
           <div>
             <p style={{ margin: "0 0 3px 0" }}>
               © {new Date().getFullYear()} - All Rights Reserved
             </p>
-            <p style={{ margin: 0 }}>Powered by React + Supabase + GitHub Raw</p>
+            <p style={{ margin: 0 }}>Tech Used React + Supabase + GitHub Raw </p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
             <p style={{ margin: 0 }}>Projects: {projects.length}</p>
