@@ -498,27 +498,27 @@ const convertTableauUrl = (url) => {
                 </div>
 
                 <div
-  style={{
-    border: `1px solid ${currentTheme.border}`,
-    margin: "8px 0",
-  }}
->
-  <iframe
-    src={convertTableauUrl(selectedProject.tabula_url)}
-    title={`Visualization: ${selectedProject.title}`}
-    style={{
-      width: "100%",
-      height: "400px",
-      display: "block",
-      border: "none",
-    }}
-    onError={(e) => {
-      console.error("Failed to load Tableau visualization");
-      e.target.style.display = "none";
-      // Optionally show an error message
-    }}
-  />
-</div>
+                  style={{
+                    border: `1px solid ${currentTheme.border}`,
+                    margin: "8px 0",
+                  }}
+                >
+                  <iframe
+                    src={convertTableauUrl(selectedProject.tabula_url)}
+                    title={`Visualization: ${selectedProject.title}`}
+                    style={{
+                      width: "100%",
+                      height: "400px",
+                      display: "block",
+                      border: "none",
+                    }}
+                    onError={(e) => {
+                      console.error("Failed to load Tableau visualization");
+                      e.target.style.display = "none";
+                      // Optionally show an error message
+                    }}
+                  />
+                </div>
 
                 <div
                   style={{
