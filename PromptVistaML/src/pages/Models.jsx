@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { fetchAllModels, searchModels } from '../services/supabase'
 
 const Models = () => {
@@ -79,7 +80,7 @@ const Models = () => {
     if (displayedPlaceholder !== targetPlaceholder) {
       // Start fresh for new placeholder
       setDisplayedPlaceholder('')
-      
+
       // Type out the new placeholder
       let index = 0
       const typePlaceholder = () => {
@@ -89,7 +90,7 @@ const Models = () => {
           timeoutId = setTimeout(typePlaceholder, 50)
         }
       }
-      
+
       typePlaceholder()
     }
 
@@ -118,60 +119,96 @@ const Models = () => {
     }
   }
 
-  const ModelCard = ({ model }) => (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-200 hover:shadow-lg">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="font-semibold text-gray-900 dark:text-white text-lg">
-            {model.model_name}
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            {model.model_number}
+  // ✅ FIXED: encodeURIComponent to prevent broken URLs in production
+  const ModelCard = ({ model }) => {
+    const safeModelNumber = encodeURIComponent(model.model_number)
+
+    return (
+      <Link to={`/models/${safeModelNumber}`} className="block">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-200 hover:shadow-lg cursor-pointer group">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white text-lg group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                {model.model_name}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {model.model_number}
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <span
+                className={`px-3 py-1 text-xs rounded-full ${
+                  model.deployment_status === 'live'
+                    ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
+                    : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300'
+                }`}
+              >
+                {model.deployment_status}
+              </span>
+
+              <svg
+                className="w-5 h-5 text-gray-400 group-hover:text-purple-500 transition-colors opacity-0 group-hover:opacity-100"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
+            {model.model_description}
           </p>
+
+          <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+            <div className="flex items-center space-x-2">
+              <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-md">
+                {model.category}
+              </span>
+
+              {model.input_category && (
+                <span
+                  className={`px-2 py-1 text-xs rounded-md ${
+                    model.input_category === 'text'
+                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+                      : model.input_category === 'image'
+                      ? 'bg-pink-100 dark:bg-pink-900/30 text-pink-800 dark:text-pink-300'
+                      : 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300'
+                  }`}
+                >
+                  {model.input_category}
+                </span>
+              )}
+            </div>
+
+            <span className="text-purple-600 dark:text-purple-400 text-sm font-medium flex items-center group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
+              Test
+              <svg
+                className="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
-
-        <span
-          className={`px-3 py-1 text-xs rounded-full ${
-            model.deployment_status === 'live'
-              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
-              : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300'
-          }`}
-        >
-          {model.deployment_status}
-        </span>
-      </div>
-
-      <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-        {model.model_description}
-      </p>
-
-      <div className="flex justify-between items-center mt-6">
-        <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-md">
-          {model.category}
-        </span>
-
-        <a
-          href={`/models/${model.model_number}`}
-          className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium flex items-center"
-        >
-          Test
-          <svg
-            className="w-4 h-4 ml-1 transform transition-transform"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </a>
-      </div>
-    </div>
-  )
+      </Link>
+    )
+  }
 
   const LoadingCard = () => (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
@@ -187,7 +224,7 @@ const Models = () => {
           <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
           <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
         </div>
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
           <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
         </div>
@@ -219,7 +256,6 @@ const Models = () => {
                 placeholder=""
               />
 
-              {/* Search Icon - Always visible */}
               <svg
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
                 fill="none"
@@ -230,11 +266,10 @@ const Models = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 0 0114 0z"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
 
-              {/* Placeholder or search preview - position adjusted to not cover icon */}
               {!searchQuery && (
                 <div className="absolute left-12 top-1/2 transform -translate-y-1/2 pointer-events-none">
                   <span className="text-gray-400 dark:text-gray-500 font-mono">
@@ -244,7 +279,6 @@ const Models = () => {
                 </div>
               )}
 
-              {/* Clear button when there's text */}
               {searchQuery && (
                 <button
                   onClick={() => {
@@ -256,8 +290,18 @@ const Models = () => {
                   }}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               )}
