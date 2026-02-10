@@ -91,7 +91,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 <li>
                   <a
-                    href="https://github.com/YOUR_GITHUB_USERNAME"
+                    href="https://github.com/dronabopche"
                     target="_blank"
                     rel="noreferrer"
                     className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
@@ -102,7 +102,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    href="https://www.linkedin.com/in/YOUR_LINKEDIN_USERNAME"
+                    href="https://www.linkedin.com/in/dronabopche"
                     target="_blank"
                     rel="noreferrer"
                     className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
@@ -113,7 +113,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    href="mailto:YOUR_EMAIL@gmail.com"
+                    href="mailto:dronabopche@gmail.com"
                     className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
                   >
                     Email Me
