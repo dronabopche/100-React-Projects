@@ -17,7 +17,7 @@ const Footer = () => {
         <div className="border border-gray-200 dark:border-gray-100 bg-white dark:bg-gray-950 p-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Brand */}
-            <div className="border border-purple-900 dark:border-gray-100 p-5 bg-gray-50 dark:bg-gray-900">
+            <div className="border border-gray-900 dark:border-gray-100 p-5 bg-gray-50 dark:bg-gray-900">
               <Link to="/" className="flex items-center space-x-2">
                 <img
                   src="/vista.png"

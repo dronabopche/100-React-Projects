@@ -263,7 +263,7 @@ const ModelDetail = () => {
         {/* LEFT */}
         <div className="space-y-6">
           {/* Prompt card */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+          <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Test the Model
             </h3>
@@ -292,7 +292,7 @@ const ModelDetail = () => {
           {inputCategory === "text" &&
             model.example_prompts &&
             model.example_prompts.length > 0 && (
-              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+              <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Example Prompts
                 </h3>
@@ -334,7 +334,7 @@ const ModelDetail = () => {
         {/* RIGHT */}
         <div className="space-y-6">
           {/* Output */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+          <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Output
             </h3>
@@ -342,7 +342,7 @@ const ModelDetail = () => {
           </div>
 
           {/* Model info */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+          <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Model Information
             </h3>

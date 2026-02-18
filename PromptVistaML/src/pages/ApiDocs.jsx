@@ -1,49 +1,50 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   fetchAllModels, 
   fetchDocumentationSections, 
   fetchRateLimits, 
   fetchApiResources 
-} from '../services/supabase'
+} from '../services/supabase';
 
 const ApiDocs = () => {
-  const [models, setModels] = useState([])
-  const [sections, setSections] = useState([])
-  const [rateLimits, setRateLimits] = useState([])
-  const [resources, setResources] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [activeSection, setActiveSection] = useState('overview')
-  const [activeModel, setActiveModel] = useState(null)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [models, setModels] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [rateLimits, setRateLimits] = useState([]);
+  const [resources, setResources] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState('overview');
+  const [activeModel, setActiveModel] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   const loadData = async () => {
     try {
+      setIsLoading(true);
       const [modelsData, sectionsData, limitsData, resourcesData] = await Promise.all([
         fetchAllModels(),
         fetchDocumentationSections(),
         fetchRateLimits(),
         fetchApiResources()
-      ])
+      ]);
       
-      setModels(modelsData)
-      setSections(sectionsData)
-      setRateLimits(limitsData)
-      setResources(resourcesData)
+      setModels(modelsData);
+      setSections(sectionsData);
+      setRateLimits(limitsData);
+      setResources(resourcesData);
       
       if (modelsData.length > 0) {
-        setActiveModel(modelsData[0].model_number)
+        setActiveModel(modelsData[0].model_number);
       }
     } catch (error) {
-      console.error('Error loading data:', error)
+      console.error('Error loading data:', error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const filteredModels = models.filter(model => 
     searchQuery === '' || 
@@ -51,7 +52,7 @@ const ApiDocs = () => {
     model.model_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
     model.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
     model.model_description.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
   const getResourceIcon = (iconType) => {
     const icons = {
@@ -80,20 +81,20 @@ const ApiDocs = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
       )
-    }
+    };
     
-    return icons[iconType] || icons.docs
-  }
+    return icons[iconType] || icons.docs;
+  };
 
   const renderSectionContent = () => {
-    const section = sections.find(s => s.section_id === activeSection)
+    const section = sections.find(s => s.section_id === activeSection);
     
     switch(activeSection) {
       case 'overview':
         return (
           <div className="space-y-6">
             <div className="prose dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-300">{section?.section_content}</p>
+              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Welcome to our API documentation. This guide will help you integrate our AI models into your applications.'}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -135,7 +136,7 @@ const ApiDocs = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm text-purple-800 dark:text-purple-300 font-medium">Uptime</p>
+                    <p className="text-sm text-purple-800 dark:text-purple-300 font-medium">Uptime (30d)</p>
                     <p className="text-2xl font-bold text-purple-900 dark:text-purple-200">99.9%</p>
                   </div>
                 </div>
@@ -175,17 +176,17 @@ const ApiDocs = () => {
               </div>
             </div>
           </div>
-        )
+        );
 
       case 'rate-limiting':
         return (
           <div className="space-y-6">
             <div className="prose dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-300">{section?.section_content}</p>
+              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Understand our rate limiting policies to optimize your API usage.'}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {rateLimits.map((plan, index) => (
+              {rateLimits.length > 0 ? rateLimits.map((plan, index) => (
                 <div 
                   key={plan.id} 
                   className={`border rounded-lg p-6 ${
@@ -216,19 +217,19 @@ const ApiDocs = () => {
                       <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span>{plan.requests_per_hour.toLocaleString()} requests/hour</span>
+                      <span>{plan.requests_per_hour?.toLocaleString() || '100'} requests/hour</span>
                     </li>
                     <li className="flex items-center text-sm">
                       <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span>{plan.concurrent_requests} concurrent requests</span>
+                      <span>{plan.concurrent_requests || '5'} concurrent requests</span>
                     </li>
                     <li className="flex items-center text-sm">
                       <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span>{plan.burst_limit} burst limit</span>
+                      <span>{plan.burst_limit || '10'} burst limit</span>
                     </li>
                     <li className="flex items-center text-sm">
                       <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +247,57 @@ const ApiDocs = () => {
                     Get Started
                   </button>
                 </div>
-              ))}
+              )) : (
+                // Fallback if no rate limits in database
+                <>
+                  <div className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-6">
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Free</h3>
+                    <div className="mb-6">
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$0</span>
+                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+                      </div>
+                    </div>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center text-sm"><span>100 requests/hour</span></li>
+                      <li className="flex items-center text-sm"><span>5 concurrent requests</span></li>
+                      <li className="flex items-center text-sm"><span>10 burst limit</span></li>
+                    </ul>
+                    <button className="w-full bg-gray-800 text-white py-2 px-4 rounded">Get Started</button>
+                  </div>
+                  <div className="border border-purple-500 bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 shadow-lg transform scale-105">
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Pro</h3>
+                    <span className="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded ml-2">POPULAR</span>
+                    <div className="mb-6">
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$49</span>
+                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+                      </div>
+                    </div>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center text-sm"><span>10,000 requests/hour</span></li>
+                      <li className="flex items-center text-sm"><span>50 concurrent requests</span></li>
+                      <li className="flex items-center text-sm"><span>100 burst limit</span></li>
+                    </ul>
+                    <button className="w-full bg-purple-600 text-white py-2 px-4 rounded">Get Started</button>
+                  </div>
+                  <div className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-6">
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Enterprise</h3>
+                    <div className="mb-6">
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$499</span>
+                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+                      </div>
+                    </div>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center text-sm"><span>100,000 requests/hour</span></li>
+                      <li className="flex items-center text-sm"><span>500 concurrent requests</span></li>
+                      <li className="flex items-center text-sm"><span>1000 burst limit</span></li>
+                    </ul>
+                    <button className="w-full bg-gray-800 text-white py-2 px-4 rounded">Get Started</button>
+                  </div>
+                </>
+              )}
             </div>
             
             <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
@@ -259,13 +310,13 @@ const ApiDocs = () => {
               </div>
             </div>
           </div>
-        )
+        );
 
       case 'authentication':
         return (
           <div className="space-y-6">
             <div className="prose dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-300">{section?.section_content}</p>
+              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Learn how to authenticate your API requests securely.'}</p>
             </div>
             
             <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
@@ -276,7 +327,7 @@ const ApiDocs = () => {
                 <span>HTTP Request</span>
               </div>
               <pre className="whitespace-pre-wrap">
-{`curl https://api.yourservice.com/v1/models \\
+{`curl https://api.modelhub.com/v1/models \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json"`}
               </pre>
@@ -303,22 +354,22 @@ const ApiDocs = () => {
               </div>
             </div>
           </div>
-        )
+        );
 
       default:
         return (
           <div className="prose dark:prose-invert max-w-none">
-            <p className="text-gray-600 dark:text-gray-300">{section?.section_content}</p>
+            <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Documentation content goes here.'}</p>
           </div>
-        )
+        );
     }
-  }
+  };
 
   const renderActiveModel = () => {
-    if (!activeModel) return null
+    if (!activeModel) return null;
     
-    const model = models.find(m => m.model_number === activeModel)
-    if (!model) return null
+    const model = models.find(m => m.model_number === activeModel);
+    if (!model) return null;
 
     return (
       <div className="space-y-8">
@@ -371,10 +422,10 @@ const ApiDocs = () => {
         {/* API Endpoint */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">API Endpoint</h3>
-          <div className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+          <div className="bg-purple-600 dark:bg-purple-900 text-gray-100 p-4 rounded-lg">
             <div className="flex justify-between items-start mb-2">
-              <span className="text-xs text-gray-400 font-mono">POST</span>
-              <button className="text-gray-400 hover:text-white text-sm">
+              <span className="text-xs text-gray-100 font-mono">POST</span>
+              <button className="text-purple-200 hover:text-white text-sm">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                 </svg>
@@ -388,7 +439,7 @@ const ApiDocs = () => {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Request Example</h3>
           <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-            <div className="bg-gray-800 dark:bg-gray-900 text-gray-400 text-xs px-4 py-2 border-b border-gray-700 dark:border-gray-600">
+            <div className="bg-purple-600 dark:bg-purple-900 text-gray-100 text-xs px-4 py-2 border-b border-gray-900 dark:border-purple-500">
               <span className="font-mono">curl</span>
             </div>
             <pre className="p-4 text-sm font-mono text-gray-800 dark:text-gray-200 overflow-x-auto">
@@ -427,11 +478,11 @@ const ApiDocs = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Requests per hour</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{model.rate_limit_per_hour.toLocaleString()}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{model.rate_limit_per_hour?.toLocaleString() || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Burst limit</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{model.rate_limit_burst}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{model.rate_limit_burst || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Tokens per minute</span>
@@ -447,11 +498,11 @@ const ApiDocs = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Platform</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{model.deployment_platform}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{model.deployment_platform || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Region</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{model.deployment_region}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{model.deployment_region || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Uptime (30 days)</span>
@@ -508,8 +559,8 @@ const ApiDocs = () => {
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const LoadingSkeleton = () => (
     <div className="space-y-6">
@@ -521,7 +572,7 @@ const ApiDocs = () => {
       </div>
       <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded"></div>
     </div>
-  )
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -583,8 +634,8 @@ const ApiDocs = () => {
                       <button
                         key={model.id}
                         onClick={() => {
-                          setActiveModel(model.model_number)
-                          setActiveSection(null)
+                          setActiveModel(model.model_number);
+                          setActiveSection(null);
                         }}
                         className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-between ${
                           activeModel === model.model_number
@@ -624,8 +675,8 @@ const ApiDocs = () => {
                     <button
                       key={section.id}
                       onClick={() => {
-                        setActiveSection(section.section_id)
-                        setActiveModel(null)
+                        setActiveSection(section.section_id);
+                        setActiveModel(null);
                       }}
                       className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
                         activeSection === section.section_id && !activeModel
@@ -648,7 +699,7 @@ const ApiDocs = () => {
                   Resources
                 </h3>
                 <div className="space-y-2">
-                  {resources.map((resource) => (
+                  {resources.length > 0 ? resources.map((resource) => (
                     <a
                       key={resource.id}
                       href={resource.resource_url}
@@ -661,7 +712,29 @@ const ApiDocs = () => {
                       </div>
                       <span>{resource.resource_name}</span>
                     </a>
-                  ))}
+                  )) : (
+                    // Fallback resources if none in database
+                    <>
+                      <a href="#" className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                        </svg>
+                        <span>GitHub</span>
+                      </a>
+                      <a href="#" className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <span>Status Page</span>
+                      </a>
+                      <a href="#" className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <span>Documentation</span>
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -706,7 +779,7 @@ const ApiDocs = () => {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {sections.find(s => s.section_id === activeSection)?.section_title}
+                        {sections.find(s => s.section_id === activeSection)?.section_title || 'Documentation'}
                       </h2>
                       <p className="text-gray-600 dark:text-gray-400 mt-1">
                         Last updated: {new Date().toLocaleDateString()}
@@ -795,8 +868,8 @@ const ApiDocs = () => {
                               <div className="flex space-x-2">
                                 <button
                                   onClick={() => {
-                                    setActiveModel(model.model_number)
-                                    setActiveSection(null)
+                                    setActiveModel(model.model_number);
+                                    setActiveSection(null);
                                   }}
                                   className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium flex items-center"
                                 >
@@ -837,7 +910,7 @@ const ApiDocs = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ApiDocs
+export default ApiDocs;

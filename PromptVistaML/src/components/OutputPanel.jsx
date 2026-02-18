@@ -79,7 +79,7 @@ const OutputPanel = ({ output, isLoading, error }) => {
 
   if (!output) {
     return (
-      <div className="border border-yellow-500 dark:border-yellow-100 bg-white dark:bg-gray-900 p-6">
+      <div className="border border-black-500 dark:border-purple-500 bg-white dark:bg-gray-900 p-6">
         <div className="text-center py-10">
           <svg
             className="w-12 h-12 text-gray-300 dark:text-gray-700 mx-auto mb-4"
