@@ -22,31 +22,34 @@ function App() {
   // Theme styles
   const themes = {
     light: {
-      bg: "#ffffff",
-      text: "#000000",
-      border: "#cccccc",
-      boxBg: "#ffffff",
-      sidebarBg: "#f8f8f8",
+      bg: "#FAFAF4",
+      text: "#161B12",
+      border: "#D8DCCB",
+      boxBg: "#ced8c8",
+      sidebarBg: "#F0F2E4",
       hoverBg: "rgba(0,0,0,0.05)",
-      codeBg: "#f8f9fa",
-      outputBg: "#ffffff",
-      outputBorder: "#e1e4e8",
+      codeBg: "#F4F5EA",
+      outputBg: "#FFFFFF",
+      outputBorder: "#D8DCCB",
     },
     dark: {
-      bg: "#0d1117",
-      text: "#c9d1d9",
-      border: "#30363d",
-      boxBg: "#161b22",
-      sidebarBg: "#161b22",
+      bg: "#0F120D",
+      text: "#F4EAD7",
+      border: "#3E4436",
+      boxBg: "#1B2018",
+      sidebarBg: "#232B20",
       hoverBg: "rgba(255,255,255,0.05)",
-      codeBg: "#0d1117",
-      outputBg: "#161b22",
-      outputBorder: "#30363d",
+      codeBg: "#0B0D08",
+      outputBg: "#1B2018",
+      outputBorder: "#3E4436",
     },
   };
 
   const currentTheme = themes[theme];
   const codeStyle = theme === "light" ? vs : vscDarkPlus;
+
+  // Hardcoded test model link
+  const TEST_MODEL_LINK = "https://your-test-model-site.com"; // Replace with your actual link
 
   // Initialize theme
   useEffect(() => {
@@ -168,29 +171,31 @@ function App() {
       return [];
     }
   };
+  
   // Add this function to convert Tableau URLs to embed format
-const convertTableauUrl = (url) => {
-  if (!url) return "";
-  
-  // If it's already an embed URL, return as-is
-  if (url.includes("embed=y")) {
+  const convertTableauUrl = (url) => {
+    if (!url) return "";
+    
+    // If it's already an embed URL, return as-is
+    if (url.includes("embed=y")) {
+      return url;
+    }
+    
+    // If it's a Tableau public URL, convert to embed format
+    if (url.includes("tableau.com")) {
+      // Extract the base URL without query parameters
+      const urlObj = new URL(url);
+      const basePath = urlObj.pathname;
+      
+      // Build embed URL
+      const embedUrl = `https://public.tableau.com${basePath}?:embed=y&:showVizHome=no&:host_url=https%3A%2F%2Fpublic.tableau.com%2F&:embed_code_version=3&:tabs=no&:toolbar=yes&:animate_transition=yes&:display_static_image=no&:display_spinner=no&:display_overlay=yes&:display_count=yes&:language=en-US&publish=yes&:loadOrderID=0`;
+      
+      return embedUrl;
+    }
+    
     return url;
-  }
-  
-  // If it's a Tableau public URL, convert to embed format
-  if (url.includes("tableau.com")) {
-    // Extract the base URL without query parameters
-    const urlObj = new URL(url);
-    const basePath = urlObj.pathname;
-    
-    // Build embed URL
-    const embedUrl = `https://public.tableau.com${basePath}?:embed=y&:showVizHome=no&:host_url=https%3A%2F%2Fpublic.tableau.com%2F&:embed_code_version=3&:tabs=no&:toolbar=yes&:animate_transition=yes&:display_static_image=no&:display_spinner=no&:display_overlay=yes&:display_count=yes&:language=en-US&publish=yes&:loadOrderID=0`;
-    
-    return embedUrl;
-  }
-  
-  return url;
-};
+  };
+
   // ===== NOTEBOOK RENDER HELPERS =====
 
   const getTextFromCellSource = (source) => {
@@ -404,8 +409,8 @@ const convertTableauUrl = (url) => {
     container: {
       display: "flex",
       flex: 1,
-      padding: "20px",
-      gap: "20px",
+      padding: "10px",
+      gap: "10px",
       minHeight: "calc(100vh - 100px)",
     },
     mainContent: {
@@ -431,7 +436,7 @@ const convertTableauUrl = (url) => {
     footer: {
       borderTop: `1px solid ${currentTheme.border}`,
       padding: "10px 20px",
-      backgroundColor: theme === "light" ? "#f8f8f8" : "#1a1a1a",
+      backgroundColor: currentTheme.bg, // Changed to match background
       textAlign: "center",
     },
   };
@@ -461,17 +466,34 @@ const convertTableauUrl = (url) => {
             </div>
           ) : selectedProject ? (
             <>
-              {/* TITLE */}
+              {/* TITLE with Test Model Button */}
               <div style={{ ...baseStyles.box, padding: "10px 15px" }}>
-                <h1 style={{ margin: "0 0 5px 0", fontSize: "24px" }}>
-                  {selectedProject.title}
-                </h1>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <h1 style={{ margin: "0", fontSize: "24px" }}>
+                    {selectedProject.title}
+                  </h1>
+                  <a
+                    href={TEST_MODEL_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      ...baseStyles.button,
+                      padding: "6px 16px",
+                      textDecoration: "none",
+                      display: "inline-block",
+                      backgroundColor: theme === "light" ? "#f0f0f0" : "#2d2d2d",
+                    }}
+                  >
+                    Test Model
+                  </a>
+                </div>
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     fontSize: "12px",
                     opacity: 0.7,
+                    marginTop: "8px",
                   }}
                 >
                   <span>ID: {selectedProject.id?.substring(0, 8)}...</span>
@@ -515,7 +537,6 @@ const convertTableauUrl = (url) => {
                     onError={(e) => {
                       console.error("Failed to load Tableau visualization");
                       e.target.style.display = "none";
-                      // Optionally show an error message
                     }}
                   />
                 </div>
@@ -531,6 +552,60 @@ const convertTableauUrl = (url) => {
                   <small>Embedded from Tabula</small>
                 </div>
               </div>
+
+              {/* ARCHITECTURE SECTION - NEW */}
+              {selectedProject.flowchat_url && (
+                <div style={baseStyles.box}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      paddingBottom: "8px",
+                      borderBottom: `1px solid ${currentTheme.border}`,
+                    }}
+                  >
+                    <h2 style={{ margin: 0, fontSize: "18px" }}>Architecture</h2>
+                  </div>
+
+                  <div
+                    style={{
+                      border: `1px solid ${currentTheme.border}`,
+                      padding: "10px",
+                      backgroundColor: currentTheme.bg,
+                      textAlign: "center",
+                    }}
+                  >
+                    <img
+                      src={selectedProject.flowchat_url}
+                      alt={`Architecture for ${selectedProject.title}`}
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        display: "block",
+                        margin: "0 auto",
+                      }}
+                      onError={(e) => {
+                        console.error("Failed to load architecture image");
+                        e.target.style.display = "none";
+                        e.target.parentNode.innerHTML += '<p style="color: #ff0000; padding: 20px;">Failed to load architecture image</p>';
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      textAlign: "right",
+                      fontSize: "11px",
+                      opacity: 0.7,
+                      marginTop: "5px",
+                    }}
+                  >
+                    <small>System Architecture Diagram</small>
+                  </div>
+                </div>
+              )}
 
               {/* LINKS & RESOURCES */}
               <div style={baseStyles.box}>
@@ -628,6 +703,119 @@ const convertTableauUrl = (url) => {
                 </div>
               </div>
 
+              {/* API ENDPOINTS SECTION - ONLY SHOW WHEN DATA EXISTS */}
+{selectedProject?.api_endpoint && 
+  (() => {
+    // Parse and validate API endpoints
+    let apiEndpoints = [];
+    try {
+      if (typeof selectedProject.api_endpoint === 'string') {
+        apiEndpoints = JSON.parse(selectedProject.api_endpoint);
+      } else if (Array.isArray(selectedProject.api_endpoint)) {
+        apiEndpoints = selectedProject.api_endpoint;
+      }
+    } catch (e) {
+      console.error("Failed to parse API endpoints:", e);
+      return null;
+    }
+
+    // Only render if we have valid endpoints
+    if (!Array.isArray(apiEndpoints) || apiEndpoints.length === 0) {
+      return null;
+    }
+
+    return (
+      <div style={baseStyles.box}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "10px",
+            paddingBottom: "8px",
+            borderBottom: `1px solid ${currentTheme.border}`,
+          }}
+        >
+          <h2 style={{ margin: 0, fontSize: "18px" }}>API Endpoints</h2>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {apiEndpoints.map((endpoint, index) => (
+            <div
+              key={index}
+              style={{
+                padding: "12px",
+                border: `1px dashed ${currentTheme.border}`,
+                backgroundColor: theme === "light" ? "#fafafa" : "#1a1a1a",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                <code style={{ fontSize: "13px", fontWeight: "bold" }}>
+                  {endpoint.method || 'GET'} {endpoint.path || '/api/endpoint'}
+                </code>
+                {endpoint.status && (
+                  <span style={{ 
+                    fontSize: "11px", 
+                    padding: "2px 6px", 
+                    backgroundColor: endpoint.status === 'active' ? '#28a745' : '#6c757d',
+                    color: "#ffffff", 
+                    borderRadius: "3px" 
+                  }}>
+                    {endpoint.status}
+                  </span>
+                )}
+              </div>
+              
+              {endpoint.description && (
+                <p style={{ fontSize: "13px", margin: "0 0 8px 0", opacity: 0.8 }}>
+                  {endpoint.description}
+                </p>
+              )}
+              
+              {endpoint.example && (
+                <pre style={{ fontSize: "12px", margin: 0, padding: "8px", backgroundColor: currentTheme.codeBg, border: `1px solid ${currentTheme.border}` }}>
+                  {JSON.stringify(endpoint.example, null, 2)}
+                </pre>
+              )}
+              
+              {endpoint.url && (
+                <div style={{ marginTop: "8px", textAlign: "right" }}>
+                  <a
+                    href={endpoint.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      ...baseStyles.button,
+                      padding: "4px 8px",
+                      fontSize: "11px",
+                      textDecoration: "none",
+                      display: "inline-block"
+                    }}
+                  >
+                    Test Endpoint ↗
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {apiEndpoints.length > 0 && (
+          <div
+            style={{
+              textAlign: "right",
+              fontSize: "11px",
+              opacity: 0.7,
+              marginTop: "12px",
+            }}
+          >
+            <small>API documentation available</small>
+          </div>
+        )}
+      </div>
+    );
+  })()}
+
               {/* ANALYSIS REPORT */}
               <div style={baseStyles.box}>
                 <div
@@ -720,7 +908,7 @@ const convertTableauUrl = (url) => {
                 )}
               </div>
 
-              {/* NOTEBOOK PREVIEW (MOVED TO BOTTOM) */}
+              {/* NOTEBOOK PREVIEW */}
               {selectedProject.ipynb_url && (
                 <div style={baseStyles.box}>
                   <div
@@ -864,8 +1052,42 @@ const convertTableauUrl = (url) => {
           ) : null}
         </div>
 
-        {/* SIDEBAR */}
+        {/* SIDEBAR with Logo */}
         <div style={baseStyles.sidebar}>
+          {/* Logo Section - NEW */}
+          <div
+            style={{
+              padding: "20px 15px",
+              borderBottom: `1px solid ${currentTheme.border}`,
+              textAlign: "center",
+              backgroundColor: currentTheme.boxBg,
+            }}
+          >
+            <div
+              style={{
+                width: "80px",
+                height: "80px",
+                margin: "0 auto 10px auto",
+                borderRadius: "50%",
+                border: `2px solid ${currentTheme.border}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: currentTheme.bg,
+                overflow: "hidden",
+              }}
+            >
+              {/* You can replace this with an actual image */}
+              <img
+                  src="/logo.png"
+                  alt="Logo"
+                  style={{ width: "80%", height: "80%", objectFit: "cover" }}
+                />
+            </div>
+            <p style={{ margin: "5px 0 0 0", fontSize: "12px", opacity: 0.7 }}>
+              Data Science Portfolio
+            </p>
+          </div>
           <div
             style={{
               padding: "10px 15px",
@@ -972,7 +1194,7 @@ const convertTableauUrl = (url) => {
                   Error
                 </span>
               ) : (
-                <span style={{ color: theme === "light" ? "#008000" : "#00ff00" }}>
+                <span style={{ color: "#0065c3" }}>
                   Loaded {projects.length} projects
                 </span>
               )}
@@ -996,6 +1218,13 @@ const convertTableauUrl = (url) => {
             <p style={{ margin: "0 0 3px 0" }}>Data Science Portfolio v1.0</p>
             <p style={{ margin: 0 }}>By Drona Bopche</p>
           </div>
+          <div>
+          <img
+                  src="/logo.png"
+                  alt="Logo"
+                  style={{ width: "10%", height: "10%", objectFit: "cover" }}
+                />
+            </div>
           <div>
             <p style={{ margin: "0 0 3px 0" }}>
               © {new Date().getFullYear()} - All Rights Reserved
