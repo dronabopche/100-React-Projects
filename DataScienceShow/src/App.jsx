@@ -48,9 +48,9 @@ function App() {
   const currentTheme = themes[theme];
   const codeStyle = theme === "light" ? vs : vscDarkPlus;
 
-  // Hardcoded test model link
-  const TEST_MODEL_LINK = "https://your-test-model-site.com"; // Replace with your actual link
-
+  //Hardcoded test model link
+  const TEST_MODEL_LINK = "https://promptvistaml.vercel.app/";
+  
   // Initialize theme
   useEffect(() => {
     const savedTheme = localStorage.getItem("portfolio-theme") || "light";
