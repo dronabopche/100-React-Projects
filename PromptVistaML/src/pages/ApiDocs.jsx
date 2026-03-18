@@ -16,7 +16,6 @@ const ApiDocs = () => {
   const [activeSection, setActiveSection] = useState('overview');
   const [activeModel, setActiveModel] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedNotebook, setSelectedNotebook] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -55,151 +54,6 @@ const ApiDocs = () => {
     model.model_description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Parse the extra JSON column
-  const parseExtraLinks = (extraJson) => {
-    if (!extraJson) return [];
-    try {
-      // If it's already an object, use it directly
-      if (typeof extraJson === 'object') return extraJson;
-      // If it's a string, parse it
-      return JSON.parse(extraJson);
-    } catch (e) {
-      console.error('Error parsing extra links:', e);
-      return [];
-    }
-  };
-
-  // Function to get icon based on link name
-  const getIconForLink = (name) => {
-    const nameLower = name.toLowerCase();
-    const icons = {
-      github: (
-        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-        </svg>
-      ),
-      paper: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
-      docs: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      ),
-      colab: (
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
-        </svg>
-      ),
-      huggingface: (
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
-        </svg>
-      )
-    };
-    
-    // Try to match icon based on name
-    for (const [key, icon] of Object.entries(icons)) {
-      if (nameLower.includes(key)) return icon;
-    }
-    
-    // Default icon
-    return (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-      </svg>
-    );
-  };
-
-  // Notebook viewer component
-  const NotebookViewer = ({ url }) => {
-    const [notebookContent, setNotebookContent] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-      if (!url) return;
-      
-      const loadNotebook = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-          // Convert GitHub URL to raw URL
-          let rawUrl = url;
-          if (url.includes('github.com')) {
-            rawUrl = url
-              .replace('github.com', 'raw.githubusercontent.com')
-              .replace('/blob/', '/');
-          }
-          
-          const response = await fetch(rawUrl);
-          if (!response.ok) throw new Error('Failed to load notebook');
-          
-          const content = await response.json();
-          setNotebookContent(content);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadNotebook();
-    }, [url]);
-
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <p className="text-red-600 dark:text-red-400">Error loading notebook: {error}</p>
-        </div>
-      );
-    }
-
-    if (!notebookContent) return null;
-
-    return (
-      <div className="notebook-viewer bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="bg-gray-50 dark:bg-gray-800 px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center">
-          <svg className="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Jupyter Notebook</span>
-        </div>
-        <div className="p-4 max-h-96 overflow-y-auto">
-          {notebookContent.cells?.map((cell, idx) => (
-            <div key={idx} className="mb-4">
-              {cell.cell_type === 'markdown' && (
-                <div className="prose dark:prose-invert max-w-none text-sm">
-                  <div dangerouslySetInnerHTML={{ __html: cell.source.join('') }} />
-                </div>
-              )}
-              {cell.cell_type === 'code' && (
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
-                  <div className="bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs text-gray-600 dark:text-gray-400">
-                    Code cell {idx + 1}
-                  </div>
-                  <pre className="p-3 text-sm font-mono text-gray-800 dark:text-gray-200 overflow-x-auto">
-                    <code>{cell.source.join('')}</code>
-                  </pre>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
   const getResourceIcon = (iconType) => {
     const icons = {
       github: (
@@ -232,13 +86,290 @@ const ApiDocs = () => {
     return icons[iconType] || icons.docs;
   };
 
+  const renderSectionContent = () => {
+    const section = sections.find(s => s.section_id === activeSection);
+    
+    switch(activeSection) {
+      case 'overview':
+        return (
+          <div className="space-y-6">
+            <div className="prose dark:prose-invert max-w-none">
+              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Welcome to our API documentation. This guide will help you integrate our AI models into your applications.'}</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-center">
+                  <div className="bg-blue-100 dark:bg-blue-800 p-2 rounded-md mr-3">
+                    <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">Total Models</p>
+                    <p className="text-2xl font-bold text-blue-900 dark:text-blue-200">{models.length}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <div className="flex items-center">
+                  <div className="bg-green-100 dark:bg-green-800 p-2 rounded-md mr-3">
+                    <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm text-green-800 dark:text-green-300 font-medium">Live Endpoints</p>
+                    <p className="text-2xl font-bold text-green-900 dark:text-green-200">
+                      {models.filter(m => m.deployment_status === 'live').length}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                <div className="flex items-center">
+                  <div className="bg-purple-100 dark:bg-purple-800 p-2 rounded-md mr-3">
+                    <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm text-purple-800 dark:text-purple-300 font-medium">Uptime (30d)</p>
+                    <p className="text-2xl font-bold text-purple-900 dark:text-purple-200">99.9%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Getting Started</h3>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
+                    1
+                  </div>
+                  <div>
+                    <p className="text-gray-700 dark:text-gray-300 font-medium">Get Your API Key</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Sign up for an account to receive your unique API key</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
+                    2
+                  </div>
+                  <div>
+                    <p className="text-gray-700 dark:text-gray-300 font-medium">Choose a Model</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Select from our available models based on your requirements</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
+                    3
+                  </div>
+                  <div>
+                    <p className="text-gray-700 dark:text-gray-300 font-medium">Make Your First Request</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Use the provided endpoint with your API key to start making requests</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'rate-limiting':
+        return (
+          <div className="space-y-6">
+            <div className="prose dark:prose-invert max-w-none">
+              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Understand our rate limiting policies to optimize your API usage.'}</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {rateLimits.length > 0 ? rateLimits.map((plan, index) => (
+                <div 
+                  key={plan.id} 
+                  className={`border rounded-lg p-6 ${
+                    index === 1 
+                      ? 'border-purple-500 dark:border-purple-400 bg-purple-50 dark:bg-purple-900/20 shadow-lg transform scale-105' 
+                      : 'border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900'
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-white">{plan.plan_name}</h3>
+                    {index === 1 && (
+                      <span className="bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 text-xs font-bold px-2 py-1 rounded">
+                        POPULAR
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="mb-6">
+                    <div className="flex items-baseline">
+                      <span className="text-3xl font-bold text-gray-900 dark:text-white">${plan.price_per_month}</span>
+                      <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Billed monthly</p>
+                  </div>
+                  
+                  <ul className="space-y-3 mb-6">
+                    <li className="flex items-center text-sm">
+                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{plan.requests_per_hour?.toLocaleString() || '100'} requests/hour</span>
+                    </li>
+                    <li className="flex items-center text-sm">
+                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{plan.concurrent_requests || '5'} concurrent requests</span>
+                    </li>
+                    <li className="flex items-center text-sm">
+                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{plan.burst_limit || '10'} burst limit</span>
+                    </li>
+                    <li className="flex items-center text-sm">
+                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Priority support</span>
+                    </li>
+                  </ul>
+                  
+                  <button className={`w-full py-2 px-4 rounded font-medium ${
+                    index === 1 
+                      ? 'bg-purple-600 text-white hover:bg-purple-700' 
+                      : 'bg-gray-800 text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600'
+                  }`}>
+                    Get Started
+                  </button>
+                </div>
+              )) : (
+                // Fallback if no rate limits in database
+                <>
+                  <div className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-6">
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Free</h3>
+                    <div className="mb-6">
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$0</span>
+                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+                      </div>
+                    </div>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center text-sm"><span>100 requests/hour</span></li>
+                      <li className="flex items-center text-sm"><span>5 concurrent requests</span></li>
+                      <li className="flex items-center text-sm"><span>10 burst limit</span></li>
+                    </ul>
+                    <button className="w-full bg-gray-800 text-white py-2 px-4 rounded">Get Started</button>
+                  </div>
+                  <div className="border border-purple-500 bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 shadow-lg transform scale-105">
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Pro</h3>
+                    <span className="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded ml-2">POPULAR</span>
+                    <div className="mb-6">
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$49</span>
+                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+                      </div>
+                    </div>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center text-sm"><span>10,000 requests/hour</span></li>
+                      <li className="flex items-center text-sm"><span>50 concurrent requests</span></li>
+                      <li className="flex items-center text-sm"><span>100 burst limit</span></li>
+                    </ul>
+                    <button className="w-full bg-purple-600 text-white py-2 px-4 rounded">Get Started</button>
+                  </div>
+                  <div className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-6">
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Enterprise</h3>
+                    <div className="mb-6">
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$499</span>
+                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+                      </div>
+                    </div>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center text-sm"><span>100,000 requests/hour</span></li>
+                      <li className="flex items-center text-sm"><span>500 concurrent requests</span></li>
+                      <li className="flex items-center text-sm"><span>1000 burst limit</span></li>
+                    </ul>
+                    <button className="w-full bg-gray-800 text-white py-2 px-4 rounded">Get Started</button>
+                  </div>
+                </>
+              )}
+            </div>
+            
+            <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Understanding Rate Limits</h4>
+              <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                <p>• <strong>Requests per hour</strong>: Maximum requests allowed in a rolling 60-minute window</p>
+                <p>• <strong>Concurrent requests</strong>: Maximum simultaneous active connections</p>
+                <p>• <strong>Burst limit</strong>: Maximum requests allowed in a short burst period (typically 1 minute)</p>
+                <p>• Rate limit headers are included in all API responses</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'authentication':
+        return (
+          <div className="space-y-6">
+            <div className="prose dark:prose-invert max-w-none">
+              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Learn how to authenticate your API requests securely.'}</p>
+            </div>
+            
+            <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
+              <div className="flex items-center text-gray-400 text-xs mb-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                <span>HTTP Request</span>
+              </div>
+              <pre className="whitespace-pre-wrap">
+{`curl https://api.modelhub.com/v1/models \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json"`}
+              </pre>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                <h4 className="font-semibold text-red-800 dark:text-red-300 mb-2">Error Responses</h4>
+                <div className="space-y-2 text-sm">
+                  <p><code className="bg-red-100 dark:bg-red-800 px-1 py-0.5 rounded">401 Unauthorized</code> - Invalid or missing API key</p>
+                  <p><code className="bg-red-100 dark:bg-red-800 px-1 py-0.5 rounded">429 Too Many Requests</code> - Rate limit exceeded</p>
+                  <p><code className="bg-red-100 dark:bg-red-800 px-1 py-0.5 rounded">403 Forbidden</code> - Insufficient permissions</p>
+                </div>
+              </div>
+              
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <h4 className="font-semibold text-green-800 dark:text-green-300 mb-2">Best Practices</h4>
+                <div className="space-y-2 text-sm">
+                  <p>• Store API keys in environment variables</p>
+                  <p>• Rotate keys periodically</p>
+                  <p>• Never commit API keys to version control</p>
+                  <p>• Use different keys for different environments</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="prose dark:prose-invert max-w-none">
+            <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Documentation content goes here.'}</p>
+          </div>
+        );
+    }
+  };
+
   const renderActiveModel = () => {
     if (!activeModel) return null;
     
     const model = models.find(m => m.model_number === activeModel);
     if (!model) return null;
-
-    const extraLinks = parseExtraLinks(model.extra);
 
     return (
       <div className="space-y-8">
@@ -288,29 +419,6 @@ const ApiDocs = () => {
           </div>
         </div>
 
-        {/* Architecture Section - if architecture_url exists */}
-        {model.architecture_url && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-              <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              Architecture
-            </h3>
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-              <img 
-                src={model.architecture_url} 
-                alt={`${model.model_name} Architecture`}
-                className="w-full h-auto rounded-lg"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = 'https://via.placeholder.com/800x400?text=Architecture+Diagram+Not+Available';
-                }}
-              />
-            </div>
-          </div>
-        )}
-
         {/* API Endpoint */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">API Endpoint</h3>
@@ -331,7 +439,7 @@ const ApiDocs = () => {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Request Example</h3>
           <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-            <div className="bg-purple-600 dark:bg-purple-900 text-gray-100 text-xs px-4 py-2 border-b border-gray-900 dark:border-purple-500 flex items-center">
+            <div className="bg-purple-600 dark:bg-purple-900 text-gray-100 text-xs px-4 py-2 border-b border-gray-900 dark:border-purple-500">
               <span className="font-mono">curl</span>
             </div>
             <pre className="p-4 text-sm font-mono text-gray-800 dark:text-gray-200 overflow-x-auto">
@@ -359,29 +467,6 @@ const ApiDocs = () => {
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* Notebook Viewer - if GitHub notebook URL exists in extra links */}
-        {extraLinks.some(link => 
-          link.name.toLowerCase().includes('notebook') || 
-          link.name.toLowerCase().includes('ipynb') ||
-          link.url.includes('.ipynb')
-        ) && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-              <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Interactive Notebook
-            </h3>
-            <NotebookViewer 
-              url={extraLinks.find(link => 
-                link.name.toLowerCase().includes('notebook') || 
-                link.name.toLowerCase().includes('ipynb') ||
-                link.url.includes('.ipynb')
-              ).url} 
-            />
           </div>
         )}
 
@@ -428,30 +513,51 @@ const ApiDocs = () => {
           </div>
         </div>
 
-        {/* Resources from extra column */}
-        {extraLinks.length > 0 && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resources</h3>
-            <div className="flex flex-wrap gap-3">
-              {extraLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 px-4 py-2 rounded-lg transition-colors group"
-                >
-                  <div className="text-gray-500 group-hover:text-purple-600 dark:text-gray-400 dark:group-hover:text-purple-400">
-                    {getIconForLink(link.name)}
-                  </div>
-                  <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400">
-                    {link.name}
-                  </span>
-                </a>
-              ))}
-            </div>
+        {/* Resources */}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resources</h3>
+          <div className="flex flex-wrap gap-3">
+            {model.github_repo && (
+              <a
+                href={model.github_repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                </svg>
+                <span className="text-sm">GitHub Repository</span>
+              </a>
+            )}
+            
+            {model.documentation_url && (
+              <a
+                href={model.documentation_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span className="text-sm">Documentation</span>
+              </a>
+            )}
+            
+            {model.support_email && (
+              <a
+                href={`mailto:${model.support_email}`}
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="text-sm">Support</span>
+              </a>
+            )}
           </div>
-        )}
+        </div>
       </div>
     );
   };
@@ -523,7 +629,7 @@ const ApiDocs = () => {
                     ))}
                   </div>
                 ) : (
-                  <nav className="space-y-1 max-h-96 overflow-y-auto">
+                  <nav className="space-y-1">
                     {filteredModels.map((model) => (
                       <button
                         key={model.id}
@@ -680,9 +786,125 @@ const ApiDocs = () => {
                       </p>
                     </div>
                   </div>
-                  {/* Section content would go here */}
+                  {renderSectionContent()}
                 </div>
               )}
+            </div>
+
+            {/* All Models Table */}
+            <div className="mt-8">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    All Models ({filteredModels.length})
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    Click on any model to view detailed documentation
+                  </p>
+                </div>
+                
+                {isLoading ? (
+                  <div className="p-6">
+                    <div className="space-y-4">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Model</th>
+                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">ID</th>
+                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Category</th>
+                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Status</th>
+                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredModels.map((model) => (
+                          <tr 
+                            key={model.id} 
+                            className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                          >
+                            <td className="p-4">
+                              <div>
+                                <div className="flex items-center">
+                                  <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                  </svg>
+                                  <p className="font-medium text-gray-900 dark:text-white">{model.model_name}</p>
+                                </div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                                  {model.model_description}
+                                </p>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <code className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
+                                {model.model_number}
+                              </code>
+                            </td>
+                            <td className="p-4">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
+                                {model.category}
+                              </span>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center">
+                                <div className={`w-2 h-2 rounded-full mr-2 ${
+                                  model.deployment_status === 'live' 
+                                    ? 'bg-green-500' 
+                                    : 'bg-yellow-500'
+                                }`}></div>
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  {model.deployment_status}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex space-x-2">
+                                <button
+                                  onClick={() => {
+                                    setActiveModel(model.model_number);
+                                    setActiveSection(null);
+                                  }}
+                                  className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium flex items-center"
+                                >
+                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  View Docs
+                                </button>
+                                <span className="text-gray-400">|</span>
+                                <Link
+                                  to={`/models/${model.model_number}`}
+                                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 text-sm font-medium flex items-center"
+                                >
+                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                  </svg>
+                                  Test
+                                </Link>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {filteredModels.length === 0 && (
+                      <div className="text-center py-12">
+                        <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-gray-600 dark:text-gray-400">No models found matching your search</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

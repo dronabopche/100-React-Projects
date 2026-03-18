@@ -1,0 +1,85 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:        #0c0806;
+  --bg2:       #110d0a;
+  --surface:   #1a1108;
+  --border:    #2e200f;
+  --border2:   #3d2c15;
+  --text:      #e8dcc8;
+  --muted:     #7a6448;
+  --gold:      #eebb2f;
+  --gold2:     #e8c96a;
+  --gold-dim:  #c0850e;
+  --crimson:   #6b1a1a;
+  --cream:     #f0e6cc;
+  --shadow:    rgba(0,0,0,0.7);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'EB Garamond', Georgia, serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* Subtle vignette overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%);
+  pointer-events: none;
+  z-index: 998;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+a { color: inherit; text-decoration: none; }
+
+.section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.section-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(3.6rem, 3.5vw, 3.6rem);
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 8rem;
+  margin: 1.5rem 0;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border2), transparent);
+}
+.divider-gem {
+  width: 6px; height: 6px;
+  background: var(--gold-dim);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}

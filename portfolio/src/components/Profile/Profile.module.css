@@ -1,0 +1,90 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  position: relative;
+  text-align: center;
+}
+
+.glowRing {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 184, 154, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.avatarWrap {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  box-shadow:
+    0 0 0 4px var(--bg),
+    0 0 0 5px var(--border),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+  display: block;
+}
+
+.avatarPlaceholder {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 3rem;
+  color: var(--accent);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.name {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.handle {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.bio {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  max-width: 420px;
+  line-height: 1.7;
+}
+
+.scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  font-size: 1.2rem;
+  color: var(--muted);
+}

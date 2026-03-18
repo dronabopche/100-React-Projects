@@ -1,0 +1,99 @@
+.section {
+  padding: 6rem 2rem;
+  background: var(--bg);
+  position: relative;
+}
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border2), transparent);
+}
+
+.header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 4rem;
+}
+
+.groups {
+  max-width: 1100px;
+  margin: 0 auto 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.8rem;
+  position: relative;
+}
+.group::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+}
+
+.groupTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'EB Garamond', serif;
+  font-size: 0.9rem;
+  border-radius: 1px;
+  cursor: default;
+  transition: border-color 0.2s, color 0.2s;
+}
+.pill:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+/* Scrolling belt */
+.belt {
+  margin-top: 1rem;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+.beltInner { overflow: hidden; }
+.beltRow {
+  display: flex;
+  width: max-content;
+  gap: 0;
+}
+.beltTag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 0.6rem 1.8rem;
+  border-right: 1px solid var(--border);
+}
+.beltDot { color: var(--gold-dim); margin-right: 0.3rem; }
+
+@media (max-width: 600px) {
+  .groups { grid-template-columns: 1fr; }
+}

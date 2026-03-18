@@ -1,4 +1,5 @@
 const OutputPanel = ({ output, isLoading, error }) => {
+  // Copy output
   const handleCopy = async () => {
     if (!output) return
     try {
