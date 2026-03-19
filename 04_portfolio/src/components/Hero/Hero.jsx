@@ -2,8 +2,8 @@ import { motion } from 'framer-motion'
 import styles from './Hero.module.css'
 
 export default function Hero() {
-  const name = 'Cherry'
-  const role = 'AI/ML Developer · Builder · Creator'
+  const name = 'Drona Bopche'
+  const role = 'ML Developer · Quantum Enthusiast · AI Engineer'
   const tagline =
     'Crafting elegant solutions through code, automation, and machine intelligence.'
 

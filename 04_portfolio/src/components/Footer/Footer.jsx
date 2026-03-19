@@ -13,7 +13,7 @@ const NAV = [
 export default function Footer() {
   const year = new Date().getFullYear()
 
-  const name = 'Cherry'
+  const name = 'Drona Bopche'
 
   return (
     <motion.footer
@@ -30,7 +30,7 @@ export default function Footer() {
         <div className={styles.brand}>
           <span className={styles.brandName}>{name}</span>
           <span className={styles.brandSub}>
-            AI/ML Developer · Builder · Creator
+            Quantum Enthusiast · AI Engineer · ML Developer 
           </span>
         </div>
 
@@ -46,12 +46,12 @@ export default function Footer() {
         {/* Social */}
         <div className={styles.social}>
           <a
-            href="https://github.com/yourusername"
+            href="https://github.com/dronabopche"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
           >
-            GitHub ↗
+            Proof ↗
           </a>
         </div>
       </div>
@@ -62,6 +62,8 @@ export default function Footer() {
 
         <div className={styles.bottomInner}>
           <span>© {year} {name}. Built with React & Framer Motion.</span>
+          <span className={styles.ornament}>✦</span>
+          <span>Designed & Developed by {name}</span>
           <span className={styles.ornament}>✦</span>
           <span>Designed & Developed by {name}</span>
         </div>

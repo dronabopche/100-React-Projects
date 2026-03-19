@@ -5,6 +5,7 @@ import Skills from './components/Skills/Skills'
 import Projects from './components/Projects/Projects'
 import Experience from './components/Experience/Experience'
 import Gallery from './components/Gallery/Gallery'
+import LiveProjects from './components/LiveProjectCard/LiveProject'
 import Contact from './components/Contact/Contact'
 import Footer from './components/Footer/Footer'
 import { fetchRepos } from './services/github'
@@ -37,6 +38,7 @@ export default function App() {
       {/* Main Content */}
       <Hero />
       <About />
+      <LiveProjects />
       <Skills />
       <Projects repos={repos} loading={loading} error={error} />
       <Gallery/>

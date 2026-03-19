@@ -1,0 +1,100 @@
+/* Wrapper */
+.wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Track */
+.track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+}
+
+/* Cards */
+.card {
+  min-width: 320px;
+  height: 260px;
+
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  filter: blur(3px) brightness(0.65);
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* Hover = focus */
+.card:hover {
+  transform: scale(1.15);
+  filter: blur(0) brightness(1);
+  z-index: 3;
+}
+
+/* Image */
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark default overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  transition: 0.4s ease;
+}
+
+/* Royal yellow hover */
+.card:hover .overlay {
+  background: rgba(252, 250, 252, 0 );
+}
+
+/* Content */
+.content {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+
+  color: #fff;
+
+  opacity: 0;
+  transform: translateY(12px);
+  transition: 0.35s ease;
+}
+
+.card:hover .content {
+  opacity: 1;
+  transform: translateY(0);
+}
+.leftBtn,
+.rightBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(71, 49, 5, 0.6);
+  border: none;
+  color: rgba(255, 255, 255, 0.362);
+  font-size: 20px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.leftBtn:hover,
+.rightBtn:hover {
+  background: rgba(255, 255, 255, 0.585);
+}
+
+.leftBtn {
+  left: 10px;
+}
+
+.rightBtn {
+  right: 10px;
+}
