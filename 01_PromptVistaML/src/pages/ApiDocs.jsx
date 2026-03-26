@@ -16,6 +16,7 @@ const ApiDocs = () => {
   const [activeSection, setActiveSection] = useState('overview');
   const [activeModel, setActiveModel] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [architectureZoomed, setArchitectureZoomed] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -80,10 +81,15 @@ const ApiDocs = () => {
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
+      ),
+      link: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
       )
     };
     
-    return icons[iconType] || icons.docs;
+    return icons[iconType] || icons.link;
   };
 
   const renderSectionContent = () => {
@@ -248,7 +254,6 @@ const ApiDocs = () => {
                   </button>
                 </div>
               )) : (
-                // Fallback if no rate limits in database
                 <>
                   <div className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-6">
                     <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Free</h3>
@@ -365,11 +370,32 @@ const ApiDocs = () => {
     }
   };
 
+  // Parse extra JSON field — supports both object { label: url } and array [{ name, url }]
+  const parseExtraLinks = (extra) => {
+    if (!extra) return [];
+    try {
+      const parsed = typeof extra === 'string' ? JSON.parse(extra) : extra;
+      if (Array.isArray(parsed)) {
+        return parsed.filter(item => item && item.url);
+      }
+      if (typeof parsed === 'object') {
+        return Object.entries(parsed)
+          .filter(([, url]) => url)
+          .map(([name, url]) => ({ name, url }));
+      }
+    } catch {
+      // silently ignore malformed JSON
+    }
+    return [];
+  };
+
   const renderActiveModel = () => {
     if (!activeModel) return null;
     
     const model = models.find(m => m.model_number === activeModel);
     if (!model) return null;
+
+    const extraLinks = parseExtraLinks(model.extra);
 
     return (
       <div className="space-y-8">
@@ -470,6 +496,90 @@ const ApiDocs = () => {
           </div>
         )}
 
+        {/* ── NEW: Architecture Diagram ── */}
+        {model.architecture_url && (
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+              </svg>
+              Architecture Diagram
+            </h3>
+            <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+              {/* Toolbar */}
+              <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                  {model.model_name} — system architecture
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setArchitectureZoomed(z => !z)}
+                    className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 border border-purple-200 dark:border-purple-700 rounded px-2 py-1 transition-colors"
+                  >
+                    {architectureZoomed ? (
+                      <>
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                        Collapse
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                        Expand
+                      </>
+                    )}
+                  </button>
+                  <a
+                    href={model.architecture_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 rounded px-2 py-1 transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    Open
+                  </a>
+                </div>
+              </div>
+
+              {/* Image */}
+              <div
+                className={`relative overflow-hidden transition-all duration-300 ${
+                  architectureZoomed ? 'max-h-none' : 'max-h-80'
+                } bg-white dark:bg-gray-900 flex items-center justify-center`}
+              >
+                <img
+                  src={model.architecture_url}
+                  alt={`${model.model_name} architecture diagram`}
+                  className={`w-full object-contain ${architectureZoomed ? '' : 'cursor-zoom-in'}`}
+                  onClick={() => setArchitectureZoomed(true)}
+                  onError={(e) => {
+                    e.currentTarget.parentElement.innerHTML = `
+                      <div class="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-gray-600 gap-2">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span class="text-sm">Architecture diagram could not be loaded</span>
+                      </div>`;
+                  }}
+                />
+
+                {/* Fade hint when collapsed */}
+                {!architectureZoomed && (
+                  <div
+                    className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-white dark:from-gray-900 to-transparent pointer-events-none"
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Technical Specifications */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -556,6 +666,22 @@ const ApiDocs = () => {
                 <span className="text-sm">Support</span>
               </a>
             )}
+
+            {/* ── NEW: extra links from the `extra` JSON column ── */}
+            {extraLinks.map((link, idx) => (
+              <a
+                key={idx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 px-4 py-2 rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <span className="text-sm">{link.name || `Extra Link ${idx + 1}`}</span>
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -636,6 +762,7 @@ const ApiDocs = () => {
                         onClick={() => {
                           setActiveModel(model.model_number);
                           setActiveSection(null);
+                          setArchitectureZoomed(false);
                         }}
                         className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-between ${
                           activeModel === model.model_number
@@ -699,20 +826,53 @@ const ApiDocs = () => {
                   Resources
                 </h3>
                 <div className="space-y-2">
-                  {resources.length > 0 ? resources.map((resource) => (
-                    <a
-                      key={resource.id}
-                      href={resource.resource_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
-                    >
-                      <div className="text-gray-400 dark:text-gray-500">
-                        {getResourceIcon(resource.icon)}
-                      </div>
-                      <span>{resource.resource_name}</span>
-                    </a>
-                  )) : (
+                  {resources.length > 0 ? (
+                    <>
+                      {resources.map((resource) => (
+                        <a
+                          key={resource.id}
+                          href={resource.resource_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
+                        >
+                          <div className="text-gray-400 dark:text-gray-500">
+                            {getResourceIcon(resource.icon)}
+                          </div>
+                          <span>{resource.resource_name}</span>
+                        </a>
+                      ))}
+
+                      {/* ── NEW: extra_url entries from currently viewed model ── */}
+                      {activeModel && (() => {
+                        const model = models.find(m => m.model_number === activeModel);
+                        const extraLinks = parseExtraLinks(model?.extra);
+                        if (!extraLinks.length) return null;
+                        return (
+                          <>
+                            <div className="border-t border-gray-100 dark:border-gray-700 my-2" />
+                            <p className="text-xs text-gray-400 dark:text-gray-500 px-3 pb-1 font-medium uppercase tracking-wide">
+                              Model Links
+                            </p>
+                            {extraLinks.map((link, idx) => (
+                              <a
+                                key={idx}
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
+                              >
+                                <div className="text-gray-400 dark:text-gray-500">
+                                  {getResourceIcon('link')}
+                                </div>
+                                <span className="truncate">{link.name || `Extra Link ${idx + 1}`}</span>
+                              </a>
+                            ))}
+                          </>
+                        );
+                      })()}
+                    </>
+                  ) : (
                     // Fallback resources if none in database
                     <>
                       <a href="#" className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
@@ -870,6 +1030,7 @@ const ApiDocs = () => {
                                   onClick={() => {
                                     setActiveModel(model.model_number);
                                     setActiveSection(null);
+                                    setArchitectureZoomed(false);
                                   }}
                                   className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium flex items-center"
                                 >

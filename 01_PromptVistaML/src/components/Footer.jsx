@@ -119,6 +119,26 @@ const Footer = () => {
                     Email Me
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="https://www.youtube.com/@cherry_rxch/streams"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
+                  >
+                    YouTube
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.kaggle.com/dronabopche"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
+                  >
+                    Kaggle
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -130,7 +150,7 @@ const Footer = () => {
             </p>
 
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Built for ShowCaseing Models Drona Bopche Built.
+              Built for ShowCaseing Models By Drona Bopche.
             </p>
           </div>
         </div>
