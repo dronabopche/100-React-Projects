@@ -1,19 +1,19 @@
-01_PromptVistalML/node_modules
-01_PromptVistalML/.env
-01_PromptVistalML/.DS_Store
+01_PromptVistaML/node_modules/
+01_PromptVistaML/.env
+01_PromptVistaML/.DS_Store
 
-02_DataScienceShow/node_modules
+02_DataScienceShow/node_modules/
 02_DataScienceShow/.env
 02_DataScienceShow/.DS_Store
 
-03_LnT_Tracker/node_modules
+03_LnT_Tracker/node_modules/
 03_LnT_Tracker/.env
 03_LnT_Tracker/.DS_Store
 
-04_portfolio/node_modules
+04_portfolio/node_modules/
 04_portfolio/.env
 04_portfolio/.DS_Store
 
-05_mathbits/node_modules
+05_mathbits/node_modules/
 05_mathbits/.env
 05_mathbits/.DS_Store
