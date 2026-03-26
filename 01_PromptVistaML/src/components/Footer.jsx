@@ -80,8 +80,25 @@ const Footer = () => {
                     Explore Models
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    to="https://supabase.com/"
+                    className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
+                  >
+                    Database
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="https://aistudio.google.com/prompts/new_chat"
+                    className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
+                  >
+                    API layer
+                  </Link>
+                </li>
               </ul>
             </div>
+            
 
             {/* Community */}
             <div className="border border-gray-200 dark:border-gray-800 p-5 bg-gray-50 dark:bg-gray-900">
