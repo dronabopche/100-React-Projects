@@ -1,26 +1,380 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Link } from 'react-router-dom';
-import { 
-  fetchAllModels, 
-  fetchDocumentationSections, 
-  fetchRateLimits, 
-  fetchApiResources 
+import {
+  fetchAllModels,
+  fetchDocumentationSections,
+  fetchRateLimits,
+  fetchApiResources
 } from '../services/supabase';
 
-const ApiDocs = () => {
-  const [models, setModels] = useState([]);
-  const [sections, setSections] = useState([]);
-  const [rateLimits, setRateLimits] = useState([]);
-  const [resources, setResources] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState('overview');
-  const [activeModel, setActiveModel] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [architectureZoomed, setArchitectureZoomed] = useState(false);
+// ─── Notebook Output ────────────────────────────────────────────────────────
+
+const NotebookOutput = ({ output }) => {
+  if (output.output_type === 'stream') {
+    const text = Array.isArray(output.text) ? output.text.join('') : output.text || '';
+    return (
+      <pre className={`text-xs font-mono p-2 rounded border overflow-x-auto ${
+        output.name === 'stderr'
+          ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
+          : 'bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300'
+      }`}>
+        {text}
+      </pre>
+    );
+  }
+
+  if (output.output_type === 'display_data' || output.output_type === 'execute_result') {
+    const data = output.data || {};
+    if (data['image/png']) {
+      return (
+        <img
+          src={`data:image/png;base64,${data['image/png']}`}
+          alt="notebook output"
+          className="max-w-full rounded border border-gray-200 dark:border-gray-700"
+        />
+      );
+    }
+    if (data['text/html']) {
+      const html = Array.isArray(data['text/html']) ? data['text/html'].join('') : data['text/html'];
+      return (
+        <div
+          className="text-xs overflow-x-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-2"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      );
+    }
+    if (data['text/plain']) {
+      const text = Array.isArray(data['text/plain']) ? data['text/plain'].join('') : data['text/plain'];
+      return (
+        <pre className="text-xs font-mono text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded p-2 overflow-x-auto">
+          {text}
+        </pre>
+      );
+    }
+  }
+
+  if (output.output_type === 'error') {
+    return (
+      <pre className="text-xs font-mono p-2 rounded border bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 overflow-x-auto">
+        {output.ename}: {output.evalue}
+      </pre>
+    );
+  }
+
+  return null;
+};
+
+// ─── Notebook Cell ───────────────────────────────────────────────────────────
+
+const NotebookCell = ({ cell, index }) => {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const isCode     = cell.cell_type === 'code';
+  const isMarkdown = cell.cell_type === 'markdown';
+  const source     = Array.isArray(cell.source) ? cell.source.join('') : cell.source || '';
+  const outputs    = cell.outputs || [];
+  const execCount  = cell.execution_count;
+
+  return (
+    <div className={`group flex gap-0 ${isCode ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/40'}`}>
+      {/* Gutter */}
+      <div className="flex-shrink-0 w-12 pt-3 pb-2 flex flex-col items-center gap-1">
+        <span className="text-xs text-gray-400 dark:text-gray-600 font-mono select-none">
+          {isCode ? `[${execCount ?? ' '}]` : 'md'}
+        </span>
+        <button
+          onClick={() => setCollapsed(c => !c)}
+          className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400"
+          title={collapsed ? 'Expand cell' : 'Collapse cell'}
+        >
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d={collapsed ? 'M19 9l-7 7-7-7' : 'M5 15l7-7 7 7'} />
+          </svg>
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0 py-2 pr-4">
+        {!collapsed ? (
+          <>
+            {source && (
+              isMarkdown ? (
+                <div className="prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed font-sans">
+                  <ReactMarkdown
+                    components={{
+                      code({ node, inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || '');
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            style={vscDarkPlus}
+                            language={match[1]}
+                            PreTag="div"
+                            {...props}
+                          >
+                            {String(children).replace(/\n$/, '')}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      }
+                    }}
+                  >
+                    {source}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <pre className="text-xs font-mono text-gray-800 dark:text-gray-200 overflow-x-auto bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded p-3 leading-relaxed">
+                  {source}
+                </pre>
+              )
+            )}
+            {outputs.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {outputs.map((output, oi) => (
+                  <NotebookOutput key={oi} output={output} />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="text-xs text-gray-400 dark:text-gray-600 italic py-1">
+            Cell {index + 1} collapsed · {source.split('\n').length} lines
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ─── Notebook Preview ────────────────────────────────────────────────────────
+
+const NotebookPreview = ({ url, modelName }) => {
+  const [notebook,    setNotebook]    = useState(null);
+  const [loading,     setLoading]     = useState(false);
+  const [error,       setError]       = useState(null);
+  const [expanded,    setExpanded]    = useState(false);
+  const [lastLoaded,  setLastLoaded]  = useState(null);
+
+  const fetchNotebook = useCallback(async (notebookUrl) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(notebookUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const data = await res.json();
+      setNotebook(data);
+      setLastLoaded(new Date());
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (url) fetchNotebook(url);
+  }, [url, fetchNotebook]);
+
+  return (
+    <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+          {modelName} — notebook
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => fetchNotebook(url)}
+            disabled={loading}
+            className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 rounded px-2 py-1 transition-colors disabled:opacity-40"
+          >
+            <svg className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Reload
+          </button>
+          <button
+            onClick={() => setExpanded(e => !e)}
+            className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 border border-purple-200 dark:border-purple-700 rounded px-2 py-1 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+            {expanded ? 'Collapse' : 'Expand'}
+          </button>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 rounded px-2 py-1 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            View Source
+          </a>
+        </div>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div className="mx-4 mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+          <span className="font-medium">⚠ Error loading notebook: </span>{error}
+        </div>
+      )}
+
+      {/* Cells */}
+      <div className={`overflow-y-auto transition-all duration-300 ${expanded ? '' : 'max-h-[480px]'} relative`}>
+        {loading ? (
+          <div className="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500 text-sm gap-2">
+            <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Loading notebook...
+          </div>
+        ) : notebook ? (
+          <div className="divide-y divide-gray-100 dark:divide-gray-700/50">
+            {notebook.cells?.map((cell, idx) => (
+              <NotebookCell key={idx} cell={cell} index={idx} />
+            ))}
+          </div>
+        ) : !error ? (
+          <div className="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500 text-sm">
+            No notebook loaded.
+          </div>
+        ) : null}
+
+        {/* Fade hint when collapsed */}
+        {!expanded && notebook && (
+          <div className="sticky bottom-0 inset-x-0 h-16 bg-gradient-to-t from-gray-50 dark:from-gray-800 to-transparent pointer-events-none" />
+        )}
+      </div>
+
+      {/* Footer */}
+      {notebook && !loading && (
+        <div className="flex justify-between items-center px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-400 dark:text-gray-500">
+          <span>
+            {notebook.cells?.length || 0} cells · kernel: {notebook.metadata?.kernelspec?.display_name || 'unknown'}
+          </span>
+          {lastLoaded && (
+            <span>Loaded at {lastLoaded.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Markdown Renderer Component ────────────────────────────────────────────
+
+const MarkdownRenderer = ({ content }) => {
+  return (
+    <div className="prose dark:prose-invert max-w-none">
+      <ReactMarkdown
+        components={{
+          code({ node, inline, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || '');
+            return !inline && match ? (
+              <SyntaxHighlighter
+                style={vscDarkPlus}
+                language={match[1]}
+                PreTag="div"
+                {...props}
+              >
+                {String(children).replace(/\n$/, '')}
+              </SyntaxHighlighter>
+            ) : (
+              <code className={`${className} bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm`} {...props}>
+                {children}
+              </code>
+            );
+          },
+          a({ href, children, ...props }) {
+            return (
+              <a href={href} target="_blank" rel="noopener noreferrer" className="text-purple-600 dark:text-purple-400 hover:underline" {...props}>
+                {children}
+              </a>
+            );
+          },
+          h1({ children, ...props }) {
+            return <h1 className="text-3xl font-bold mt-8 mb-4" {...props}>{children}</h1>;
+          },
+          h2({ children, ...props }) {
+            return <h2 className="text-2xl font-bold mt-6 mb-3" {...props}>{children}</h2>;
+          },
+          h3({ children, ...props }) {
+            return <h3 className="text-xl font-semibold mt-4 mb-2" {...props}>{children}</h3>;
+          },
+          p({ children, ...props }) {
+            return <p className="mb-4 leading-relaxed" {...props}>{children}</p>;
+          },
+          ul({ children, ...props }) {
+            return <ul className="list-disc pl-6 mb-4 space-y-1" {...props}>{children}</ul>;
+          },
+          ol({ children, ...props }) {
+            return <ol className="list-decimal pl-6 mb-4 space-y-1" {...props}>{children}</ol>;
+          },
+          li({ children, ...props }) {
+            return <li className="mb-1" {...props}>{children}</li>;
+          },
+          blockquote({ children, ...props }) {
+            return (
+              <blockquote className="border-l-4 border-purple-500 pl-4 italic my-4 text-gray-600 dark:text-gray-400" {...props}>
+                {children}
+              </blockquote>
+            );
+          },
+          table({ children, ...props }) {
+            return (
+              <div className="overflow-x-auto my-4">
+                <table className="min-w-full border border-gray-200 dark:border-gray-700" {...props}>
+                  {children}
+                </table>
+              </div>
+            );
+          },
+          th({ children, ...props }) {
+            return (
+              <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 bg-gray-50 dark:bg-gray-800 font-semibold" {...props}>
+                {children}
+              </th>
+            );
+          },
+          td({ children, ...props }) {
+            return (
+              <td className="border border-gray-200 dark:border-gray-700 px-4 py-2" {...props}>
+                {children}
+              </td>
+            );
+          }
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+};
+
+// ─── Main ApiDocs Component ──────────────────────────────────────────────────
+
+const ApiDocs = () => {
+  const [models,             setModels]             = useState([]);
+  const [sections,           setSections]           = useState([]);
+  const [rateLimits,         setRateLimits]         = useState([]);
+  const [resources,          setResources]          = useState([]);
+  const [isLoading,          setIsLoading]          = useState(true);
+  const [activeSection,      setActiveSection]      = useState('overview');
+  const [activeModel,        setActiveModel]        = useState(null);
+  const [searchQuery,        setSearchQuery]        = useState('');
+  const [architectureZoomed, setArchitectureZoomed] = useState(false);
+
+  useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
     try {
@@ -31,15 +385,11 @@ const ApiDocs = () => {
         fetchRateLimits(),
         fetchApiResources()
       ]);
-      
       setModels(modelsData);
       setSections(sectionsData);
       setRateLimits(limitsData);
       setResources(resourcesData);
-      
-      if (modelsData.length > 0) {
-        setActiveModel(modelsData[0].model_number);
-      }
+      if (modelsData.length > 0) setActiveModel(modelsData[0].model_number);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -47,8 +397,8 @@ const ApiDocs = () => {
     }
   };
 
-  const filteredModels = models.filter(model => 
-    searchQuery === '' || 
+  const filteredModels = models.filter(model =>
+    searchQuery === '' ||
     model.model_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     model.model_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
     model.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -88,21 +438,32 @@ const ApiDocs = () => {
         </svg>
       )
     };
-    
     return icons[iconType] || icons.link;
+  };
+
+  const parseExtraLinks = (extra) => {
+    if (!extra) return [];
+    try {
+      const parsed = typeof extra === 'string' ? JSON.parse(extra) : extra;
+      if (Array.isArray(parsed)) return parsed.filter(item => item && item.url);
+      if (typeof parsed === 'object') {
+        return Object.entries(parsed)
+          .filter(([, url]) => url)
+          .map(([name, url]) => ({ name, url }));
+      }
+    } catch { /* ignore */ }
+    return [];
   };
 
   const renderSectionContent = () => {
     const section = sections.find(s => s.section_id === activeSection);
-    
-    switch(activeSection) {
+
+    switch (activeSection) {
       case 'overview':
         return (
           <div className="space-y-6">
-            <div className="prose dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Welcome to our API documentation. This guide will help you integrate our AI models into your applications.'}</p>
-            </div>
-            
+            <MarkdownRenderer content={section?.section_content || 'Welcome to our API documentation. This guide will help you integrate our AI models into your applications.'} />
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                 <div className="flex items-center">
@@ -117,7 +478,7 @@ const ApiDocs = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                 <div className="flex items-center">
                   <div className="bg-green-100 dark:bg-green-800 p-2 rounded-md mr-3">
@@ -133,7 +494,7 @@ const ApiDocs = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
                 <div className="flex items-center">
                   <div className="bg-purple-100 dark:bg-purple-800 p-2 rounded-md mr-3">
@@ -148,37 +509,25 @@ const ApiDocs = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Getting Started</h3>
               <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
-                    1
+                {[
+                  { title: 'Get Your API Key',       desc: 'Sign up for an account to receive your unique API key' },
+                  { title: 'Choose a Model',          desc: 'Select from our available models based on your requirements' },
+                  { title: 'Make Your First Request', desc: 'Use the provided endpoint with your API key to start making requests' },
+                ].map((step, i) => (
+                  <div key={i} className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
+                      {i + 1}
+                    </div>
+                    <div>
+                      <p className="text-gray-700 dark:text-gray-300 font-medium">{step.title}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{step.desc}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-gray-700 dark:text-gray-300 font-medium">Get Your API Key</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Sign up for an account to receive your unique API key</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
-                    2
-                  </div>
-                  <div>
-                    <p className="text-gray-700 dark:text-gray-300 font-medium">Choose a Model</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Select from our available models based on your requirements</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
-                    3
-                  </div>
-                  <div>
-                    <p className="text-gray-700 dark:text-gray-300 font-medium">Make Your First Request</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Use the provided endpoint with your API key to start making requests</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -187,17 +536,15 @@ const ApiDocs = () => {
       case 'rate-limiting':
         return (
           <div className="space-y-6">
-            <div className="prose dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Understand our rate limiting policies to optimize your API usage.'}</p>
-            </div>
-            
+            <MarkdownRenderer content={section?.section_content || 'Understand our rate limiting policies to optimize your API usage.'} />
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {rateLimits.length > 0 ? rateLimits.map((plan, index) => (
-                <div 
-                  key={plan.id} 
+                <div
+                  key={plan.id}
                   className={`border rounded-lg p-6 ${
-                    index === 1 
-                      ? 'border-purple-500 dark:border-purple-400 bg-purple-50 dark:bg-purple-900/20 shadow-lg transform scale-105' 
+                    index === 1
+                      ? 'border-purple-500 dark:border-purple-400 bg-purple-50 dark:bg-purple-900/20 shadow-lg transform scale-105'
                       : 'border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900'
                   }`}
                 >
@@ -209,7 +556,6 @@ const ApiDocs = () => {
                       </span>
                     )}
                   </div>
-                  
                   <div className="mb-6">
                     <div className="flex items-baseline">
                       <span className="text-3xl font-bold text-gray-900 dark:text-white">${plan.price_per_month}</span>
@@ -217,94 +563,84 @@ const ApiDocs = () => {
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Billed monthly</p>
                   </div>
-                  
                   <ul className="space-y-3 mb-6">
-                    <li className="flex items-center text-sm">
-                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{plan.requests_per_hour?.toLocaleString() || '100'} requests/hour</span>
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{plan.concurrent_requests || '5'} concurrent requests</span>
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{plan.burst_limit || '10'} burst limit</span>
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Priority support</span>
-                    </li>
+                    {[
+                      `${plan.requests_per_hour?.toLocaleString() || '100'} requests/hour`,
+                      `${plan.concurrent_requests || '5'} concurrent requests`,
+                      `${plan.burst_limit || '10'} burst limit`,
+                      'Priority support',
+                    ].map((item, ii) => (
+                      <li key={ii} className="flex items-center text-sm">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
-                  
                   <button className={`w-full py-2 px-4 rounded font-medium ${
-                    index === 1 
-                      ? 'bg-purple-600 text-white hover:bg-purple-700' 
+                    index === 1
+                      ? 'bg-purple-600 text-white hover:bg-purple-700'
                       : 'bg-gray-800 text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600'
                   }`}>
                     Get Started
                   </button>
                 </div>
               )) : (
-                <>
-                  <div className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-6">
-                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Free</h3>
+                // Fallback plans
+                [
+                  { name: 'Free',       price: '$0',   rpm: '100',     concurrent: '5',   burst: '10',   popular: false },
+                  { name: 'Pro',        price: '$49',  rpm: '10,000',  concurrent: '50',  burst: '100',  popular: true  },
+                  { name: 'Enterprise', price: '$499', rpm: '100,000', concurrent: '500', burst: '1000', popular: false },
+                ].map((plan, index) => (
+                  <div
+                    key={plan.name}
+                    className={`border rounded-lg p-6 ${
+                      plan.popular
+                        ? 'border-purple-500 dark:border-purple-400 bg-purple-50 dark:bg-purple-900/20 shadow-lg transform scale-105'
+                        : 'border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="font-bold text-xl text-gray-900 dark:text-white">{plan.name}</h3>
+                      {plan.popular && (
+                        <span className="bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 text-xs font-bold px-2 py-1 rounded">
+                          POPULAR
+                        </span>
+                      )}
+                    </div>
                     <div className="mb-6">
                       <div className="flex items-baseline">
-                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$0</span>
+                        <span className="text-3xl font-bold text-gray-900 dark:text-white">{plan.price}</span>
                         <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
                       </div>
                     </div>
                     <ul className="space-y-3 mb-6">
-                      <li className="flex items-center text-sm"><span>100 requests/hour</span></li>
-                      <li className="flex items-center text-sm"><span>5 concurrent requests</span></li>
-                      <li className="flex items-center text-sm"><span>10 burst limit</span></li>
+                      {[
+                        `${plan.rpm} requests/hour`,
+                        `${plan.concurrent} concurrent requests`,
+                        `${plan.burst} burst limit`,
+                      ].map((item, ii) => (
+                        <li key={ii} className="flex items-center text-sm">
+                          <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {item}
+                        </li>
+                      ))}
                     </ul>
-                    <button className="w-full bg-gray-800 text-white py-2 px-4 rounded">Get Started</button>
+                    <button className={`w-full py-2 px-4 rounded font-medium ${
+                      plan.popular
+                        ? 'bg-purple-600 text-white hover:bg-purple-700'
+                        : 'bg-gray-800 text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600'
+                    }`}>
+                      Get Started
+                    </button>
                   </div>
-                  <div className="border border-purple-500 bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 shadow-lg transform scale-105">
-                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Pro</h3>
-                    <span className="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded ml-2">POPULAR</span>
-                    <div className="mb-6">
-                      <div className="flex items-baseline">
-                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$49</span>
-                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
-                      </div>
-                    </div>
-                    <ul className="space-y-3 mb-6">
-                      <li className="flex items-center text-sm"><span>10,000 requests/hour</span></li>
-                      <li className="flex items-center text-sm"><span>50 concurrent requests</span></li>
-                      <li className="flex items-center text-sm"><span>100 burst limit</span></li>
-                    </ul>
-                    <button className="w-full bg-purple-600 text-white py-2 px-4 rounded">Get Started</button>
-                  </div>
-                  <div className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-6">
-                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-4">Enterprise</h3>
-                    <div className="mb-6">
-                      <div className="flex items-baseline">
-                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$499</span>
-                        <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
-                      </div>
-                    </div>
-                    <ul className="space-y-3 mb-6">
-                      <li className="flex items-center text-sm"><span>100,000 requests/hour</span></li>
-                      <li className="flex items-center text-sm"><span>500 concurrent requests</span></li>
-                      <li className="flex items-center text-sm"><span>1000 burst limit</span></li>
-                    </ul>
-                    <button className="w-full bg-gray-800 text-white py-2 px-4 rounded">Get Started</button>
-                  </div>
-                </>
+                ))
               )}
             </div>
-            
+
             <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Understanding Rate Limits</h4>
               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
@@ -320,10 +656,8 @@ const ApiDocs = () => {
       case 'authentication':
         return (
           <div className="space-y-6">
-            <div className="prose dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Learn how to authenticate your API requests securely.'}</p>
-            </div>
-            
+            <MarkdownRenderer content={section?.section_content || 'Learn how to authenticate your API requests securely.'} />
+
             <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
               <div className="flex items-center text-gray-400 text-xs mb-2">
                 <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
@@ -337,7 +671,7 @@ const ApiDocs = () => {
   -H "Content-Type: application/json"`}
               </pre>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
                 <h4 className="font-semibold text-red-800 dark:text-red-300 mb-2">Error Responses</h4>
@@ -347,7 +681,7 @@ const ApiDocs = () => {
                   <p><code className="bg-red-100 dark:bg-red-800 px-1 py-0.5 rounded">403 Forbidden</code> - Insufficient permissions</p>
                 </div>
               </div>
-              
+
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                 <h4 className="font-semibold text-green-800 dark:text-green-300 mb-2">Best Practices</h4>
                 <div className="space-y-2 text-sm">
@@ -363,35 +697,13 @@ const ApiDocs = () => {
 
       default:
         return (
-          <div className="prose dark:prose-invert max-w-none">
-            <p className="text-gray-600 dark:text-gray-300">{section?.section_content || 'Documentation content goes here.'}</p>
-          </div>
+          <MarkdownRenderer content={section?.section_content || 'Documentation content goes here.'} />
         );
     }
   };
 
-  // Parse extra JSON field — supports both object { label: url } and array [{ name, url }]
-  const parseExtraLinks = (extra) => {
-    if (!extra) return [];
-    try {
-      const parsed = typeof extra === 'string' ? JSON.parse(extra) : extra;
-      if (Array.isArray(parsed)) {
-        return parsed.filter(item => item && item.url);
-      }
-      if (typeof parsed === 'object') {
-        return Object.entries(parsed)
-          .filter(([, url]) => url)
-          .map(([name, url]) => ({ name, url }));
-      }
-    } catch {
-      // silently ignore malformed JSON
-    }
-    return [];
-  };
-
   const renderActiveModel = () => {
     if (!activeModel) return null;
-    
     const model = models.find(m => m.model_number === activeModel);
     if (!model) return null;
 
@@ -399,7 +711,8 @@ const ApiDocs = () => {
 
     return (
       <div className="space-y-8">
-        {/* Model Header */}
+
+        {/* ── Model Header ── */}
         <div className="pb-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
             <div>
@@ -424,7 +737,7 @@ const ApiDocs = () => {
               </button>
             </div>
           </div>
-          
+
           <div className="flex flex-wrap gap-2">
             <span className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-md text-sm font-mono border border-gray-300 dark:border-gray-700">
               {model.model_number}
@@ -433,8 +746,8 @@ const ApiDocs = () => {
               {model.category}
             </span>
             <span className={`px-3 py-1 rounded-md text-sm border ${
-              model.deployment_status === 'live' 
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-300 dark:border-green-700' 
+              model.deployment_status === 'live'
+                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-300 dark:border-green-700'
                 : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700'
             }`}>
               {model.deployment_status}
@@ -445,7 +758,7 @@ const ApiDocs = () => {
           </div>
         </div>
 
-        {/* API Endpoint */}
+        {/* ── API Endpoint ── */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">API Endpoint</h3>
           <div className="bg-purple-600 dark:bg-purple-900 text-gray-100 p-4 rounded-lg">
@@ -461,7 +774,7 @@ const ApiDocs = () => {
           </div>
         </div>
 
-        {/* Request Example */}
+        {/* ── Request Example ── */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Request Example</h3>
           <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -481,7 +794,7 @@ const ApiDocs = () => {
           </div>
         </div>
 
-        {/* Example Prompts */}
+        {/* ── Example Prompts ── */}
         {model.example_prompts && model.example_prompts.length > 0 && (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Example Prompts</h3>
@@ -496,7 +809,7 @@ const ApiDocs = () => {
           </div>
         )}
 
-        {/* ── NEW: Architecture Diagram ── */}
+        {/* ── Architecture Diagram ── */}
         {model.architecture_url && (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
@@ -506,7 +819,6 @@ const ApiDocs = () => {
               Architecture Diagram
             </h3>
             <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-              {/* Toolbar */}
               <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
                 <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
                   {model.model_name} — system architecture
@@ -516,21 +828,10 @@ const ApiDocs = () => {
                     onClick={() => setArchitectureZoomed(z => !z)}
                     className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 border border-purple-200 dark:border-purple-700 rounded px-2 py-1 transition-colors"
                   >
-                    {architectureZoomed ? (
-                      <>
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                        </svg>
-                        Collapse
-                      </>
-                    ) : (
-                      <>
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                        </svg>
-                        Expand
-                      </>
-                    )}
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    {architectureZoomed ? 'Collapse' : 'Expand'}
                   </button>
                   <a
                     href={model.architecture_url}
@@ -545,13 +846,7 @@ const ApiDocs = () => {
                   </a>
                 </div>
               </div>
-
-              {/* Image */}
-              <div
-                className={`relative overflow-hidden transition-all duration-300 ${
-                  architectureZoomed ? 'max-h-none' : 'max-h-80'
-                } bg-white dark:bg-gray-900 flex items-center justify-center`}
-              >
+              <div className={`relative overflow-hidden transition-all duration-300 ${architectureZoomed ? '' : 'max-h-80'} bg-white dark:bg-gray-900 flex items-center justify-center`}>
                 <img
                   src={model.architecture_url}
                   alt={`${model.model_name} architecture diagram`}
@@ -568,19 +863,15 @@ const ApiDocs = () => {
                       </div>`;
                   }}
                 />
-
-                {/* Fade hint when collapsed */}
                 {!architectureZoomed && (
-                  <div
-                    className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-white dark:from-gray-900 to-transparent pointer-events-none"
-                  />
+                  <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-white dark:from-gray-900 to-transparent pointer-events-none" />
                 )}
               </div>
             </div>
           </div>
         )}
 
-        {/* Technical Specifications */}
+        {/* ── Technical Specifications ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Rate Limits</h3>
@@ -623,59 +914,40 @@ const ApiDocs = () => {
           </div>
         </div>
 
-        {/* Resources */}
+        {/* ── Resources ── */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resources</h3>
           <div className="flex flex-wrap gap-3">
             {model.github_repo && (
-              <a
-                href={model.github_repo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg"
-              >
+              <a href={model.github_repo} target="_blank" rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
                 </svg>
                 <span className="text-sm">GitHub Repository</span>
               </a>
             )}
-            
             {model.documentation_url && (
-              <a
-                href={model.documentation_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg"
-              >
+              <a href={model.documentation_url} target="_blank" rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 <span className="text-sm">Documentation</span>
               </a>
             )}
-            
             {model.support_email && (
-              <a
-                href={`mailto:${model.support_email}`}
-                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg"
-              >
+              <a href={`mailto:${model.support_email}`}
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 px-4 py-2 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <span className="text-sm">Support</span>
               </a>
             )}
-
-            {/* ── NEW: extra links from the `extra` JSON column ── */}
             {extraLinks.map((link, idx) => (
-              <a
-                key={idx}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 px-4 py-2 rounded-lg transition-colors"
-              >
+              <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 px-4 py-2 rounded-lg transition-colors">
                 <svg className="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                 </svg>
@@ -684,226 +956,201 @@ const ApiDocs = () => {
             ))}
           </div>
         </div>
+             {/* ── Notebook Preview ── */}
+        {model.notebook && (
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Notebook Preview
+              <span className="text-xs font-mono font-normal text-gray-400 border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                .ipynb
+              </span>
+            </h3>
+            <NotebookPreview url={model.notebook} modelName={model.model_name} />
+          </div>
+        )}
       </div>
     );
   };
 
   const LoadingSkeleton = () => (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-pulse">
       <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
       <div className="grid grid-cols-3 gap-4">
-        {[1, 2, 3].map(i => (
-          <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
-        ))}
+        {[1, 2, 3].map(i => <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded"></div>)}
       </div>
       <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded"></div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">API Documentation</h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">
-                Complete reference for {models.length} AI models with live examples and test endpoints
-              </p>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search models..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full md:w-64"
-                />
-              </div>
-            </div>
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-50 dark:bg-gray-900">
+
+      {/* ── Fixed Top Header ── */}
+      <div className="flex-shrink-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">API Documentation</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Complete reference for {models.length} AI models · live data
+            </p>
           </div>
-          
-          <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div className="relative flex-shrink-0">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <span>All data is fetched live from our database</span>
+            <input
+              type="text"
+              placeholder="Search models..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 text-sm"
+            />
           </div>
         </div>
+      </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <div className="lg:w-64 flex-shrink-0">
-            <div className="sticky top-24 space-y-6">
-              {/* Available Models */}
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                  </svg>
-                  Available Models ({models.length})
-                </h3>
-                {isLoading ? (
-                  <div className="space-y-2">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                    ))}
-                  </div>
-                ) : (
-                  <nav className="space-y-1">
-                    {filteredModels.map((model) => (
-                      <button
-                        key={model.id}
-                        onClick={() => {
-                          setActiveModel(model.model_number);
-                          setActiveSection(null);
-                          setArchitectureZoomed(false);
-                        }}
-                        className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-between ${
-                          activeModel === model.model_number
-                            ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
-                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                        }`}
-                      >
-                        <span className="truncate">{model.model_name}</span>
-                        <span className={`text-xs px-1.5 py-0.5 rounded ${
-                          model.deployment_status === 'live' 
-                            ? 'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300' 
-                            : 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-300'
-                        }`}>
-                          {model.deployment_status}
-                        </span>
-                      </button>
-                    ))}
-                    {filteredModels.length === 0 && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
-                        No models found
-                      </p>
-                    )}
-                  </nav>
-                )}
-              </div>
+      {/* ── Scrollable body: sidebar + main ── */}
+      <div className="flex-1 overflow-hidden flex">
+        <div className="flex flex-1 max-w-7xl w-full mx-auto px-4 py-4 gap-6 overflow-hidden">
 
-              {/* Documentation Sections */}
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Documentation
-                </h3>
+          {/* ── Sidebar (own scroll) ── */}
+          <div className="hidden lg:flex flex-col w-64 flex-shrink-0 overflow-y-auto space-y-4 pb-4">
+
+            {/* Available Models */}
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center text-sm">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                Models ({models.length})
+              </h3>
+              {isLoading ? (
+                <div className="space-y-2">
+                  {[1, 2, 3].map(i => <div key={i} className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>)}
+                </div>
+              ) : (
                 <nav className="space-y-1">
-                  {sections.map((section) => (
+                  {filteredModels.map((model) => (
                     <button
-                      key={section.id}
-                      onClick={() => {
-                        setActiveSection(section.section_id);
-                        setActiveModel(null);
-                      }}
-                      className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                        activeSection === section.section_id && !activeModel
+                      key={model.id}
+                      onClick={() => { setActiveModel(model.model_number); setActiveSection(null); setArchitectureZoomed(false); }}
+                      className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-between ${
+                        activeModel === model.model_number
                           ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
                           : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                       }`}
                     >
-                      {section.section_title}
+                      <span className="truncate">{model.model_name}</span>
+                      <span className={`text-xs px-1.5 py-0.5 rounded ml-1 flex-shrink-0 ${
+                        model.deployment_status === 'live'
+                          ? 'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300'
+                          : 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-300'
+                      }`}>
+                        {model.deployment_status}
+                      </span>
                     </button>
                   ))}
-                </nav>
-              </div>
-
-              {/* Resources */}
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  </svg>
-                  Resources
-                </h3>
-                <div className="space-y-2">
-                  {resources.length > 0 ? (
-                    <>
-                      {resources.map((resource) => (
-                        <a
-                          key={resource.id}
-                          href={resource.resource_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
-                        >
-                          <div className="text-gray-400 dark:text-gray-500">
-                            {getResourceIcon(resource.icon)}
-                          </div>
-                          <span>{resource.resource_name}</span>
-                        </a>
-                      ))}
-
-                      {/* ── NEW: extra_url entries from currently viewed model ── */}
-                      {activeModel && (() => {
-                        const model = models.find(m => m.model_number === activeModel);
-                        const extraLinks = parseExtraLinks(model?.extra);
-                        if (!extraLinks.length) return null;
-                        return (
-                          <>
-                            <div className="border-t border-gray-100 dark:border-gray-700 my-2" />
-                            <p className="text-xs text-gray-400 dark:text-gray-500 px-3 pb-1 font-medium uppercase tracking-wide">
-                              Model Links
-                            </p>
-                            {extraLinks.map((link, idx) => (
-                              <a
-                                key={idx}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
-                              >
-                                <div className="text-gray-400 dark:text-gray-500">
-                                  {getResourceIcon('link')}
-                                </div>
-                                <span className="truncate">{link.name || `Extra Link ${idx + 1}`}</span>
-                              </a>
-                            ))}
-                          </>
-                        );
-                      })()}
-                    </>
-                  ) : (
-                    // Fallback resources if none in database
-                    <>
-                      <a href="#" className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                        </svg>
-                        <span>GitHub</span>
-                      </a>
-                      <a href="#" className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        <span>Status Page</span>
-                      </a>
-                      <a href="#" className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        <span>Documentation</span>
-                      </a>
-                    </>
+                  {filteredModels.length === 0 && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">No models found</p>
                   )}
-                </div>
+                </nav>
+              )}
+            </div>
+
+            {/* Documentation Sections */}
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center text-sm">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Documentation
+              </h3>
+              <nav className="space-y-1">
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => { setActiveSection(section.section_id); setActiveModel(null); }}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                      activeSection === section.section_id && !activeModel
+                        ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    {section.section_title}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Resources */}
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center text-sm">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                Resources
+              </h3>
+              <div className="space-y-1">
+                {resources.length > 0 ? (
+                  <>
+                    {resources.map((resource) => (
+                      <a
+                        key={resource.id}
+                        href={resource.resource_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
+                      >
+                        <div className="text-gray-400 dark:text-gray-500">{getResourceIcon(resource.icon)}</div>
+                        <span>{resource.resource_name}</span>
+                      </a>
+                    ))}
+                    {activeModel && (() => {
+                      const m = models.find(m => m.model_number === activeModel);
+                      const el = parseExtraLinks(m?.extra);
+                      if (!el.length) return null;
+                      return (
+                        <>
+                          <div className="border-t border-gray-100 dark:border-gray-700 my-2" />
+                          <p className="text-xs text-gray-400 dark:text-gray-500 px-3 pb-1 font-medium uppercase tracking-wide">Model Links</p>
+                          {el.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors">
+                              <div className="text-gray-400 dark:text-gray-500">{getResourceIcon('link')}</div>
+                              <span className="truncate">{link.name || `Extra Link ${idx + 1}`}</span>
+                            </a>
+                          ))}
+                        </>
+                      );
+                    })()}
+                  </>
+                ) : (
+                  [{ icon: 'github', label: 'GitHub' }, { icon: 'status', label: 'Status Page' }, { icon: 'docs', label: 'Documentation' }]
+                    .map(r => (
+                      <a key={r.label} href="#"
+                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md">
+                        <div className="text-gray-400">{getResourceIcon(r.icon)}</div>
+                        <span>{r.label}</span>
+                      </a>
+                    ))
+                )}
               </div>
             </div>
+
           </div>
 
-          {/* Main Content */}
-          <div className="flex-1">
+          {/* ── Main content (own scroll) ── */}
+          <div className="flex-1 overflow-y-auto min-w-0 pb-4">
+
             {/* Breadcrumb */}
-            <div className="mb-6">
+            <div className="mb-4">
               <nav className="flex text-sm text-gray-600 dark:text-gray-400">
                 <Link to="/" className="hover:text-purple-600 dark:hover:text-purple-400">Home</Link>
                 <span className="mx-2">/</span>
@@ -919,16 +1166,12 @@ const ApiDocs = () => {
               </nav>
             </div>
 
-            {/* Content Area */}
+            {/* Content Card */}
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
               {isLoading ? (
-                <div className="p-8">
-                  <LoadingSkeleton />
-                </div>
+                <div className="p-8"><LoadingSkeleton /></div>
               ) : activeModel ? (
-                <div className="p-8">
-                  {renderActiveModel()}
-                </div>
+                <div className="p-8">{renderActiveModel()}</div>
               ) : (
                 <div className="p-8">
                   <div className="flex items-center mb-6">
@@ -951,122 +1194,6 @@ const ApiDocs = () => {
               )}
             </div>
 
-            {/* All Models Table */}
-            <div className="mt-8">
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                    All Models ({filteredModels.length})
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    Click on any model to view detailed documentation
-                  </p>
-                </div>
-                
-                {isLoading ? (
-                  <div className="p-6">
-                    <div className="space-y-4">
-                      {[1, 2, 3].map(i => (
-                        <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Model</th>
-                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">ID</th>
-                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Category</th>
-                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Status</th>
-                          <th className="text-left p-4 font-medium text-gray-700 dark:text-gray-300">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredModels.map((model) => (
-                          <tr 
-                            key={model.id} 
-                            className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-                          >
-                            <td className="p-4">
-                              <div>
-                                <div className="flex items-center">
-                                  <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                                  </svg>
-                                  <p className="font-medium text-gray-900 dark:text-white">{model.model_name}</p>
-                                </div>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
-                                  {model.model_description}
-                                </p>
-                              </div>
-                            </td>
-                            <td className="p-4">
-                              <code className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
-                                {model.model_number}
-                              </code>
-                            </td>
-                            <td className="p-4">
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
-                                {model.category}
-                              </span>
-                            </td>
-                            <td className="p-4">
-                              <div className="flex items-center">
-                                <div className={`w-2 h-2 rounded-full mr-2 ${
-                                  model.deployment_status === 'live' 
-                                    ? 'bg-green-500' 
-                                    : 'bg-yellow-500'
-                                }`}></div>
-                                <span className="text-sm text-gray-700 dark:text-gray-300">
-                                  {model.deployment_status}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="p-4">
-                              <div className="flex space-x-2">
-                                <button
-                                  onClick={() => {
-                                    setActiveModel(model.model_number);
-                                    setActiveSection(null);
-                                    setArchitectureZoomed(false);
-                                  }}
-                                  className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium flex items-center"
-                                >
-                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  View Docs
-                                </button>
-                                <span className="text-gray-400">|</span>
-                                <Link
-                                  to={`/models/${model.model_number}`}
-                                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 text-sm font-medium flex items-center"
-                                >
-                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                                  </svg>
-                                  Test
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    {filteredModels.length === 0 && (
-                      <div className="text-center py-12">
-                        <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-gray-600 dark:text-gray-400">No models found matching your search</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </div>
