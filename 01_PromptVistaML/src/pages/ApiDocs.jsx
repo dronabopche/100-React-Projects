@@ -587,7 +587,6 @@ const ApiDocs = () => {
                   </button>
                 </div>
               )) : (
-                // Fallback plans
                 [
                   { name: 'Free',       price: '$0',   rpm: '100',     concurrent: '5',   burst: '10',   popular: false },
                   { name: 'Pro',        price: '$49',  rpm: '10,000',  concurrent: '50',  burst: '100',  popular: true  },
@@ -729,12 +728,7 @@ const ApiDocs = () => {
                 </svg>
                 Test
               </Link>
-              <button className="border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 text-sm font-medium rounded-lg flex items-center">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                Copy
-              </button>
+            
             </div>
           </div>
 
@@ -956,25 +950,16 @@ const ApiDocs = () => {
             ))}
           </div>
         </div>
-             {/* ── Notebook Preview ── */}
-        {model.notebook && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Notebook Preview
-              <span className="text-xs font-mono font-normal text-gray-400 border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                .ipynb
-              </span>
-            </h3>
-            <NotebookPreview url={model.notebook} modelName={model.model_name} />
-          </div>
-        )}
+
+        {/* ── Notebook section intentionally removed from here ── */}
+        {/* It now renders separately below the content card */}
+
       </div>
     );
   };
+
+  // ── Derive the active model object for notebook rendering ──
+  const activeModelObj = activeModel ? models.find(m => m.model_number === activeModel) : null;
 
   const LoadingSkeleton = () => (
     <div className="space-y-6 animate-pulse">
@@ -1193,11 +1178,41 @@ const ApiDocs = () => {
                 </div>
               )}
             </div>
+  {/* ── Notebook Preview — separate block below the content card ── */}
+            {!isLoading && activeModelObj?.notebook && (
+              <div className="mt-6">
+                {/* Section header */}
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Notebook Preview</h3>
+                  <span className="text-xs font-mono font-normal text-gray-400 border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                    .ipynb
+                  </span>
+                </div>
+                <NotebookPreview url={activeModelObj.notebook} modelName={activeModelObj.model_name} />
 
+                {/* Footer */}
+                <div className="mt-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500">
+                  <span>
+                    {activeModelObj.model_name} · v{activeModelObj.model_version} · {activeModelObj.category}
+                  </span>
+                  <span>Last updated: {new Date().toLocaleDateString()}</span>
+                </div>
+              </div>
+              
+            )}
           </div>
+          
+        
         </div>
+        
       </div>
+       
     </div>
+    
   );
 };
 

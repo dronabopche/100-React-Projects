@@ -10,6 +10,9 @@ const Models = () => {
   const [displayedSearchQuery, setDisplayedSearchQuery] = useState('')
   const [isTyping, setIsTyping] = useState(false)
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 30
+
   const placeholderTexts = [
     'Search for language models...',
     'Search for vision models...',
@@ -46,7 +49,10 @@ const Models = () => {
     return () => clearTimeout(timeoutId)
   }, [searchQuery, models])
 
-  // Simplified typing effect - only for search query when user is typing
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, models])
+
   useEffect(() => {
     if (searchQuery === displayedSearchQuery) {
       setIsTyping(false)
@@ -62,7 +68,6 @@ const Models = () => {
     return () => clearTimeout(timeoutId)
   }, [searchQuery, displayedSearchQuery])
 
-  // Placeholder animation
   useEffect(() => {
     const interval = setInterval(() => {
       setPlaceholderIndex((prev) => (prev + 1) % placeholderTexts.length)
@@ -72,16 +77,14 @@ const Models = () => {
   }, [])
 
   useEffect(() => {
-    if (searchQuery) return // Don't show placeholder animation when user is typing
+    if (searchQuery) return
 
     let timeoutId
     const targetPlaceholder = placeholderTexts[placeholderIndex]
 
     if (displayedPlaceholder !== targetPlaceholder) {
-      // Start fresh for new placeholder
       setDisplayedPlaceholder('')
 
-      // Type out the new placeholder
       let index = 0
       const typePlaceholder = () => {
         if (index <= targetPlaceholder.length) {
@@ -119,13 +122,19 @@ const Models = () => {
     }
   }
 
-  // ✅ FIXED: encodeURIComponent to prevent broken URLs in production
+  const totalPages = Math.ceil(filteredModels.length / ITEMS_PER_PAGE)
+
+  const paginatedModels = filteredModels.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
+
   const ModelCard = ({ model }) => {
     const safeModelNumber = encodeURIComponent(model.model_number)
 
     return (
       <Link to={`/models/${safeModelNumber}`} className="block">
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-200 hover:shadow-lg cursor-pointer group">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-200 hover:shadow-lg cursor-pointer group h-full flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-lg group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
@@ -245,139 +254,112 @@ const Models = () => {
         </div>
 
         <div className="mb-8 max-w-2xl mx-auto">
-          <div className="relative" onClick={handleInputFocus}>
-            <div className="relative">
-              <input
-                ref={inputRef}
-                type="text"
-                value={searchQuery}
-                onChange={handleSearch}
-                className="w-full px-12 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-transparent text-gray-900 dark:text-white"
-                placeholder=""
+          <div className="relative group">
+            <input
+              ref={inputRef}
+              type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              className="w-full pl-12 pr-10 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white shadow-sm transition-all duration-200"
+              placeholder={displayedPlaceholder || 'Search models...'}
+            />
+
+            {/* Search Icon */}
+            <svg
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
+            </svg>
 
-              <svg
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Clear Button */}
+            {searchQuery && (
+              <button
+                onClick={() => {
+                  setSearchQuery('')
+                  setDisplayedSearchQuery('')
+                  inputRef.current?.focus()
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-
-              {!searchQuery && (
-                <div className="absolute left-12 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <span className="text-gray-400 dark:text-gray-500 font-mono">
-                    {displayedPlaceholder}
-                    <span className="inline-block w-[2px] h-5 bg-purple-500 ml-[1px] animate-pulse"></span>
-                  </span>
-                </div>
-              )}
-
-              {searchQuery && (
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setDisplayedSearchQuery('')
-                    if (inputRef.current) {
-                      inputRef.current.focus()
-                    }
-                  }}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                <svg
+                  className="w-4 h-4 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              )}
-            </div>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="mb-4">
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
-            {searchQuery ? (
-              <>
-                Found{' '}
-                <span className="font-medium text-gray-900 dark:text-white">
-                  {filteredModels.length}
-                </span>{' '}
-                models matching "
-                <span className="font-mono text-purple-600 dark:text-purple-400">
-                  {displayedSearchQuery}
-                  {isTyping && (
-                    <span className="inline-block w-[1px] h-3 bg-purple-500 ml-[1px] animate-pulse align-middle"></span>
-                  )}
-                </span>
-                "
-              </>
-            ) : (
-              <>
-                Showing{' '}
-                <span className="font-medium text-gray-900 dark:text-white">
-                  {filteredModels.length}
-                </span>{' '}
-                models
-              </>
-            )}
-          </p>
+        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          {searchQuery ? (
+            <>Found {filteredModels.length} models matching "{displayedSearchQuery}"</>
+          ) : (
+            <>Showing {filteredModels.length} models</>
+          )}
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <LoadingCard key={i} />
             ))}
           </div>
-        ) : filteredModels.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 max-w-md mx-auto">
-              <svg
-                className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                No models found
-              </h3>
-
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                {searchQuery
-                  ? 'Try a different search term'
-                  : 'No models available at the moment'}
-              </p>
-            </div>
-          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredModels.map((model) => (
-              <ModelCard key={model.id} model={model} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {paginatedModels.map((model) => (
+                <ModelCard key={model.id} model={model} />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center mt-10 space-x-2">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                  Prev
+                </button>
+
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`px-3 py-2 border rounded ${
+                      currentPage === i + 1
+                        ? 'bg-purple-600 text-white'
+                        : ''
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
