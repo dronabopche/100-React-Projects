@@ -27,7 +27,10 @@ const Footer = () => {
               </Link>
 
               <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                Deploy and use AI models through prompts and automated APIs.
+                2nd Floor Killang Hostel NEHU University Mawali Shillong - 793022.
+              </p>
+              <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                promptvista@gmail.com
               </p>
             </div>
 
