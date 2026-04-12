@@ -3,8 +3,8 @@ import styles from './Gallery.module.css'
 
 export default function Gallery() {
   const images = [
-    { src: '/profile.png', subtitle: 'AI Project' },
-    { src: '/profile.png', subtitle: 'Dashboard UI' },
+    { src: '/codefest.png', subtitle: 'Runner UP in Offline Coding Competition' },
+    { src: '/youtube.png', subtitle: 'Documented Project in YouTube' },
     { src: '/profile.png', subtitle: 'ML Output' },
     { src: '/profile.png', subtitle: 'Data Visualization' },
     { src: '/profile.png', subtitle: 'Training Pipeline' },
