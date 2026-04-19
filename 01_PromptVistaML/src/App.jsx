@@ -6,7 +6,10 @@ import Models from './pages/Models'
 import ModelDetail from './pages/ModelDetail'
 import ApiDocs from './pages/ApiDocs'
 import Architecture from './pages/Architecture'
+import Products from './pages/Products'
 import { useTheme } from './hooks/useTheme'
+import FileAnalyzer from './products/FileAnalyzer';
+
 
 function App() {
   useTheme()
@@ -22,7 +25,8 @@ function App() {
             <Route path="/models/:modelNumber" element={<ModelDetail />} />
             <Route path="/api-docs" element={<ApiDocs />} />
             <Route path="/architecture" element={<Architecture />} />
-
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:type" element={<FileAnalyzer />} />
           </Routes>
         </main>
         <Footer />

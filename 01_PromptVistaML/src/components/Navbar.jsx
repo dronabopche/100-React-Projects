@@ -12,7 +12,9 @@ const Navbar = () => {
     { path: '/', label: 'Home' },
     { path: '/models', label: 'Models' },
     { path: '/api-docs', label: 'API Docs' },
-    { path: '/architecture', label: 'Architecture' },
+    { path: '/products', label: 'Products' },
+    { path: '/architecture', label: 'Architecture' }
+    
   ]
 
   return (

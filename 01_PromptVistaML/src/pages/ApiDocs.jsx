@@ -397,14 +397,23 @@ const ApiDocs = () => {
     }
   };
 
-  const filteredModels = models.filter(model =>
-    searchQuery === '' ||
-    model.model_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    model.model_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    model.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    model.model_description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  const filteredModels = models.filter(model => {
+  if (searchQuery === '') return true;
+  
+  try {
+    const query = searchQuery.toLowerCase();
+    return (
+      (model.model_name || '').toLowerCase().includes(query) ||
+      (model.model_number || '').toLowerCase().includes(query) ||
+      (model.category || '').toLowerCase().includes(query) ||
+      (model.model_description || '').toLowerCase().includes(query)
+    );
+  } catch (error) {
+    console.error('Failed to filter model:', model);
+    console.error('Error details:', error);
+    return false;
+  }
+});
   const getResourceIcon = (iconType) => {
     const icons = {
       github: (
