@@ -22,7 +22,7 @@ function Nav() {
     <nav className="nav">
       <div className="nav-inner">
         <Link to="/" className="nav-logo">
-          <span className="logo-icon">🔐</span>
+          <img src="/logo.png" alt="MiniVault Logo"/>
           Mini<span className="accent">Vault</span>
         </Link>
         <div className="nav-links">

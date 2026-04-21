@@ -26,18 +26,30 @@ const FEATURES = [
 export default function Home() {
   return (
     <>
+      {/* HERO */}
       <section className="hero">
         <div className="hero-badge">1MB · Minimal · Free</div>
-        <h1>
-          Your tiny<br />
-          <em>secure vault</em><br />
-          on the web
+
+        <h1
+          className="fade-up"
+          style={{
+            marginBottom: "1rem",
+            fontSize: "5rem",
+            lineHeight: "1.1",
+          }}
+        >
+          Your tiny <em>secure vault</em> on the web
         </h1>
-        <p>
-          No signup. No apps. Just a 4-character ID and password — and you have
-          a private 1MB storage slot accessible from anywhere.
+
+        <p style={{ maxWidth: "600px", margin: "0 auto" }}>
+          No signup. No apps. Just a 4-character ID and password —
+          your private 1MB storage accessible from anywhere.
         </p>
-        <div className="hero-actions fade-up">
+
+        <div
+          className="hero-actions fade-up"
+          style={{ marginTop: "2rem" }}
+        >
           <Link to="/create" className="btn btn-primary">
             + Create a Vault
           </Link>
@@ -47,13 +59,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FEATURES */}
       <section className="features">
+        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
+          Why MiniVault?
+        </h2>
+
         <div className="features-grid">
           {FEATURES.map((f, i) => (
-            <div key={f.title} className={`feature-card fade-up fade-up-delay-${i + 1}`}>
-              <div className="feature-icon">{f.icon}</div>
-              <h3>{f.title}</h3>
-              <p>{f.desc}</p>
+            <div
+              key={f.title}
+              className={`feature-card fade-up fade-up-delay-${i + 1}`}
+            >
+              <div
+                className="feature-icon"
+                style={{ fontSize: "2rem", marginBottom: "0.5rem" }}
+              >
+                {f.icon}
+              </div>
+
+              <h3 style={{ marginBottom: "0.5rem" }}>{f.title}</h3>
+
+              <p style={{ opacity: 0.8 }}>{f.desc}</p>
             </div>
           ))}
         </div>

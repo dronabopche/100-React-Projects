@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const API = "/api";
+const API = "https://one00-react-projects.onrender.com/api";
 
 export default function CreateVault() {
   const [vaultId, setVaultId] = useState("");

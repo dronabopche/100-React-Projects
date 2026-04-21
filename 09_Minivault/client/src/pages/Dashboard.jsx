@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import StorageBar from "../components/StorageBar.jsx";
 import FileCard from "../components/FileCard.jsx";
 
-const API = "/api";
+const API = "https://one00-react-projects.onrender.com/api";
 const MAX_SIZE = 1024 * 1024;
 
 function getSession() {
@@ -158,7 +158,9 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="dashboard-actions">
-          <button className="btn btn-secondary btn-sm" onClick={fetchFiles}>↻ Refresh</button>
+          <button style={{ fontsize: "10px" ,color: "var(--text)" }} onClick={fetchFiles}>
+            ↻ Refresh
+          </button>
           <button
             className="btn btn-danger btn-sm"
             onClick={() => setShowDeleteVault(true)}
