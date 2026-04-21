@@ -5,17 +5,19 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
 
+/* ─── MODELS ─── */
+
 export const fetchAllModels = async () => {
   const { data, error } = await supabase
     .from('models')
     .select('*')
     .order('created_at', { ascending: false })
-  
+
   if (error) {
     console.error('Error fetching models:', error)
     throw error
   }
-  
+
   return data || []
 }
 
@@ -25,12 +27,12 @@ export const fetchModelById = async (id) => {
     .select('*')
     .eq('id', id)
     .single()
-  
+
   if (error) {
     console.error('Error fetching model:', error)
     throw error
   }
-  
+
   return data
 }
 
@@ -40,12 +42,12 @@ export const fetchModelByNumber = async (modelNumber) => {
     .select('*')
     .eq('model_number', modelNumber)
     .single()
-  
+
   if (error) {
     console.error('Error fetching model:', error)
     throw error
   }
-  
+
   return data
 }
 
@@ -54,68 +56,58 @@ export const searchModels = async (query) => {
     .from('models')
     .select('*')
     .or(`model_name.ilike.%${query}%,model_description.ilike.%${query}%,category.ilike.%${query}%`)
-  
+
   if (error) {
     console.error('Error searching models:', error)
     throw error
   }
-  
+
   return data || []
 }
 
-export const fetchDocumentationSections = async () => {
+
+/* ─── PRODUCTS ─── */
+
+export const fetchAllProducts = async () => {
   const { data, error } = await supabase
-    .from('api_documentation')
+    .from('products')
     .select('*')
-    .order('section_order', { ascending: true })
-  
+    .order('priority', { ascending: true })
+
   if (error) {
-    console.error('Error fetching documentation:', error)
+    console.error('Error fetching products:', error)
     throw error
   }
-  
+
   return data || []
 }
 
-export const fetchRateLimits = async () => {
+export const fetchProductByPriority = async (priority) => {
   const { data, error } = await supabase
-    .from('rate_limits')
+    .from('products')
     .select('*')
-    .order('price_per_month', { ascending: true })
-  
-  if (error) {
-    console.error('Error fetching rate limits:', error)
-    throw error
-  }
-  
-  return data || []
-}
-
-export const fetchApiResources = async () => {
-  const { data, error } = await supabase
-    .from('api_resources')
-    .select('*')
-    .order('created_at', { ascending: true })
-  
-  if (error) {
-    console.error('Error fetching API resources:', error)
-    throw error
-  }
-  
-  return data || []
-}
-
-export const fetchModelDocumentation = async (modelNumber) => {
-  const { data, error } = await supabase
-    .from('model_documentation')
-    .select('*')
-    .eq('model_number', modelNumber)
+    .eq('priority', priority)
     .single()
-  
+
   if (error) {
-    console.error('Error fetching model documentation:', error)
+    console.error('Error fetching product:', error)
     throw error
   }
-  
+
   return data
+}
+
+export const searchProducts = async (query) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .or(`Name.ilike.%${query}%,description.ilike.%${query}%`)
+    .order('priority', { ascending: true })
+
+  if (error) {
+    console.error('Error searching products:', error)
+    throw error
+  }
+
+  return data || []
 }
