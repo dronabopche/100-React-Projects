@@ -158,7 +158,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="dashboard-actions">
-          <button style={{ fontsize: "10px" ,color: "var(--text)" }} onClick={fetchFiles}>
+          <button style={{ color: "var(--text)" }} onClick={fetchFiles}>
             ↻ Refresh
           </button>
           <button
