@@ -5,7 +5,7 @@ export default function Gallery() {
   const images = [
     { src: '/codefest.jpeg', subtitle: 'Runner UP in Offline Coding Competition' },
     { src: '/youtube.png', subtitle: 'Documented Project in YouTube' },
-    { src: '/profile.png', subtitle: 'ML Output' },
+    { src: '/host.png', subtitle: 'Hosted Coding Competition at St. Edmunt' },
     { src: '/profile.png', subtitle: 'Data Visualization' },
     { src: '/profile.png', subtitle: 'Training Pipeline' },
     { src: '/profile.png', subtitle: 'Deployment View' },
