@@ -100,10 +100,12 @@ const Products = () => {
 
   return (
     <div className="products-page">
-
+       
       {/* HEADER */}
       <section className="products-header">
+        
         <div className="products-header-bg" />
+      
         <div
           ref={headerRef}
           className="products-header-card"
@@ -115,8 +117,12 @@ const Products = () => {
           }}
         >
           <h1 className="products-title">
-            Our <span className="products-title-gradient">Product Catalog</span>
+            Our <span className="products-title-gradient">Product Catalog</span>.
           </h1>
+          <p className='products-subtitle'>Explore our curated collection of tools, platforms, 
+            and solutions designed to simplify your workflow and boost productivity. Discover reliable resources, 
+            innovative technologies, scaling projects with confidence and ease in a fast-paced digital environment.
+</p>
         </div>
       </section>
 
