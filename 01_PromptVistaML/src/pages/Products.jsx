@@ -122,7 +122,7 @@ const Products = () => {
           <p className='products-subtitle'>Explore our curated collection of tools, platforms, 
             and solutions designed to simplify your workflow and boost productivity. Discover reliable resources, 
             innovative technologies, scaling projects with confidence and ease in a fast-paced digital environment.
-</p>
+          </p>
         </div>
       </section>
 
