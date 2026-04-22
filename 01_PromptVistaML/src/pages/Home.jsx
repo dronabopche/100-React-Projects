@@ -274,8 +274,8 @@ const Home = () => {
               <Link to="/models" className="btn-primary hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg hover:shadow-xl">
                 <span className="flex items-center justify-center gap-2">Explore Models {Icon.arrow}</span>
               </Link>
-              <Link to="/architecture" className="btn-secondary hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-center">
-                View Architecture
+              <Link to="https://github.com/dronabopche/100-ML-AI-Project" className="btn-secondary hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-center">
+                * Star on GitHub
               </Link>
               <Link to="/api-docs" className="btn-secondary hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-center">
                 API Docs
