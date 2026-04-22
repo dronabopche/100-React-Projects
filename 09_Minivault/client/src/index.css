@@ -3,8 +3,8 @@
   --bg: #e5e6e7;          /* light icy white-blue */
   --bg-card: #ffffff;
   --bg-raised: #c3d0fb;
-  --border: #81aed4;
-  --border-bright: #a9c9ff;
+  --border: #000000;
+  --border-bright: #ffdda2;
   --text: #000000;         /* deep navy for readability */
   --text-muted: #000000;
   --text-dim: #000000;
@@ -184,7 +184,6 @@ body {
   padding: 0.65rem 1.3rem;
   border-radius: 44px;
   border: none;
-  cursor: pointer;
   transition: all 0.2s;
   background: var(--bg-raised);
   color: var(--text);
@@ -197,7 +196,7 @@ body {
 
 .btn-primary {
   background: var(--amber);
-  color: #0a1c2f;
+  color: #211b00;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
@@ -813,4 +812,104 @@ body {
   .form-actions .btn {
     width: 100%;
   }
+}
+
+/* --- Animations --- */
+.animate-fade {
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.animate-slide {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideUp 0.8s ease forwards;
+}
+
+.feature-animate {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.6s ease forwards;
+}
+
+/* Stagger handled inline via delay */
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Buttons --- */
+.btn-animate {
+  transition: all 0.25s ease;
+}
+
+.btn-animate:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* --- Feature Cards --- */
+.feature-card {
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+/* --- Highlight Text --- */
+.highlight {
+  background: linear-gradient(90deg, #4f46e5, #9333ea);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* --- Hero Entrance --- */
+.hero-visible {
+  animation: fadeIn 1s ease;
+}
+.floating-text {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Floating motion */
+.floating-text {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Moving gradient text */
+.moving-gradient {
+  background: linear-gradient(270deg, #4f46e5, #9333ea, #06b6d4);
+  background-size: 600% 600%;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientMove 6s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

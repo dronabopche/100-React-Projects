@@ -17,3 +17,7 @@
 05_mathbits/node_modules/
 05_mathbits/.env
 05_mathbits/.DS_Store
+
+.DS_Store
+.env
+.gitignore

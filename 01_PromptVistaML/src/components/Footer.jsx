@@ -8,6 +8,7 @@ const Footer = () => {
     { path: "/models", label: "Models" },
     { path: "/api-docs", label: "API Docs" },
     { path: "/architecture", label: "Architecture" },
+    { path: "/products", label: "Products" }
   ]
 
   return (
