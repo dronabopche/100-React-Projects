@@ -31,7 +31,7 @@ const Footer = () => {
                 2nd Floor Killang Hostel NEHU University Mawali Shillong - 793022.
               </p>
               <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                promptvista@gmail.com
+                promptvistaml@gmail.com
               </p>
             </div>
 
