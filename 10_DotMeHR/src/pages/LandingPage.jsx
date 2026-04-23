@@ -46,18 +46,32 @@ function NavBar({ onGetStarted }) {
       <div style={{ maxWidth: 1140, margin: '0 auto', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <div style={{
-            width: 34, height: 34, borderRadius: 9,
-            background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 2px 12px var(--accent-glow)',
-          }}>
-            <span style={{ fontFamily: 'Syne', fontWeight: 800, color: '#fff', fontSize: '0.95rem' }}>H</span>
-          </div>
-          <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '1.05rem', background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            HireAdstore.ai
-          </span>
-        </div>
+  <img 
+    src="/icon.svg" 
+    alt="Logo" 
+    style={{
+      width: 44,
+      height: 44,
+      borderRadius: 9,
+      padding: 8,
+      background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
+      boxShadow: '0 2px 12px var(--accent-glow)',
+    }} 
+  />
+  
+  <span 
+    style={{
+      fontFamily: 'Arial',
+      fontWeight: 800,
+      fontSize: '1.05rem',
+      background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
+    }}
+  >
+    DotMeHR
+  </span>
+</div>
 
         {/* Right */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -257,17 +271,43 @@ export default function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '2rem 1.5rem', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-          <div style={{ width: 22, height: 22, borderRadius: 6, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'Syne', fontWeight: 800, color: '#fff', fontSize: '0.65rem' }}>H</span>
-          </div>
-          <span style={{ fontFamily: 'Syne', fontWeight: 700, fontSize: '0.9rem' }}>HireAdstore.ai</span>
-        </div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: 0 }}>
-          © {new Date().getFullYear()} HireAdstore.ai · AI-powered hiring for modern teams
-        </p>
-      </footer>
+      {/* ── FOOTER ── */}
+<footer style={{ borderTop: '1px solid var(--border)', padding: '2rem 1.5rem', textAlign: 'center' }}>
+  
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
+    
+    <img
+      src="/icon.svg"
+      alt="DotMeHR"
+      style={{
+        width: 22,
+        height: 22,
+        borderRadius: 6,
+        padding: 4,
+        background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
+      }}
+    />
+
+    <span
+      style={{
+        fontFamily: 'Arial',
+        fontWeight: 700,
+        fontSize: '0.9rem',
+        background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent'
+      }}
+    >
+      DotMeHR.ai
+    </span>
+
+  </div>
+
+  <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: 0 }}>
+    © {new Date().getFullYear()} DotMeHR.ai · AI-powered hiring for modern teams
+  </p>
+
+</footer>
     </div>
   )
 }
