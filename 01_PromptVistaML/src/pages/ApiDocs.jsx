@@ -356,6 +356,73 @@ const MarkdownRenderer = ({ content }) => {
   );
 };
 
+// ─── Helper Functions for Safe JSON Parsing ─────────────────────────────────
+
+const safeJsonParse = (data, defaultValue = null) => {
+  if (!data) return defaultValue;
+  try {
+    const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+    return parsed;
+  } catch (error) {
+    console.error('Failed to parse JSON:', error);
+    return defaultValue;
+  }
+};
+
+const renderFeaturesTable = (features) => {
+  if (!features || !Array.isArray(features) || features.length === 0) return null;
+  
+  return (
+    <div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Input Features</h3>
+      <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-800">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Field</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Options</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
+            {features.map((feature, idx) => (
+              <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-gray-100">
+                  {feature.name}
+                </td>
+                <td className="px-4 py-3 text-sm">
+                  <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${
+                    feature.type === 'enum' 
+                      ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                      : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                  }`}>
+                    {feature.type}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                  {feature.options ? (
+                    <div className="flex flex-wrap gap-1">
+                      {feature.options.map((option, optIdx) => (
+                        <code key={optIdx} className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">
+                          {option}
+                        </code>
+                      ))}
+                    </div>
+                  ) : '-'}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                  {feature.description || '-'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 // ─── Main ApiDocs Component ──────────────────────────────────────────────────
 
 const ApiDocs = () => {
@@ -418,8 +485,22 @@ const ApiDocs = () => {
     if (!model) return null;
 
     const extraLinks = parseExtraLinks(model.extra);
-    // Parse features if they exist
-    const features = model.features ? (typeof model.features === 'string' ? JSON.parse(model.features) : model.features) : [];
+    
+    // Safe parsing of all JSON fields
+    const features = safeJsonParse(model.features, []);
+    const inputFormat = safeJsonParse(model.input_format, {
+      prompt: "string",
+      model_id: "string",
+      timestamp: "string"
+    });
+    const outputFormat = safeJsonParse(model.output_format, {
+      output: "string",
+      success: "boolean",
+      processing_time: "number"
+    });
+
+    // Check if features is an array of objects (like the input format table) or array of strings
+    const isFeaturesTable = Array.isArray(features) && features.length > 0 && features[0]?.name && features[0]?.type;
 
     return (
       <div className="space-y-8">
@@ -473,7 +554,14 @@ const ApiDocs = () => {
           <div className="bg-purple-600 dark:bg-purple-900 text-gray-100 p-4 rounded-lg">
             <div className="flex justify-between items-start mb-2">
               <span className="text-xs text-gray-100 font-mono">POST</span>
-              <button className="text-purple-200 hover:text-white text-sm">
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(model.backend_url);
+                  // You could add a toast notification here
+                }}
+                className="text-purple-200 hover:text-white text-sm"
+                title="Copy URL"
+              >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                 </svg>
@@ -625,19 +713,21 @@ const ApiDocs = () => {
           </div>
         </div>
 
-        {/* ── Features ── */}
-        {features.length > 0 && (
+        {/* ── Features / Input Specifications Table ── */}
+        {isFeaturesTable ? (
+          renderFeaturesTable(features)
+        ) : features.length > 0 ? (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Features</h3>
             <div className="flex flex-wrap gap-2">
               {features.map((feature, idx) => (
                 <span key={idx} className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-md text-sm border border-gray-200 dark:border-gray-700">
-                  {feature}
+                  {typeof feature === 'string' ? feature : feature.name || JSON.stringify(feature)}
                 </span>
               ))}
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* ── Input/Output Format ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -645,11 +735,7 @@ const ApiDocs = () => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Input Format</h3>
             <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 overflow-x-auto">
               <pre className="text-xs font-mono text-gray-700 dark:text-gray-300">
-                {JSON.stringify(model.input_format || {
-                  prompt: "string",
-                  model_id: "string",
-                  timestamp: "string"
-                }, null, 2)}
+                {JSON.stringify(inputFormat, null, 2)}
               </pre>
             </div>
           </div>
@@ -657,17 +743,12 @@ const ApiDocs = () => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Output Format</h3>
             <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 overflow-x-auto">
               <pre className="text-xs font-mono text-gray-700 dark:text-gray-300">
-                {JSON.stringify(model.output_format || {
-                  output: "string",
-                  success: "boolean",
-                  processing_time: "number"
-                }, null, 2)}
+                {JSON.stringify(outputFormat, null, 2)}
               </pre>
             </div>
           </div>
         </div>
 
-      
         {/* ── Resources ── */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resources</h3>
@@ -890,7 +971,7 @@ const ApiDocs = () => {
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900 dark:text-white">API Documentation</h2>
                       <p className="text-gray-600 dark:text-gray-400 mt-1">
-                        Welcome to the ModelHub API documentation
+                        Welcome to the Promp API documentation
                       </p>
                     </div>
                   </div>
