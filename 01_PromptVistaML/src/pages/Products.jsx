@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState, useRef } from 'react'
 import { fetchAllProducts } from '../services/supabase'
+import VistaSecureAI from '../products/VistaSecureAI'
+
 
 /* ─── Intersection observer hook ─── */
 function useReveal(threshold = 0.08) {
@@ -126,8 +128,12 @@ const Products = () => {
         </div>
       </section>
 
+      {/* VISTA SECURE AI SECTION */}
+      <VistaSecureAI />
+
       {/* GRID */}
       <section ref={gridRef} className="products-grid-section">
+
         {isLoading ? (
           <div className="products-grid">
             {[1,2,3].map(i => (

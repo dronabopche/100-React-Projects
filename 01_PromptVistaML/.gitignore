@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 01_PromptVistalML/.env
+01_PromptVistalML/.agents/*
+
