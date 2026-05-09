@@ -17,9 +17,9 @@
   /* UI background + text */
   --bg: #ffffff;
   --text: #111827;
-  --muted-text: #6b7280;
-  --border: #e5e7eb;
-  --skeleton: #e5e7eb;
+  --muted-text: #4b5563; /* Darker gray for better visibility in light mode */
+  --border: #d1d5db;     /* More visible border in light mode */
+  --skeleton: #f3f4f6;
 
   /* Card */
   --card-bg: #ffffff;
@@ -35,8 +35,8 @@
   --btn-primary-hover: #1f2937;
   --btn-primary-text: #ffffff;
 
-  --btn-secondary-bg: #f3f4f6;
-  --btn-secondary-hover: #e5e7eb;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-hover: #f9fafb;
   --btn-secondary-text: #111827;
 
   /* Table borders */
@@ -47,7 +47,7 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --border-color: 2px solid rgba(0, 0, 0, 0.2);
+  --border-color: 2px solid rgba(0, 0, 0, 0.3); /* Higher contrast border */
   --border-hover: 2px solid rgba(109, 40, 217, 0.6);
   
   /* Purple accent in light mode */
@@ -59,7 +59,7 @@
 .dark {
   --bg: #0b0b0f;
   --text: #f9fafb;
-  --muted-text: #9ca3af;
+  --muted-text: #d1d5db; /* Lighter gray for dark mode visibility */
   --border: #2a2f3a;
   --skeleton: #1f2937;
 
@@ -85,7 +85,7 @@
   --shadow-md: 0 4px 6px -1px rgba(139, 92, 246, 0.15), 0 2px 4px -1px rgba(139, 92, 246, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(139, 92, 246, 0.15), 0 4px 6px -2px rgba(139, 92, 246, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(139, 92, 246, 0.15), 0 10px 10px -5px rgba(139, 92, 246, 0.08);
-  --border-color: 2px solid rgba(139, 92, 246, 0.25);
+  --border-color: 2px solid rgba(139, 92, 246, 0.4); /* Higher contrast border for dark mode */
   --border-hover: 2px solid rgba(139, 92, 246, 0.7);
   
   --accent: var(--brand-light-purple);
@@ -207,7 +207,40 @@
   .bg-brand-black {
     background: var(--brand-black);
   }
+
+  /* Dots grid */
+  .pv-grid-dots {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .dark .pv-grid-dots {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  /* Linear grid (Blueprint style) - matching Home.jsx */
+  .pv-grid {
+    background-image:
+      linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .dark .pv-grid {
+    background-image:
+      linear-gradient(rgba(139, 92, 246, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
+  }
+
+  .pv-grid-lines {
+    background-image: linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .dark .pv-grid-lines {
+    background-image: linear-gradient(rgba(139, 92, 246, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
+  }
 }
+
 
 /* =========================================================
    BOXY MODE (NO ROUNDING, CLEAN BORDERS)
@@ -215,8 +248,34 @@
 
 .boxy-card {
   background: var(--card-bg);
-  border: var(--border-color);
+  border: 1px solid var(--input-border);
   box-shadow: var(--shadow-sm);
+  @apply transition-all duration-300;
+}
+
+.boxy-card:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.dark .boxy-card:hover {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.25);
+}
+
+/* Home.jsx specific cards */
+.pv-card {
+  @apply transition-all duration-300;
+}
+
+.pv-card:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.dark .pv-card:hover {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.25);
 }
 
 .boxy-button {
@@ -364,7 +423,7 @@
 
 .products-title {
   font-size: clamp(4rem, 7vw, 5.5rem);
-  font-weight: 900;
+  font-weight: 700;
   color: var(--text);
   text-align: center;
   line-height: 1.1;
@@ -585,8 +644,8 @@
 
 .product-card:hover {
   transform: translateY(-5px);
-  border-color: var(--brand-purple);
-  box-shadow: var(--shadow-lg);
+  border-color: #8b5cf6;
+  box-shadow: none;
 }
 
 .product-card > * {

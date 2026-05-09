@@ -242,11 +242,10 @@ const ModelDetail = () => {
 
           {model.deployment_status && (
             <span
-              className={`text-sm px-3 py-1 rounded-md border ${
-                model.deployment_status === "live"
+              className={`text-sm px-3 py-1 rounded-md border ${model.deployment_status === "live"
                   ? "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-100 dark:border-green-800"
                   : "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-100 dark:border-yellow-800"
-              }`}
+                }`}
             >
               {model.deployment_status}
             </span>
@@ -263,7 +262,7 @@ const ModelDetail = () => {
         {/* LEFT */}
         <div className="space-y-6">
           {/* Prompt card */}
-          <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
+          <div className="boxy-card p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Test the Model
             </h3>
@@ -292,7 +291,7 @@ const ModelDetail = () => {
           {inputCategory === "text" &&
             model.example_prompts &&
             model.example_prompts.length > 0 && (
-              <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
+              <div className="boxy-card p-6">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Example Prompts
                 </h3>
@@ -334,7 +333,7 @@ const ModelDetail = () => {
         {/* RIGHT */}
         <div className="space-y-6">
           {/* Output */}
-          <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
+          <div className="boxy-card p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Output
             </h3>
@@ -342,7 +341,7 @@ const ModelDetail = () => {
           </div>
 
           {/* Model info */}
-          <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
+          <div className="boxy-card p-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Model Information
             </h3>
@@ -365,8 +364,8 @@ const ModelDetail = () => {
                   {inputCategory === "text"
                     ? "Text prompt (JSON)"
                     : inputCategory === "image"
-                    ? "Image upload (multipart/form-data)"
-                    : "Audio upload (multipart/form-data)"}
+                      ? "Image upload (multipart/form-data)"
+                      : "Audio upload (multipart/form-data)"}
                 </dd>
               </div>
 
@@ -387,7 +386,7 @@ const ModelDetail = () => {
 
       {/* Model Parameters - Full width table at bottom */}
       {model.features && model.features.length > 0 && (
-        <div className="bg-white dark:bg-gray-900 border border-purple-500 dark:border-gray-500 rounded-lg p-6">
+        <div className="boxy-card p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Model Parameters
           </h3>

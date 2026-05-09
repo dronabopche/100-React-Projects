@@ -147,7 +147,7 @@ const PromptBox = ({
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder={labelText}
-            className="input-field min-h-[120px] resize-none"
+            className="boxy-input w-full min-h-[180px] resize-y"
             rows={4}
             disabled={isLoading}
           />
@@ -159,7 +159,7 @@ const PromptBox = ({
 
       {/* IMAGE/AUDIO MODE */}
       {(inputCategory === "image" || inputCategory === "audio") && (
-        <div className="border-2 border-dashed rounded-xl p-6 space-y-4">
+        <div className="border-2 border-dashed border-gray-200 dark:border-gray-800 p-6 space-y-4">
 
           <div className="text-center">
             <p className="text-sm text-gray-700 font-medium">{labelText}</p>
@@ -191,7 +191,7 @@ const PromptBox = ({
 
       {/* ERROR */}
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3">
           {error}
         </div>
       )}

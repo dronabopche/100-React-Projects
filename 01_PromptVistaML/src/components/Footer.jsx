@@ -27,10 +27,10 @@ const Footer = () => {
                 />
               </Link>
 
-              <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              <p className="mt-4 text-gray-700 dark:text-gray-400 text-sm leading-relaxed">
                 2nd Floor Killang Hostel NEHU University Mawali Shillong - 793022.
               </p>
-              <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              <p className="mt-4 text-gray-700 dark:text-gray-400 text-sm leading-relaxed">
                 promptvistaml@gmail.com
               </p>
             </div>
@@ -45,7 +45,7 @@ const Footer = () => {
                   <li key={link.path}>
                     <Link
                       to={link.path}
-                      className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
+                      className="text-gray-700 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
                     >
                       {link.label}
                     </Link>
@@ -166,11 +166,11 @@ const Footer = () => {
 
           {/* Bottom bar */}
           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-700 dark:text-gray-400">
               © {currentYear} ModelHub. All rights reserved.
             </p>
 
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-700 dark:text-gray-400">
               Built for ShowCaseing Models By Drona Bopche.
             </p>
           </div>

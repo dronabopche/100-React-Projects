@@ -5,27 +5,37 @@ description: Helps with creating smooth animations and transitions using CSS @ke
 
 # Animations (CSS & Hooks) Skill
 
-Detailed instructions for the agent regarding animations and micro-interactions in PromptVista ML.
+Detailed instructions for the agent regarding the animation system in PromptVista ML, derived from `index.css` and component implementation.
 
 ## When to use this skill
 
-- Use this when adding page transitions, hover effects, or scroll-triggered animations.
-- This is helpful for creating the premium, fluid motion feel of the platform without external heavy libraries.
+- Use this when adding micro-interactions, page transitions, or scroll-triggered effects.
+- This is helpful for maintaining the premium "PromptVista" aesthetic characterized by fluid, meaningful motion.
 
 ## How to use it
 
-### Design Patterns
-- **CSS @keyframes**: Define custom animations in a `<style>` tag within the component or in `index.css`. Standard animations include:
-  - `pv-up`: Slide up and fade in.
-  - `pv-glow`: Pulsing background glow.
-  - `pv-tick`: Horizontal scrolling for the ticker.
-  - `pv-grad`: Animating gradients on text or cards.
-- **Scroll-Triggered Animations**: Use the `useReveal` hook to detect when an element enters the viewport and apply the animation class (e.g., `pv-up`).
-- **Animated Counters**: Use the `Counter` component for incrementing numbers (stats) when they become visible.
-- **Hover Transitions**: Apply `transition-all duration-200` to buttons and cards. Use `transform: translateY(-5px)` and `box-shadow` changes for the "lift" effect.
+### Global Keyframes (defined in index.css)
+- **`pv-up`**: The primary entrance animation. Slides an element up by 32px and fades it in. 
+  - Usage: `animation: pv-up .85s cubic-bezier(.22,1,.36,1) forwards`.
+- **`pv-grad`**: Animates the background position of gradients. Used for "living" borders and text.
+  - Usage: Apply to elements with linear-gradients to create a shifting color effect.
+- **`pulse`**: A standard opacity oscillation (1 to 0.5) for loading states and badges.
+- **`gradientFlow`**: Used specifically for `gradient-flow-text` to create a continuous shimmer effect.
 
-### Conventions
-- **PV Prefix**: Prefix all custom animation classes and keyframes with `pv-` (e.g., `.pv-card`, `@keyframes pv-up`).
-- **Ambient Effects**: Use "Ambient Orbs" (radial gradients with `pv-glow`) to add depth to the background of hero sections.
-- **Terminal Animation**: Use the `.pv-cursor` class for a blinking block cursor effect in technical walkthroughs.
-- **Performance**: Use `will-change` or `transform/opacity` properties primarily to ensure 60fps animations. Avoid animating layout-breaking properties like `width` or `height` where possible.
+### Interactive Patterns
+- **Lift-on-Hover**: Standard for `.card` and `.btn-primary`. Combines `transform: translateY(-5px)` with an increased `box-shadow` and `border-color` transition.
+- **Glow Effects**: Use the `.pv-glow` class with radial gradients and `animation: pv-glow` (as seen in `Home.jsx`) to create ambient background depth.
+- **Ticker Animation**: Use `pv-tick` for horizontal scrolling banners (e.g., the "Workflow" ticker).
+- **Living Borders**: Many cards use a `::after` pseudo-element with a `pv-grad` animated gradient that becomes visible (`opacity: 1`) on hover.
+
+### Animation Implementation
+- **Intersection Observer**: Use the `useReveal` hook to apply animations only when elements enter the viewport.
+- **Timeline Staggering**: Stagger animations for lists by adding an `animationDelay` based on the element index (e.g., `delay: idx * 0.05s`).
+- **Performance**: Stick to `opacity` and `transform` for animations to ensure 60fps performance across devices.
+- **Hover Disabling**: Be aware that `index.css` disables hover transforms on touch devices (`@media (hover: none)`) to prevent "stuck" hover states.
+
+### Specific Animation Classes
+- `.gradient-flow-text`: Shimmering gradient text.
+- `.products-title-gradient`: Shifting gradient specifically for product headlines.
+- `.pv-cursor`: Blinking block cursor for terminal simulations.
+- `.pv-up`: General slide-up utility.

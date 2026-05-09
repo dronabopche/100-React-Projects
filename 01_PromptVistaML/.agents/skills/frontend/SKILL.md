@@ -5,27 +5,36 @@ description: Helps with frontend React development tasks. Use when you need to b
 
 # Frontend Development Skill
 
-Detailed instructions for the agent regarding frontend development in the PromptVista ML project.
+Detailed instructions for the agent regarding frontend development in the PromptVista ML project, focusing on styling integration and component architecture.
 
 ## When to use this skill
 
 - Use this when building new React components in `src/components`.
 - Use this when adding or modifying pages in `src/pages`.
-- This is helpful for implementing UI logic, managing state, and handling routing with `react-router-dom`.
+- This is helpful for ensuring components adhere to the global design system defined in `index.css`.
 
 ## How to use it
 
-### Design Patterns
-- **Functional Components**: Use functional components with standard React hooks (`useState`, `useEffect`, `useRef`).
-- **Custom Hooks**:
-  - `useReveal(threshold)`: Uses `IntersectionObserver` to trigger entrance animations.
-  - `useTheme()`: Manages light/dark mode persistence and body class toggling.
-- **Section-Based Architecture**: Pages like `Home.jsx` are structured into logical sections (Hero, Features, Workflow, etc.) wrapped in `<section>` tags.
-- **Loading States**: Use skeleton screens (e.g., in `Models.jsx` or `Home.jsx`) to improve perceived performance.
-- **Conditional Rendering**: Handle empty states (e.g., "No models found") with specific empty-state components or blocks.
+### Styling & Component Patterns (from index.css)
+- **Standard UI Components**: Always use the following classes instead of raw Tailwind whenever possible:
+  - `btn-primary`: The main action button (variable-driven background, shadow-sm, hover effects).
+  - `btn-secondary`: The ghost/outline button variant.
+  - `card`: Standard container with lift-on-hover effect, custom borders, and shadows.
+  - `input-field`: Standardized form input styling.
+- **Boxy Mode**: For technical or architectural sections (like `ApiDocs` or `Architecture`), use the "Boxy" variants which remove rounding:
+  - `boxy-card`, `boxy-button`, `boxy-input`.
+- **Responsive Typography**: Use the `clamp()` utility in Tailwind to ensure headers scale smoothly (e.g., `text-[clamp(1.5rem,5vw,3rem)]`).
+- **Brand Identity**: Use brand text and background helpers:
+  - `.text-brand-purple`, `.text-brand-yellow`, `.text-brand-light-purple`, `.text-brand-black`.
+  - `.bg-brand-purple`, `.bg-brand-yellow`, etc.
+
+### Core Architecture
+- **Hook Integration**: Use `useReveal` for entrance animations on sections.
+- **Theme Awareness**: Ensure components respect the `dark` class which updates CSS variables for backgrounds, text, and borders.
+- **Loading UI**: Implement skeleton loaders using the `var(--skeleton)` variable and the `animate-pulse` utility.
+- **Boxy Reset**: Be aware that in `ApiDocs` sections, rounding is often forced to `0 !important` via the `#root .max-w-7xl *` selector in `index.css`.
 
 ### Conventions
-- **Routing**: Define all routes in `src/App.jsx` using `react-router-dom`.
-- **Imports**: Organize imports with React first, followed by third-party libs, then local components/services.
-- **Props**: Use descriptive prop names and consider default values where appropriate.
-- **Data Fetching**: Fetch data inside `useEffect` and handle loading/error states explicitly.
+- **SVG Icons**: Prefer inline SVG icons with consistent `strokeWidth` (usually 1.5 or 2).
+- **Conditional Styling**: Use the `.disabled` class for product cards or buttons that lack active links.
+- **Grid Backgrounds**: Use `.pv-grid` for section backgrounds to add technical depth.

@@ -52,3 +52,5 @@
 
 .DS_Store
 .env
+.gitignore
+

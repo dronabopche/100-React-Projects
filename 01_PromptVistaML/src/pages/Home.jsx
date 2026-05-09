@@ -155,21 +155,6 @@ const Home = () => {
         .pv-f1   { animation: pv-f1  7s ease-in-out infinite }
         .pv-f2   { animation: pv-f2  9s ease-in-out infinite }
         .pv-glow { animation: pv-glow 3.5s ease-in-out infinite }
-
-        .pv-grad-text {
-          background: linear-gradient(135deg, #d041d3, #bc36d1, #dcd500, #7d51e4);
-          background-size: 300% 300%;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: pv-grad 5s ease infinite;
-        }
-        .pv-grid {
-          background-image:
-            linear-gradient(rgba(139,92,246,.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139,92,246,.05) 1px, transparent 1px);
-          background-size: 44px 44px;
-        }
         .pv-card {
           position: relative;
           transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s ease;
@@ -258,7 +243,7 @@ const Home = () => {
             </div>
 
             {/* Headline — fluid size so it never overflows on phone */}
-            <h1 className="text-[clamp(1.9rem,4.5vw,5rem)] font-black text-[var(--text)] text-center leading-[1.06] tracking-tight">
+            <h1 className="text-[clamp(1.9rem,4.5vw,5rem)] font-bold text-[var(--text)] text-center leading-[1.06] tracking-tight">
               ML Models , {' '}
               <span className="pv-grad-text">Prompt Engineering</span>
               <br className="hidden sm:block" />
@@ -296,7 +281,7 @@ const Home = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 border border-[color:var(--border)] overflow-hidden mt-12">
               {stats.map(s => (
                 <div key={s.label} className="bg-[color:var(--bg)] px-4 py-5 text-center hover:bg-[color:var(--panel)] transition-colors border-r border-b border-[color:var(--border)] last:border-r-0 [&:nth-child(2)]:border-r-0 sm:[&:nth-child(2)]:border-r [&:nth-child(3)]:border-b-0 [&:nth-child(4)]:border-b-0 [&:nth-child(1)]:border-b-0 sm:[&:nth-child(1)]:border-b sm:[&:nth-child(3)]:border-b-0">
-                  <div className="text-2xl sm:text-3xl font-black text-brand-purple font-mono leading-none">
+                  <div className="text-2xl sm:text-3xl font-bold text-brand-purple font-mono leading-none">
                     {s.suffix === 'ms' ? '<' : ''}<Counter target={s.value} suffix={s.suffix} />
                   </div>
                   <p className="text-xs text-[color:var(--muted-text)] mt-2 uppercase tracking-wider">{s.label}</p>
@@ -317,7 +302,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10">
             <div>
               <p className="text-xs font-semibold tracking-widest text-brand-purple uppercase mb-2">Live from Database</p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[var(--text)]">Available Models</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--text)]">Available Models</h2>
               <p className="text-[color:var(--muted-text)] mt-2 text-sm sm:text-base">Production-deployed models ready to test right now.</p>
             </div>
             <Link to="/models" className="link-brand flex items-center gap-1 group font-semibold text-sm sm:text-base self-start sm:self-auto">
@@ -403,7 +388,7 @@ const Home = () => {
         <section ref={featRef} className="border border-[color:var(--border)] bg-[color:var(--panel)] p-5 sm:p-8 md:p-12">
           <div className="text-center mb-10 sm:mb-12">
             <p className="text-xs font-semibold tracking-widest text-brand-purple uppercase mb-3">Built Different</p>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-[var(--text)]">Key Features</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--text)]">Key Features</h2>
             <p className="text-[color:var(--muted-text)] mt-4 max-w-lg mx-auto text-sm sm:text-base">
               Every decision is intentional — optimised around prompt engineering and fast model testing.
             </p>
@@ -427,14 +412,14 @@ const Home = () => {
         <section ref={socialRef}>
           <div className="text-center mb-8 sm:mb-10">
             <p className="text-xs font-semibold tracking-widest text-brand-purple uppercase mb-3">From the Field</p>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[var(--text)]">What Developers Say</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--text)]">What Developers Say</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {testimonials.map((t, i) => (
               <div key={i}
                 className="pv-card border border-[color:var(--border)] bg-[color:var(--panel)] p-5 sm:p-6 flex flex-col gap-4"
                 style={{ opacity: socialVis ? 1 : 0, animation: socialVis ? `pv-up .6s cubic-bezier(.22,1,.36,1) ${i * .1}s both` : 'none' }}>
-                <div className="text-4xl font-black leading-none text-brand-purple opacity-25 select-none">&ldquo;</div>
+                <div className="text-4xl font-bold leading-none text-brand-purple opacity-25 select-none">&ldquo;</div>
                 <p className="text-sm text-[color:var(--muted-text)] leading-relaxed flex-1 italic">{t.quote}</p>
                 <div className="pt-4 border-t border-[color:var(--border)]">
                   <div className="flex items-center gap-2">
@@ -452,11 +437,12 @@ const Home = () => {
           </div>
         </section>
 
- {/* ══════ HOW IT WORKS ══════ */}
-        <section ref={stepsRef}>
+        {/* ══════ HOW IT WORKS ══════ */}
+        <section ref={stepsRef} className="relative py-24 overflow-hidden border-y border-[color:var(--border)]">
+          <div className="absolute inset-0 pv-grid opacity-30 pointer-events-none" />
           <div className="text-center mb-10 sm:mb-14 px-4">
             <p className="text-xs font-semibold tracking-widest text-brand-purple uppercase mb-3">The Workflow</p>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-[var(--text)]">How It Works</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--text)]">How It Works</h2>
             <p className="text-[color:var(--muted-text)] mt-4 max-w-lg mx-auto text-sm sm:text-base">
               Four deliberate steps — from raw language to a model response — with zero guesswork.
             </p>
@@ -470,7 +456,7 @@ const Home = () => {
                   className="pv-card border border-[color:var(--border)] bg-[color:var(--panel)] p-5 sm:p-6"
                   style={{ opacity: stepsVis ? 1 : 0, animation: stepsVis ? `pv-up .6s cubic-bezier(.22,1,.36,1) ${i * .1}s both` : 'none' }}>
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-10 h-10 flex items-center justify-center font-black text-sm text-white flex-shrink-0"
+                    <div className="w-10 h-10 flex items-center justify-center font-bold text-sm text-white flex-shrink-0"
                       style={{ background:'linear-gradient(135deg,#8b5cf6,#60a5fa)' }}>{s.n}</div>
                     <div className="text-brand-purple opacity-70">{s.icon}</div>
                   </div>
@@ -492,7 +478,7 @@ const Home = () => {
         <section ref={faqRef} className="border border-[color:var(--border)] bg-[color:var(--panel)] p-5 sm:p-8 md:p-12">
           <div className="text-center mb-8 sm:mb-10">
             <p className="text-xs font-semibold tracking-widest text-brand-purple uppercase mb-3">Questions</p>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[var(--text)]">Frequently Asked</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--text)]">Frequently Asked</h2>
           </div>
           <div className="max-w-3xl mx-auto divide-y divide-[color:var(--border)]">
             {faqs.map((faq, i) => (

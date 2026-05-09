@@ -4,6 +4,25 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Link } from 'react-router-dom';
 import { fetchAllModels } from '../services/supabase';
+import { useRef } from 'react';
+
+/* ─── Intersection observer hook ─── */
+function useReveal(threshold = 0.08) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect() } },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+}
+
 
 // ─── Notebook Output ────────────────────────────────────────────────────────
 
@@ -11,11 +30,10 @@ const NotebookOutput = ({ output }) => {
   if (output.output_type === 'stream') {
     const text = Array.isArray(output.text) ? output.text.join('') : output.text || '';
     return (
-      <pre className={`text-xs font-mono p-2 rounded border overflow-x-auto ${
-        output.name === 'stderr'
-          ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
-          : 'bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300'
-      }`}>
+      <pre className={`text-xs font-mono p-2 rounded border overflow-x-auto ${output.name === 'stderr'
+        ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
+        : 'bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300'
+        }`}>
         {text}
       </pre>
     );
@@ -67,11 +85,11 @@ const NotebookOutput = ({ output }) => {
 const NotebookCell = ({ cell, index }) => {
   const [collapsed, setCollapsed] = useState(false);
 
-  const isCode     = cell.cell_type === 'code';
+  const isCode = cell.cell_type === 'code';
   const isMarkdown = cell.cell_type === 'markdown';
-  const source     = Array.isArray(cell.source) ? cell.source.join('') : cell.source || '';
-  const outputs    = cell.outputs || [];
-  const execCount  = cell.execution_count;
+  const source = Array.isArray(cell.source) ? cell.source.join('') : cell.source || '';
+  const outputs = cell.outputs || [];
+  const execCount = cell.execution_count;
 
   return (
     <div className={`group flex gap-0 ${isCode ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/40'}`}>
@@ -138,7 +156,7 @@ const NotebookCell = ({ cell, index }) => {
             )}
           </>
         ) : (
-          <p className="text-xs text-gray-400 dark:text-gray-600 italic py-1">
+          <p className="text-xs text-gray-500 dark:text-gray-600 italic py-1">
             Cell {index + 1} collapsed · {source.split('\n').length} lines
           </p>
         )}
@@ -150,11 +168,11 @@ const NotebookCell = ({ cell, index }) => {
 // ─── Notebook Preview ────────────────────────────────────────────────────────
 
 const NotebookPreview = ({ url, modelName }) => {
-  const [notebook,    setNotebook]    = useState(null);
-  const [loading,     setLoading]     = useState(false);
-  const [error,       setError]       = useState(null);
-  const [expanded,    setExpanded]    = useState(false);
-  const [lastLoaded,  setLastLoaded]  = useState(null);
+  const [notebook, setNotebook] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [expanded, setExpanded] = useState(false);
+  const [lastLoaded, setLastLoaded] = useState(null);
 
   const fetchNotebook = useCallback(async (notebookUrl) => {
     setLoading(true);
@@ -240,7 +258,7 @@ const NotebookPreview = ({ url, modelName }) => {
             ))}
           </div>
         ) : !error ? (
-          <div className="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500 text-sm">
+          <div className="flex items-center justify-center py-16 text-gray-500 dark:text-gray-500 text-sm">
             No notebook loaded.
           </div>
         ) : null}
@@ -371,7 +389,7 @@ const safeJsonParse = (data, defaultValue = null) => {
 
 const renderFeaturesTable = (features) => {
   if (!features || !Array.isArray(features) || features.length === 0) return null;
-  
+
   return (
     <div>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Input Features</h3>
@@ -392,11 +410,10 @@ const renderFeaturesTable = (features) => {
                   {feature.name}
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${
-                    feature.type === 'enum' 
-                      ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
-                      : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${feature.type === 'enum'
+                    ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                    : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                    }`}>
                     {feature.type}
                   </span>
                 </td>
@@ -426,11 +443,15 @@ const renderFeaturesTable = (features) => {
 // ─── Main ApiDocs Component ──────────────────────────────────────────────────
 
 const ApiDocs = () => {
-  const [models,             setModels]             = useState([]);
-  const [isLoading,          setIsLoading]          = useState(true);
-  const [activeModel,        setActiveModel]        = useState(null);
-  const [searchQuery,        setSearchQuery]        = useState('');
+  const [models, setModels] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeModel, setActiveModel] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [architectureZoomed, setArchitectureZoomed] = useState(false);
+
+  const [ovRef, ovVis] = useReveal(0.05);
+  const [contentRef, contentVis] = useReveal(0.05);
+
 
   useEffect(() => { loadData(); }, []);
 
@@ -449,7 +470,7 @@ const ApiDocs = () => {
 
   const filteredModels = models.filter(model => {
     if (searchQuery === '') return true;
-    
+
     try {
       const query = searchQuery.toLowerCase();
       return (
@@ -485,7 +506,7 @@ const ApiDocs = () => {
     if (!model) return null;
 
     const extraLinks = parseExtraLinks(model.extra);
-    
+
     // Safe parsing of all JSON fields
     const features = safeJsonParse(model.features, []);
     const inputFormat = safeJsonParse(model.input_format, {
@@ -510,7 +531,7 @@ const ApiDocs = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{model.model_name}</h2>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">{model.model_description}</p>
+              <p className="text-gray-700 dark:text-gray-400 mt-1">{model.model_description}</p>
             </div>
             <div className="mt-4 md:mt-0 flex space-x-3">
               <Link
@@ -532,11 +553,10 @@ const ApiDocs = () => {
             <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1 rounded-md text-sm border border-purple-300 dark:border-purple-700">
               {model.category || 'General'}
             </span>
-            <span className={`px-3 py-1 rounded-md text-sm border ${
-              model.deployment_status === 'live'
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-300 dark:border-green-700'
-                : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700'
-            }`}>
+            <span className={`px-3 py-1 rounded-md text-sm border ${model.deployment_status === 'live'
+              ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-300 dark:border-green-700'
+              : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700'
+              }`}>
               {model.deployment_status || 'live'}
             </span>
             <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-md text-sm border border-blue-300 dark:border-blue-700">
@@ -554,7 +574,7 @@ const ApiDocs = () => {
           <div className="bg-purple-600 dark:bg-purple-900 text-gray-100 p-4 rounded-lg">
             <div className="flex justify-between items-start mb-2">
               <span className="text-xs text-gray-100 font-mono">POST</span>
-              <button 
+              <button
                 onClick={() => {
                   navigator.clipboard.writeText(model.backend_url);
                   // You could add a toast notification here
@@ -579,7 +599,7 @@ const ApiDocs = () => {
               <span className="font-mono">curl</span>
             </div>
             <pre className="p-4 text-sm font-mono text-gray-800 dark:text-gray-200 overflow-x-auto">
-{`curl -X POST ${model.backend_url} \\
+              {`curl -X POST ${model.backend_url} \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -599,7 +619,7 @@ const ApiDocs = () => {
               {model.example_prompts.slice(0, 4).map((prompt, index) => (
                 <div key={index} className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-purple-300 dark:hover:border-purple-700 transition-colors">
                   <p className="text-sm text-gray-700 dark:text-gray-300 font-medium mb-1">Example {index + 1}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">{prompt}</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-400 line-clamp-3">{prompt}</p>
                 </div>
               ))}
             </div>
@@ -792,22 +812,28 @@ const ApiDocs = () => {
   );
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+
 
       {/* ── Fixed Top Header ── */}
       <div className="flex-shrink-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">API Documentation</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <span className="pv-grad-text">API Reference</span>
+              <span className="text-[10px] font-mono font-normal text-gray-400 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-1.5 py-0.5 rounded">
+                v1.0.0
+              </span>
+            </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Complete reference for {models.length} AI models · live data
+              Complete documentation for {models.length} AI models
             </p>
           </div>
-          <div className="relative flex-shrink-0">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="relative flex-shrink-0 group">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-purple-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -815,18 +841,32 @@ const ApiDocs = () => {
               placeholder="Search models..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 text-sm"
+              className="boxy-input pl-10 pr-10 py-2 w-64 text-sm"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
+
+
       </div>
 
       {/* ── Scrollable body: sidebar + main ── */}
-      <div className="flex-1 overflow-hidden flex">
-        <div className="flex flex-1 max-w-7xl w-full mx-auto px-4 py-4 gap-6 overflow-hidden">
+      <div className="flex-1 flex flex-col">
+        <div className="flex flex-1 max-w-7xl w-full mx-auto px-4 py-4 gap-6">
 
-          {/* ── Sidebar (own scroll) ── */}
-          <div className="hidden lg:flex flex-col w-64 flex-shrink-0 overflow-y-auto space-y-4 pb-4">
+
+          {/* ── Sidebar (sticky) ── */}
+          <div className="hidden lg:flex flex-col w-64 flex-shrink-0 space-y-4 pb-4 sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-2">
+
 
             {/* Available Models */}
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
@@ -846,22 +886,21 @@ const ApiDocs = () => {
                     <button
                       key={model.id}
                       onClick={() => { setActiveModel(model.model_number); setArchitectureZoomed(false); }}
-                      className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center justify-between ${
-                        activeModel === model.model_number
-                          ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
-                          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
+                      className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between border-b last:border-b-0 ${activeModel === model.model_number
+                        ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border-l-4 border-l-purple-500 font-bold'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
                     >
                       <span className="truncate">{model.model_name}</span>
-                      <span className={`text-xs px-1.5 py-0.5 rounded ml-1 flex-shrink-0 ${
-                        model.deployment_status === 'live'
-                          ? 'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300'
-                          : 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-300'
-                      }`}>
+                      <span className={`text-[10px] px-1.5 py-0.5 font-mono border ${model.deployment_status === 'live'
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-300 dark:border-green-700'
+                        : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700'
+                        }`}>
                         {model.deployment_status || 'live'}
                       </span>
                     </button>
                   ))}
+
                   {filteredModels.length === 0 && (
                     <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">No models found</p>
                   )}
@@ -880,14 +919,14 @@ const ApiDocs = () => {
               <nav className="space-y-1">
                 <button
                   onClick={() => setActiveModel(null)}
-                  className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                    !activeModel
-                      ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
+                  className={`w-full text-left px-3 py-2 text-sm transition-colors border-l-4 ${!activeModel
+                    ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border-l-purple-500 font-bold'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 border-l-transparent'
+                    }`}
                 >
                   Overview
                 </button>
+
               </nav>
             </div>
 
@@ -934,8 +973,10 @@ const ApiDocs = () => {
 
           </div>
 
-          {/* ── Main content (own scroll) ── */}
-          <div className="flex-1 overflow-y-auto min-w-0 pb-4">
+
+          {/* ── Main content (natural scroll) ── */}
+          <div className="flex-1 min-w-0 pb-4">
+
 
             {/* Breadcrumb */}
             <div className="mb-4">
@@ -955,82 +996,165 @@ const ApiDocs = () => {
             </div>
 
             {/* Content Card */}
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-              {isLoading ? (
-                <div className="p-8"><LoadingSkeleton /></div>
-              ) : activeModel ? (
-                <div className="p-8">{renderActiveModel()}</div>
-              ) : (
-                <div className="p-8">
-                  <div className="flex items-center mb-6">
-                    <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg mr-3">
-                      <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg relative overflow-hidden">
+              <div className="absolute inset-0 pv-grid pointer-events-none opacity-50" />
+              <div className="relative z-10">
+
+                {isLoading ? (
+                  <div className="p-8"><LoadingSkeleton /></div>
+                ) : activeModel ? (
+                  <div className="p-8">{renderActiveModel()}</div>
+                ) : (
+                  <div className="p-8">
+                    <div className="flex items-center mb-6">
+                      <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg mr-3">
+                        <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">API Documentation</h2>
+                        <p className="text-gray-600 dark:text-gray-400 mt-1">
+                          Welcome to the PromptVista ML API documentation
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">API Documentation</h2>
-                      <p className="text-gray-600 dark:text-gray-400 mt-1">
-                        Welcome to the Promp API documentation
+
+                    <div
+                      ref={ovRef}
+                      className="prose dark:prose-invert max-w-none"
+                      style={{ opacity: 0, animation: ovVis ? 'pv-up .6s ease forwards' : 'none' }}
+                    >
+                      <h2>Overview</h2>
+                      <p>
+                        PromptVista ML provides a robust API to interact with state-of-the-art machine learning models.
+                        Our platform ensures high availability, sub-100ms response times, and built-in GenAI validation
+                        via the Gemini layer.
                       </p>
+
+                      <div className="grid sm:grid-cols-2 gap-6 my-8 not-prose">
+                        <div className="p-5 bg-gray-50 dark:bg-gray-800/40 border-l-4 border-l-purple-500 border border-gray-200 dark:border-gray-700">
+                          <h4 className="font-bold text-gray-900 dark:text-white mb-2">Base URL</h4>
+                          <code className="text-xs break-all bg-white dark:bg-gray-900 px-2 py-1 border border-gray-200 dark:border-gray-700">
+                            https://api.promptvistaml.com/v1
+                          </code>
+                        </div>
+                        <div className="p-5 bg-gray-50 dark:bg-gray-800/40 border-l-4 border-l-yellow-500 border border-gray-200 dark:border-gray-700">
+                          <h4 className="font-bold text-gray-900 dark:text-white mb-2">Format</h4>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            All requests and responses use JSON. Character encoding is UTF-8.
+                          </p>
+                        </div>
+                      </div>
+
+                      <h3>Authentication</h3>
+                      <p>
+                        All API requests require authentication using an API key provided in the Authorization header.
+                        Keep your API keys secret and never share them in client-side code.
+                      </p>
+                      <div className="overflow-x-auto my-6 not-prose">
+                        <table className="min-w-full border border-gray-200 dark:border-gray-800">
+                          <thead className="bg-gray-50 dark:bg-gray-800/50">
+                            <tr>
+                              <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-500 border-b border-gray-200 dark:border-gray-800">Header</th>
+                              <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-500 border-b border-gray-200 dark:border-gray-800">Value</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                            <tr>
+                              <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-gray-100">Authorization</td>
+                              <td className="px-4 py-3 text-sm font-mono text-purple-600 dark:text-purple-400 font-bold">Bearer YOUR_API_KEY</td>
+                            </tr>
+                            <tr>
+                              <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-gray-100">Content-Type</td>
+                              <td className="px-4 py-3 text-sm font-mono text-gray-600 dark:text-gray-400">application/json</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <h3>Common Error Codes</h3>
+                      <p>
+                        Our API uses standard HTTP response codes to indicate the success or failure of an API request.
+                      </p>
+                      <div className="overflow-x-auto my-6 not-prose">
+                        <table className="min-w-full border border-gray-200 dark:border-gray-800">
+                          <thead className="bg-gray-50 dark:bg-gray-800/50">
+                            <tr>
+                              <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-500 border-b border-gray-200 dark:border-gray-800">Code</th>
+                              <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-gray-500 border-b border-gray-200 dark:border-gray-800">Description</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100 dark:divide-gray-800 text-gray-700 dark:text-gray-300">
+                            <tr>
+                              <td className="px-4 py-3 text-sm font-mono font-bold text-green-600">200</td>
+                              <td className="px-4 py-3 text-sm">OK — Everything worked as expected.</td>
+                            </tr>
+                            <tr>
+                              <td className="px-4 py-3 text-sm font-mono font-bold text-red-600">400</td>
+                              <td className="px-4 py-3 text-sm">Bad Request — Often missing required parameters.</td>
+                            </tr>
+                            <tr>
+                              <td className="px-4 py-3 text-sm font-mono font-bold text-red-600">401</td>
+                              <td className="px-4 py-3 text-sm">Unauthorized — No valid API key provided.</td>
+                            </tr>
+                            <tr>
+                              <td className="px-4 py-3 text-sm font-mono font-bold text-red-600">429</td>
+                              <td className="px-4 py-3 text-sm">Too Many Requests — Rate limit exceeded.</td>
+                            </tr>
+                            <tr>
+                              <td className="px-4 py-3 text-sm font-mono font-bold text-red-600">500</td>
+                              <td className="px-4 py-3 text-sm">Server Errors — Something went wrong on our end.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <h3>Response Format</h3>
+                      <p>All successful responses return a JSON object with the following top-level fields:</p>
+                      <div className="bg-gray-900 text-gray-100 p-5 rounded font-mono text-xs not-prose border-2 border-purple-500 shadow-lg">
+                        {`{
+  "success": true,
+  "data": { ... },
+  "metadata": {
+    "latency": "43ms",
+    "model_id": "sentiment-analysis-01",
+    "validation_score": 0.98
+  }
+}`}
+                      </div>
                     </div>
+
                   </div>
-                  
-                  <div className="prose dark:prose-invert max-w-none">
-                    <h2>Getting Started</h2>
-                    <p>
-                      Welcome to our API documentation. This guide will help you integrate our AI models into your applications.
-                      Select a model from the sidebar to view its specific documentation, endpoints, and usage examples.
-                    </p>
-                    
-                    <h3>Authentication</h3>
-                    <p>
-                      All API requests require authentication using an API key. Include your API key in the Authorization header:
-                    </p>
-                    <pre><code>curl -H "Authorization: Bearer YOUR_API_KEY" https://api.modelhub.com/v1/models</code></pre>
-                    
-                    <h3>Rate Limits</h3>
-                    <p>
-                      Rate limits vary by model and subscription plan. Check each model's documentation for specific limits.
-                      Rate limit headers are included in all API responses.
-                    </p>
-                    
-                    <h3>Model Categories</h3>
-                    <ul>
-                      <li><strong>Text Models</strong> - Language models for text generation, classification, and analysis</li>
-                      <li><strong>Image Models</strong> - Computer vision models for image recognition and generation</li>
-                      <li><strong>Audio Models</strong> - Speech recognition and audio processing models</li>
-                    </ul>
+                )}
+              </div>
+
+              {/* ── Notebook Preview — separate block below the content card ── */}
+              {!isLoading && activeModelObj?.notebook && (
+                <div className="mt-6">
+                  {/* Section header */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Notebook Preview</h3>
+                    <span className="text-xs font-mono font-normal text-gray-400 border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                      .ipynb
+                    </span>
+                  </div>
+                  <NotebookPreview url={activeModelObj.notebook} modelName={activeModelObj.model_name} />
+
+                  {/* Footer */}
+                  <div className="mt-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500">
+                    <span>
+                      {activeModelObj.model_name} · v{activeModelObj.model_version || '1.0.0'} · {activeModelObj.category || 'General'}
+                    </span>
+                    <span>Last updated: {activeModelObj.last_updated ? new Date(activeModelObj.last_updated).toLocaleDateString() : new Date().toLocaleDateString()}</span>
                   </div>
                 </div>
               )}
             </div>
-            
-            {/* ── Notebook Preview — separate block below the content card ── */}
-            {!isLoading && activeModelObj?.notebook && (
-              <div className="mt-6">
-                {/* Section header */}
-                <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Notebook Preview</h3>
-                  <span className="text-xs font-mono font-normal text-gray-400 border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                    .ipynb
-                  </span>
-                </div>
-                <NotebookPreview url={activeModelObj.notebook} modelName={activeModelObj.model_name} />
-
-                {/* Footer */}
-                <div className="mt-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500">
-                  <span>
-                    {activeModelObj.model_name} · v{activeModelObj.model_version || '1.0.0'} · {activeModelObj.category || 'General'}
-                  </span>
-                  <span>Last updated: {activeModelObj.last_updated ? new Date(activeModelObj.last_updated).toLocaleDateString() : new Date().toLocaleDateString()}</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>

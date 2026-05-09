@@ -37,7 +37,7 @@ const OutputPanel = ({ output, isLoading, error }) => {
             <p className="font-semibold text-gray-900 dark:text-white">
               Processing your request...
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-700 dark:text-gray-400">
               The AI model is generating a response
             </p>
           </div>
@@ -48,7 +48,7 @@ const OutputPanel = ({ output, isLoading, error }) => {
 
   if (error) {
     return (
-      <div className="border border-red-200 dark:border-red-900 bg-white dark:bg-gray-900 p-6">
+      <div className="border border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-900/20 p-6">
         <div className="flex items-start space-x-3">
           <svg
             className="h-5 w-5 text-red-500 mt-0.5"
@@ -68,7 +68,7 @@ const OutputPanel = ({ output, isLoading, error }) => {
             <p className="font-semibold text-red-600 dark:text-red-400">
               Error
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
               {error}
             </p>
           </div>
@@ -79,7 +79,7 @@ const OutputPanel = ({ output, isLoading, error }) => {
 
   if (!output) {
     return (
-      <div className="border border-black-500 dark:border-purple-500 bg-white dark:bg-gray-900 p-6">
+      <div className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
         <div className="text-center py-10">
           <svg
             className="w-12 h-12 text-gray-300 dark:text-gray-700 mx-auto mb-4"
@@ -95,7 +95,7 @@ const OutputPanel = ({ output, isLoading, error }) => {
             />
           </svg>
 
-          <p className="text-black-600 dark:text-white-400 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest">
             Output will appear here after generation
           </p>
         </div>
@@ -132,7 +132,7 @@ const OutputPanel = ({ output, isLoading, error }) => {
       </div>
 
       {/* Output Box */}
-      <div className="border border-yellow-100 dark:border-yellow-800 bg-gray-50 dark:bg-gray-950 p-4">
+      <div className="border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-4">
         <pre className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap font-sans text-sm leading-relaxed">
           {output}
         </pre>
