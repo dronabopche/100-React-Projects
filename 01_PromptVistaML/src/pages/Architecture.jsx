@@ -496,31 +496,24 @@ const Architecture = () => {
 
 
       {/* Hero */}
-      <header className="relative pt-32 pb-24 overflow-hidden z-10 border-b border-gray-200 dark:border-gray-800">
-        <div className="absolute inset-0 pv-grid pointer-events-none" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-purple-500/10 to-transparent rounded-full blur-[150px] pointer-events-none" />
+      <header className="relative pt-20 pb-12 overflow-hidden z-10 border-b border-gray-200 dark:border-gray-800">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div
           ref={hRef}
-          className="max-w-6xl mx-auto px-4 sm:px-6 text-center relative"
-          style={{ opacity: 0, animation: hVis ? 'pv-up .8s cubic-bezier(0.22, 1, 0.36, 1) forwards' : 'none' }}
+          className="max-w-7xl mx-auto px-4 text-center relative"
+          style={{ opacity: 0, animation: hVis ? 'pv-up .8s ease forwards' : 'none' }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.4em] bg-white/50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 backdrop-blur-sm mb-8 animate-[bounce_3s_infinite]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[10px] font-bold tracking-widest uppercase border border-purple-200 dark:border-purple-800 mb-6">
+            <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
             Technical Infrastructure
           </div>
-          <h1 className="text-6xl sm:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tighter">
+          <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
             System <span className="pv-grad-text">Architecture</span>
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-xl leading-relaxed font-normal">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed font-normal">
             A comprehensive deep-dive into the multi-modal orchestration engine, 
             serverless data backbone, and the high-fidelity UI framework of PromptVista ML.
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {['Architecture', 'Infrastructure', 'Performance', 'Security'].map(t => (
-              <span key={t} className="px-4 py-1 border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                {t}
-              </span>
-            ))}
-          </div>
         </div>
 
         {/* Floating System Health Ticker - Moved to Middle */}
@@ -575,7 +568,7 @@ const Architecture = () => {
 
       {/* Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 mt-20 relative z-10">
-        <div className="absolute inset-0 pv-grid opacity-40 pointer-events-none -z-10" />
+        <div className="absolute inset-0 pv-grid pointer-events-none -z-10" />
         <div className="animate-[fadeIn_0.6s_ease-out]">
           {activeTab === "frontend" && <FrontendSection />}
           {activeTab === "backend" && <BackendSection />}
@@ -603,7 +596,7 @@ const Architecture = () => {
       {/* Footer CTA */}
       <footer className="max-w-6xl mx-auto px-4 sm:px-6 mt-32 relative z-10">
         <div className="boxy-card p-12 sm:p-16 bg-white dark:bg-gray-950 relative overflow-hidden text-center group border border-purple-500/30 shadow-2xl">
-          <div className="absolute inset-0 pv-grid opacity-[0.15] pointer-events-none group-hover:opacity-25 transition-opacity duration-1000" />
+          <div className="absolute inset-0 pv-grid pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px]" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px]" />
           
@@ -626,20 +619,7 @@ const Architecture = () => {
       </footer>
 
       {/* Global Animations Style */}
-      <style>{`
-        @keyframes pv-up   { from { opacity:0; transform:translateY(32px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes pv-grad { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        @keyframes pv-glow { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:.65;transform:scale(1.07)} }
-        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        @keyframes dash { to { stroke-dashoffset: -100; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .pv-glow { animation: pv-glow 3.5s ease-in-out infinite }
-        
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </div>
   )
 }

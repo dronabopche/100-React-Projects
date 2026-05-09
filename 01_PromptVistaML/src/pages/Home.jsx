@@ -140,65 +140,7 @@ const Home = () => {
   /* ── render ── */
   return (
     <>
-      <style>{`
-        @keyframes pv-up   { from { opacity:0; transform:translateY(32px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes pv-fade { from { opacity:0 } to { opacity:1 } }
-        @keyframes pv-f1   { 0%,100%{transform:translateY(0)}  50%{transform:translateY(-15px)} }
-        @keyframes pv-f2   { 0%,100%{transform:translateY(0)}  50%{transform:translateY(-10px)} }
-        @keyframes pv-glow { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:.65;transform:scale(1.07)} }
-        @keyframes pv-tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        @keyframes pv-grad { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        @keyframes pv-cur  { 0%,100%{opacity:1} 50%{opacity:0} }
 
-        .pv-up   { animation: pv-up   .65s cubic-bezier(.22,1,.36,1) both }
-        .pv-fade { animation: pv-fade .5s ease both }
-        .pv-f1   { animation: pv-f1  7s ease-in-out infinite }
-        .pv-f2   { animation: pv-f2  9s ease-in-out infinite }
-        .pv-glow { animation: pv-glow 3.5s ease-in-out infinite }
-        .pv-card {
-          position: relative;
-          transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s ease;
-        }
-        .pv-card::after {
-          content:''; position:absolute; inset:-1px; opacity:0;
-          background: linear-gradient(135deg,rgba(139,92,246,0),rgba(139,92,246,.25),rgba(96,165,250,.18),rgba(139,92,246,0));
-          background-size:300% 300%;
-          animation: pv-grad 4s ease infinite;
-          transition: opacity .3s; pointer-events:none; z-index:0;
-        }
-        .pv-card:hover::after { opacity:1 }
-        .pv-card:hover        { transform:translateY(-5px); box-shadow:0 18px 36px rgba(139,92,246,.1) }
-        .pv-card > *          { position:relative; z-index:1 }
-
-        .pv-ticker-wrap { overflow:hidden; white-space:nowrap }
-        .pv-ticker      { display:inline-flex; animation: pv-tick 30s linear infinite }
-
-        .pv-cursor {
-          display:inline-block; width:2px; height:1em;
-          background:#8b5cf6; margin-left:2px; vertical-align:middle;
-          animation: pv-cur 1s step-end infinite;
-        }
-        .pv-faq-grid            { display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s cubic-bezier(.22,1,.36,1) }
-        .pv-faq-grid.open       { grid-template-rows:1fr }
-        .pv-faq-inner           { overflow:hidden }
-
-        /* Desktop step connector */
-        @media (min-width:1024px) {
-          .pv-step-line {
-            display:block; position:absolute;
-            top:2.75rem; left:calc(12.5% + 1.5rem); right:calc(12.5% + 1.5rem);
-            height:1px;
-            background:linear-gradient(90deg,transparent,rgba(139,92,246,.3),transparent);
-            pointer-events:none;
-          }
-        }
-        /* Kill hover-lift on touch to avoid stuck states */
-        @media (hover:none) {
-          .pv-card:hover { transform:none; box-shadow:none }
-          .pv-card:hover::after { opacity:0 }
-          .pv-f1,.pv-f2 { animation:none }
-        }
-      `}</style>
 
       <div className="space-y-16 sm:space-y-20">
 
@@ -228,31 +170,29 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Card */}
-          <div
-            ref={heroRef}
-            className="relative w-full border border-[color:var(--border)] bg-[color:var(--panel)] px-5 py-12 sm:px-10 sm:py-16 md:px-14 md:py-20"
-            style={{ opacity:0, animation: heroVis ? 'pv-up .85s cubic-bezier(.22,1,.36,1) forwards' : 'none' }}
-          >
-            {/* Status pill */}
-            <div className="flex justify-center mb-6">
-              <span className="inline-flex items-center gap-2 border border-[color:var(--border)] bg-[color:var(--bg)] px-4 py-1.5 text-xs font-semibold tracking-widest text-[color:var(--muted-text)] uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+          {/* Header style to match Models.jsx */}
+          <header className="relative w-full pt-20 pb-12 overflow-hidden z-10">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+            
+            <div 
+              ref={heroRef}
+              className="max-w-7xl mx-auto px-4 text-center relative"
+              style={{ opacity:0, animation: heroVis ? 'pv-up .85s ease forwards' : 'none' }}
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[10px] font-bold tracking-widest uppercase border border-purple-200 dark:border-purple-800 mb-6">
+                <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse flex-shrink-0" />
                 PromptVista ML · Showcasing Model Platform
-              </span>
-            </div>
-
-            {/* Headline — fluid size so it never overflows on phone */}
-            <h1 className="text-[clamp(1.9rem,4.5vw,5rem)] font-bold text-[var(--text)] text-center leading-[1.06] tracking-tight">
-              ML Models , {' '}
-              <span className="pv-grad-text">Prompt Engineering</span>
-              <br className="hidden sm:block" />
-              {' '}&amp; Prompt-to-API Automation
-            </h1>
-
-            <p className="text-sm sm:text-base md:text-xl text-[color:var(--muted-text)] max-w-2xl mx-auto mt-6 leading-relaxed text-center">
-              Stop Filling Forms. Start Prompting ML.
-            </p>
+              </div>
+              
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight leading-[1.06]">
+                ML Models, <span className="pv-grad-text">Prompt Engineering</span>
+                <br className="hidden sm:block" />
+                &amp; Prompt-to-API Automation
+              </h1>
+              
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed font-normal">
+                Stop Filling Forms. Start Prompting ML.
+              </p>
 
             {/* CTAs — stacked on mobile, row on sm+ */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center mt-9">
@@ -295,7 +235,8 @@ const Home = () => {
                 scroll to explore {Icon.down}
               </div>
             </div>
-          </div>
+            </div>
+          </header>
         </section>
  {/* ══════ MODELS PREVIEW ══════ */}
         <section>
@@ -439,7 +380,7 @@ const Home = () => {
 
         {/* ══════ HOW IT WORKS ══════ */}
         <section ref={stepsRef} className="relative py-24 overflow-hidden border-y border-[color:var(--border)]">
-          <div className="absolute inset-0 pv-grid opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 pv-grid pointer-events-none" />
           <div className="text-center mb-10 sm:mb-14 px-4">
             <p className="text-xs font-semibold tracking-widest text-brand-purple uppercase mb-3">The Workflow</p>
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--text)]">How It Works</h2>

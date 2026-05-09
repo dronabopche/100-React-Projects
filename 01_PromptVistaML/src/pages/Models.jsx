@@ -200,7 +200,7 @@ const Models = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative overflow-hidden pb-20">
-      <div className="fixed inset-0 pv-grid opacity-[0.1] pointer-events-none" />
+      <div className="fixed inset-0 pv-grid pointer-events-none" />
 
       <header className="relative pt-20 pb-12 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -334,21 +334,7 @@ const Models = () => {
         )}
       </div>
       
-      <style>{`
-        @keyframes pv-up { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
-        .pv-grad-text {
-          background: linear-gradient(135deg, #d041d3, #7d51e4);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        .pv-grid {
-          background-image:
-            linear-gradient(rgba(139,92,246,.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139,92,246,.05) 1px, transparent 1px);
-          background-size: 44px 44px;
-        }
-      `}</style>
+
     </div>
   )
 }

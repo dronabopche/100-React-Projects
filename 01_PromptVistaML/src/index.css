@@ -139,6 +139,22 @@
     @apply font-medium py-2 px-6 rounded-lg transition-all duration-200;
   }
 
+  /* Animated Gradient Text */
+  @keyframes pv-grad {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .pv-grad-text {
+    background: linear-gradient(135deg, #d041d3, #bc36d1, #dcd500, #7d51e4);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pv-grad 5s ease infinite;
+  }
+
   .btn-secondary:hover {
     background: var(--btn-secondary-hover);
     border-color: var(--accent);
@@ -148,30 +164,27 @@
   /* Cards */
   .card {
     background: var(--card-bg);
-    border: var(--border-color);
-    box-shadow: var(--shadow-md);
-    @apply rounded-xl p-6 transition-all duration-200;
-  }
-  
-  .card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--card-border);
+    @apply p-6 rounded-xl transition-all duration-300;
   }
 
-  /* Inputs */
+  .card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* Form Elements */
   .input-field {
     background: var(--input-bg);
     border: 1px solid var(--input-border);
+    color: var(--text);
     @apply w-full px-4 py-2 rounded-lg outline-none transition-all duration-200;
   }
 
   .input-field:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-  }
-  
-  .dark .input-field:focus {
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
   }
 
   /* Brand text helpers */
@@ -217,28 +230,7 @@
     background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   }
 
-  /* Linear grid (Blueprint style) - matching Home.jsx */
-  .pv-grid {
-    background-image:
-      linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
-    background-size: 44px 44px;
-  }
-  .dark .pv-grid {
-    background-image:
-      linear-gradient(rgba(139, 92, 246, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
-  }
 
-  .pv-grid-lines {
-    background-image: linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
-    background-size: 44px 44px;
-  }
-  .dark .pv-grid-lines {
-    background-image: linear-gradient(rgba(139, 92, 246, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
-  }
 }
 
 
@@ -1395,4 +1387,142 @@
   .clear-all-filters {
     margin-left: 0;
   }
+}
+
+
+
+/* =========================================================
+   ANTIGRAVITY DESIGN SYSTEM (GLOBAL UTILITIES)
+   ========================================================= */
+
+/* ─── Shared Animations ─── */
+@keyframes pv-up   { from { opacity:0; transform:translateY(32px) } to { opacity:1; transform:translateY(0) } }
+@keyframes pv-fade { from { opacity:0 } to { opacity:1 } }
+@keyframes pv-f1   { 0%,100%{transform:translateY(0)}  50%{transform:translateY(-15px)} }
+@keyframes pv-f2   { 0%,100%{transform:translateY(0)}  50%{transform:translateY(-10px)} }
+@keyframes pv-glow { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:.65;transform:scale(1.07)} }
+@keyframes pv-tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+@keyframes pv-cur  { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ─── Animation Utility Classes ─── */
+.pv-up { animation: pv-up .85s cubic-bezier(.22,1,.36,1) both }
+.pv-fade { animation: pv-fade .5s ease both }
+.pv-f1 { animation: pv-f1 7s ease-in-out infinite }
+.pv-f2 { animation: pv-f2 9s ease-in-out infinite }
+.pv-glow { animation: pv-glow 3.5s ease-in-out infinite }
+
+/* ─── Global Grid Utility ─── */
+.pv-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Premium Glow Card (Home / Architecture) ─── */
+.pv-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s ease, border-color .28s ease;
+}
+.pv-card::after {
+  content:''; position:absolute; inset:-1px; opacity:0;
+  background: linear-gradient(135deg,rgba(139,92,246,0),rgba(139,92,246,.25),rgba(96,165,250,.18),rgba(139,92,246,0));
+  background-size:300% 300%;
+  animation: pv-grad 4s ease infinite;
+  transition: opacity .3s; pointer-events:none; z-index:0;
+}
+.pv-card:hover::after { opacity:1 }
+.pv-card:hover { 
+  transform:translateY(-5px); 
+  box-shadow:0 18px 36px rgba(139,92,246,.1);
+  border-color: var(--brand-purple);
+}
+.pv-card > * { position:relative; z-index:1 }
+
+/* ─── Boxy Card (Careers / About) ─── */
+.boxy-card {
+  background: white;
+  border: 1px solid var(--border);
+  box-shadow: 4px 4px 0px var(--border);
+  transition: all 0.2s ease;
+}
+.dark .boxy-card { background: #111827; }
+.boxy-card:hover {
+  box-shadow: 8px 8px 0px var(--brand-purple);
+  transform: translate(-2px, -2px);
+}
+.dark .boxy-card:hover { border-color: rgba(139, 92, 246, 0.4); }
+
+/* ─── Boxy Input ─── */
+.boxy-input {
+  width: 100%;
+  background: white;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: all 0.2s;
+}
+.dark .boxy-input { background: #0b0b0f; border-color: #3b4252; }
+.boxy-input:focus {
+  border-color: var(--brand-purple);
+  box-shadow: 4px 4px 0px var(--brand-purple);
+}
+
+/* ─── Ticker ─── */
+.pv-ticker-wrap { overflow:hidden; white-space:nowrap }
+.pv-ticker      { display:inline-flex; animation: pv-tick 30s linear infinite }
+
+/* ─── UI Misc ─── */
+.pv-cursor {
+  display:inline-block; width:2px; height:1em;
+  background:#8b5cf6; margin-left:2px; vertical-align:middle;
+  animation: pv-cur 1s step-end infinite;
+}
+.pv-faq-grid            { display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s cubic-bezier(.22,1,.36,1) }
+.pv-faq-grid.open       { grid-template-rows:1fr }
+.pv-faq-inner           { overflow:hidden }
+
+.pv-node-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--brand-purple);
+  box-shadow: 0 0 12px var(--brand-purple);
+}
+
+@keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+@keyframes dash { to { stroke-dashoffset: -100; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (min-width:1024px) {
+  .pv-step-line {
+    display:block; position:absolute;
+    top:2.75rem; left:calc(12.5% + 1.5rem); right:calc(12.5% + 1.5rem);
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(139,92,246,.3),transparent);
+    pointer-events:none;
+  }
+}
+
+@media (hover:none) {
+  .pv-card:hover { transform:none; box-shadow:none }
+  .pv-card:hover::after { opacity:0 }
+  .pv-f1,.pv-f2 { animation:none }
 }

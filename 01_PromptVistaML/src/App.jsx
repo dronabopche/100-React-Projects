@@ -7,6 +7,8 @@ import ModelDetail from './pages/ModelDetail'
 import ApiDocs from './pages/ApiDocs'
 import Architecture from './pages/Architecture'
 import Products from './pages/Products'
+import About from './pages/About'
+import Careers from './pages/Careers'
 import { useTheme } from './hooks/useTheme'
 
 
@@ -25,6 +27,8 @@ function App() {
             <Route path="/api-docs" element={<ApiDocs />} />
             <Route path="/architecture" element={<Architecture />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/careers" element={<Careers />} />
           </Routes>
         </main>
         <Footer />

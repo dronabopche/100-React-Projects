@@ -102,23 +102,7 @@ const Products = () => {
 
   return (
     <div className="products-page relative min-h-screen">
-      <style>{`
-        @keyframes pv-up   { from { opacity:0; transform:translateY(32px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes pv-grad { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        @keyframes pv-glow { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:.65;transform:scale(1.07)} }
-        @keyframes pv-tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-        .pv-up { animation: pv-up .85s cubic-bezier(.22,1,.36,1) both }
-        .pv-grad-text {
-          background: linear-gradient(135deg, #d041d3, #bc36d1, #dcd500, #7d51e4);
-          background-size: 300% 300%;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: pv-grad 5s ease infinite;
-        }
-        .pv-glow { animation: pv-glow 3.5s ease-in-out infinite }
-      `}</style>
 
 
       
@@ -170,7 +154,7 @@ const Products = () => {
 
       {/* GRID */}
       <section ref={gridRef} className="products-grid-section relative py-20 overflow-hidden">
-        <div className="absolute inset-0 pv-grid opacity-60 pointer-events-none" />
+        <div className="absolute inset-0 pv-grid pointer-events-none" />
 
         {isLoading ? (
           <div className="products-grid">

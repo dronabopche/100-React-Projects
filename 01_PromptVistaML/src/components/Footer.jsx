@@ -62,6 +62,22 @@ const Footer = () => {
               <ul className="space-y-2">
                 <li>
                   <Link
+                    to="/about"
+                    className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/careers"
+                    className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
+                  >
+                    Careers
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/api-docs"
                     className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
                   >
@@ -77,28 +93,24 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/models"
-                    className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
-                  >
-                    Explore Models
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="https://supabase.com/"
+                  <a
+                    href="https://supabase.com/"
+                    target="_blank"
+                    rel="noreferrer"
                     className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
                   >
                     Database
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to="https://aistudio.google.com/prompts/new_chat"
+                  <a
+                    href="https://aistudio.google.com/prompts/new_chat"
+                    target="_blank"
+                    rel="noreferrer"
                     className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 text-sm transition-colors duration-200"
                   >
                     API layer
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -167,7 +179,7 @@ const Footer = () => {
           {/* Bottom bar */}
           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row items-center justify-between gap-3">
             <p className="text-sm text-gray-700 dark:text-gray-400">
-              © {currentYear} ModelHub. All rights reserved.
+              © {currentYear} PromptVista ML. All rights reserved.
             </p>
 
             <p className="text-sm text-gray-700 dark:text-gray-400">

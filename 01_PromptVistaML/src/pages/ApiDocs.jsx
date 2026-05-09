@@ -820,7 +820,7 @@ const ApiDocs = () => {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <span className="pv-grad-text">API Reference</span>
+              <span>API Reference</span>
               <span className="text-[10px] font-mono font-normal text-gray-400 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-1.5 py-0.5 rounded">
                 v1.0.0
               </span>
@@ -997,7 +997,7 @@ const ApiDocs = () => {
 
             {/* Content Card */}
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg relative overflow-hidden">
-              <div className="absolute inset-0 pv-grid pointer-events-none opacity-50" />
+              <div className="absolute inset-0 pv-grid pointer-events-none" />
               <div className="relative z-10">
 
                 {isLoading ? (
