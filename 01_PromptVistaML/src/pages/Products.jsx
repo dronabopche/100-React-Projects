@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useState, useRef } from 'react'
-import { fetchAllProducts } from '../services/supabase'
+import { useEffect, useRef, useState } from 'react'
+import VistaSecureAI from './products/VistaSecureAI'
+import PromptHallucinationML from './products/PromptHallucinationML'
+import VistaMeHR from './products/VistaMeHR'
 
 
 
@@ -39,66 +41,37 @@ const Icon = {
   ),
 }
 
-/* ─── Iframe Preview Component ─── */
-function IframePreview({ url, name }) {
-  const [loaded, setLoaded] = useState(false)
-  const [failed, setFailed] = useState(false)
 
-  useEffect(() => {
-    if (!url) return
-    const timer = setTimeout(() => {
-      if (!loaded) setFailed(true)
-    }, 2500)
-    return () => clearTimeout(timer)
-  }, [url, loaded])
-
-  if (!url || failed) {
-    return <div className="product-image-placeholder">No Preview</div>
-  }
-
-  return (
-    <div className="iframe-container">
-      <iframe
-        src={url}
-        title={name || 'product-preview'}
-        className="product-iframe-preview"
-        loading="lazy"
-        sandbox="allow-scripts allow-same-origin allow-popups"
-        referrerPolicy="no-referrer"
-        onLoad={() => setLoaded(true)}
-        style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          borderRadius: 'inherit',
-          pointerEvents: 'none' // 👈 prevents iframe blocking clicks
-        }}
-      />
-    </div>
-  )
-}
 
 /* ─── MAIN COMPONENT ─── */
 const Products = () => {
-  const [products, setProducts] = useState([])
-  const [filteredProducts, setFilteredProducts] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-
   const [headerRef, headerVisible] = useReveal(0.05)
   const [gridRef, gridVisible] = useReveal(0.05)
 
-  useEffect(() => {
-    fetchAllProducts()
-      .then(data => {
-        const sorted = [...data].sort(
-          (a, b) => (a.priority || 999) - (b.priority || 999)
-        )
-        setProducts(sorted)
-        setFilteredProducts(sorted)
-      })
-      .catch(err => console.error(err))
-      .finally(() => setIsLoading(false))
-  }, [])
+  const products = [
+    {
+      id: 'vista-secure-ai',
+      Name: 'VistaSecure AI',
+      description: 'Advanced threat detection and security orchestration powered by next-generation machine learning. Protect your infrastructure with automated risk assessment and real-time response.',
+      component: <VistaSecureAI />,
+      path: '/products/vista-secure-ai'
+    },
+    {
+      id: 'prompt-hallucination-ml',
+      Name: 'PromptHallucination ML',
+      description: 'The industry standard for LLM output verification. Detect and prevent factual inaccuracies, logic gaps, and hallucinations in real-time before they reach your users.',
+      component: <PromptHallucinationML />,
+      path: '/products/prompt-hallucination-ml'
+    },
+    {
+      id: 'vistame-hr',
+      Name: 'VistaMe HR',
+      description: 'The intelligent workforce management platform. Streamline recruitment, performance tracking, and employee engagement with data-driven insights.',
+      component: <VistaMeHR />,
+      path: '/products/vistame-hr'
+    }
+  ]
+
 
   return (
     <div className="products-page relative min-h-screen">
@@ -156,61 +129,54 @@ const Products = () => {
       <section ref={gridRef} className="products-grid-section relative py-20 overflow-hidden">
         <div className="absolute inset-0 pv-grid pointer-events-none" />
 
-        {isLoading ? (
-          <div className="products-grid">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="product-card-skeleton" />
-            ))}
-          </div>
-        ) : (
-          <div className="products-grid">
-            {filteredProducts.map((product, idx) => {
-              const hasLink = !!product.website_link
+        <div className="products-grid">
+          {products.map((product, idx) => (
+            <Link
+              key={product.id}
+              to={product.path}
+              className={`product-card boxy-card bg-white dark:bg-gray-900/40`}
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+                opacity: gridVisible ? 1 : 0,
+                animation: gridVisible
+                  ? `pv-up .6s cubic-bezier(.22,1,.36,1) ${Math.min(idx * 0.05, 0.4)}s both`
+                  : 'none'
+              }}
+            >
+              <div className="product-card-image relative overflow-hidden bg-white dark:bg-gray-900 pointer-events-none">
+                <div style={{
+                  width: '300%',
+                  height: '300%',
+                  transform: 'scale(0.333)',
+                  transformOrigin: 'top left',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  overflow: 'hidden'
+                }}>
+                  {product.component}
+                </div>
+              </div>
 
-              return (
-                <a
-                  key={product.id || idx}
-                  href={hasLink ? product.website_link : "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`product-card boxy-card ${!hasLink ? 'disabled' : ''} bg-white dark:bg-gray-900/40`}
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    pointerEvents: hasLink ? 'auto' : 'none',
-                    opacity: gridVisible ? 1 : 0,
-                    animation: gridVisible
-                      ? `pv-up .6s cubic-bezier(.22,1,.36,1) ${Math.min(idx * 0.05, 0.4)}s both`
-                      : 'none'
-                  }}
-                >
-                  <div className="product-card-image">
-                    <IframePreview
-                      url={product.website_link}
-                      name={product.Name}
-                    />
-                  </div>
+              <div className="product-card-content">
+                <h3 className="product-card-title">
+                  {product.Name}
+                </h3>
 
-                  <div className="product-card-content">
-                    <h3 className="product-card-title">
-                      {product.Name}
-                    </h3>
+                <p className="product-card-description">
+                  {product.description}
+                </p>
 
-                    <p className="product-card-description">
-                      {product.description}
-                    </p>
-
-                    <div className="product-card-footer">
-                      <span className="product-card-button">
-                        {hasLink ? "Visit Website" : "No link available"} {Icon.external}
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              )
-            })}
-          </div>
-        )}
+                <div className="product-card-footer">
+                  <span className="product-card-button">
+                    View Product {Icon.external}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* CTA */}
