@@ -20,7 +20,7 @@ const About = () => {
         {/* Hero Section */}
         <header className="relative pt-8 pb-12 overflow-hidden pv-up">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
-          
+
           <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[10px] font-bold tracking-widest uppercase border border-purple-200 dark:border-purple-800 mb-6">
               <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
@@ -55,7 +55,7 @@ const About = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-4">
               <div className="boxy-card overflow-hidden h-64">
-                <img src="/aboutus1.png" alt="Office Culture" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                <img src="/aboutus1.png" alt="Core Team" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
               </div>
               <div className="boxy-card overflow-hidden h-40">
                 <img src="/aboutus2.png" alt="Engineering" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
@@ -101,7 +101,7 @@ const About = () => {
             { title: "Zero Setup", desc: "No local environment required. Every model is ready for live inference from the browser." }
           ].map((f, i) => (
             <div key={i} className="boxy-card p-8 space-y-4">
-              <div className="text-purple-500 font-mono text-xs font-bold underline decoration-2 underline-offset-4">FEATURE 0{i+1}</div>
+              <div className="text-purple-500 font-mono text-xs font-bold underline decoration-2 underline-offset-4">FEATURE 0{i + 1}</div>
               <h4 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">{f.title}</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{f.desc}</p>
             </div>
@@ -122,7 +122,7 @@ const About = () => {
               { title: "Innovation", desc: "We don't just follow trends; we set them. Our research team pushes multi-modal inference." }
             ].map((v, i) => (
               <div key={i} className="boxy-card p-6 space-y-3 group hover:border-purple-500 transition-colors">
-                <div className="text-purple-500 font-mono text-xs font-bold">VAL 0{i+1}.</div>
+                <div className="text-purple-500 font-mono text-xs font-bold">VAL 0{i + 1}.</div>
                 <h4 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">{v.title}</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{v.desc}</p>
               </div>
@@ -150,6 +150,33 @@ const About = () => {
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
               Becoming the definitive platform for model evaluation, where image, audio, and text intelligence are instantly accessible through simple, conversational prompts.
             </p>
+          </div>
+        </section>
+
+        {/* Our Team */}
+        <section className="space-y-12 pv-up" style={{ animationDelay: '0.55s' }}>
+          <div className="text-center">
+            <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-2">The Brains</h2>
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Meet the Team</h3>
+          </div>
+
+          <div className="max-w-5xl mx-auto">
+            <div className="boxy-card overflow-hidden bg-white dark:bg-gray-950 p-4 sm:p-6 border border-gray-200 dark:border-gray-800">
+              <div className="relative group overflow-hidden border border-gray-100 dark:border-gray-900 aspect-[16/9]">
+                <img
+                  src="/team.jpg"
+                  alt="PromptVista ML Core Team"
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-in-out transform scale-100 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-500 flex flex-col justify-end p-6 text-left">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-1">PromptVista ML Team</div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-tight">Driving Next-Gen ML Validation</h3>
+                  <p className="text-xs sm:text-sm text-gray-300 max-w-2xl mt-1 font-medium leading-relaxed">
+                    Our team brings together specialists in deep learning, full-stack engineering, and developer experience. Operating out of Shillong, we build open, high-performance tools that redefine how models are tested and proved.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

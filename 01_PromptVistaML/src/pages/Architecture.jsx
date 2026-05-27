@@ -1,3 +1,4 @@
+import { useEffectEvent } from "react";
 import { useState, useRef, useEffect } from "react"
 import { Link } from "react-router-dom"
 
@@ -149,7 +150,7 @@ function useReveal() {
 
 /* ── small shared atoms ── */
 const Stat = ({ metric, label, delay = 0 }) => (
-  <div 
+  <div
     className="p-4 border border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/40 text-center hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.15)] transition-all duration-300 group cursor-default transform hover:-translate-y-1"
     style={{ animation: `pv-up 0.6s ease both ${delay}s` }}
   >
@@ -176,7 +177,7 @@ const Badge = ({ text, color = "purple", pulsing = false }) => {
 
 /* ── Interactive Flow Diagram Component ── */
 const FlowNode = ({ title, desc, icon, delay = 0 }) => (
-  <div 
+  <div
     className="flex items-center gap-4 group cursor-help"
     style={{ animation: `pv-up 0.6s ease both ${delay}s` }}
   >
@@ -212,8 +213,8 @@ const FrontendSection = () => {
           </div>
           <div className="space-y-3 relative z-10">
             {FRONTEND.stack.map((t, idx) => (
-              <div 
-                key={t.label} 
+              <div
+                key={t.label}
                 className="flex flex-col sm:flex-row sm:items-center gap-1 sm:justify-between py-2 border-b border-gray-800/60 last:border-0 hover:bg-white/5 transition-all px-2 transform hover:translate-x-1"
                 style={{ animation: `pv-up 0.5s ease both ${0.3 + idx * 0.05}s` }}
               >
@@ -233,13 +234,13 @@ const FrontendSection = () => {
         </h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {FRONTEND.designSystem.map((d, idx) => (
-            <div 
-              key={d.name} 
+            <div
+              key={d.name}
               className="p-5 border border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/30 hover:border-purple-400/40 hover:bg-purple-500/5 transition-all group relative overflow-hidden"
               style={{ animation: `pv-up 0.6s ease both ${0.1 + idx * 0.05}s` }}
             >
               <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity text-purple-500">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/></svg>
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" /></svg>
               </div>
               <div className="font-mono text-xs text-purple-600 dark:text-purple-400 font-bold mb-2 group-hover:text-purple-500 transition-colors">{d.name}</div>
               <div className="text-xs text-gray-500 leading-relaxed">{d.desc}</div>
@@ -253,8 +254,8 @@ const FrontendSection = () => {
         <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-6 pb-2 border-b border-gray-200 dark:border-gray-800">Page / Route Registry</h3>
         <div className="grid md:grid-cols-2 gap-3">
           {FRONTEND.pages.map((p, idx) => (
-            <div 
-              key={p.name} 
+            <div
+              key={p.name}
               className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 border border-gray-200 dark:border-gray-800 hover:border-purple-500/40 hover:bg-purple-500/5 transition-all group"
               style={{ animation: `pv-up 0.5s ease both ${0.2 + idx * 0.05}s` }}
             >
@@ -296,8 +297,8 @@ const BackendSection = () => {
           </div>
           <div className="space-y-3 relative z-10">
             {BACKEND.services.map((s, idx) => (
-              <div 
-                key={s.name} 
+              <div
+                key={s.name}
                 className="p-3 border border-gray-800 flex items-start gap-3 hover:bg-white/5 transition-all transform hover:translate-x-1"
                 style={{ animation: `pv-up 0.5s ease both ${0.2 + idx * 0.05}s` }}
               >
@@ -323,11 +324,10 @@ const BackendSection = () => {
             <button
               key={t.name}
               onClick={() => setActiveTable(t.name)}
-              className={`px-4 py-2 text-xs font-mono font-bold uppercase tracking-widest border transition-all duration-300 relative group ${
-                activeTable === t.name
-                  ? 'border-yellow-500 bg-yellow-900/10 text-yellow-500'
-                  : 'border-gray-300 dark:border-gray-700 text-gray-500 hover:border-yellow-500/50'
-              }`}
+              className={`px-4 py-2 text-xs font-mono font-bold uppercase tracking-widest border transition-all duration-300 relative group ${activeTable === t.name
+                ? 'border-yellow-500 bg-yellow-900/10 text-yellow-500'
+                : 'border-gray-300 dark:border-gray-700 text-gray-500 hover:border-yellow-500/50'
+                }`}
             >
               {t.name}
               {activeTable === t.name && (
@@ -346,8 +346,8 @@ const BackendSection = () => {
               </thead>
               <tbody>
                 {table.fields.map((f, i) => (
-                  <tr 
-                    key={f.col} 
+                  <tr
+                    key={f.col}
                     className={`${i % 2 === 0 ? 'bg-white dark:bg-gray-900/30' : 'bg-gray-50 dark:bg-gray-900/10'} hover:bg-yellow-500/5 transition-colors group`}
                   >
                     <td className="p-4 font-mono font-bold text-yellow-600 dark:text-yellow-500 group-hover:translate-x-1 transition-transform">{f.col}</td>
@@ -387,8 +387,8 @@ const MLSection = () => {
           </div>
           <div className="space-y-4 relative z-10">
             {ML.models.map((m, idx) => (
-              <div 
-                key={m.id} 
+              <div
+                key={m.id}
                 className="p-4 border border-gray-800 space-y-2 hover:bg-white/5 transition-all transform hover:-translate-y-1"
                 style={{ animation: `pv-up 0.5s ease both ${0.2 + idx * 0.1}s` }}
               >
@@ -417,8 +417,8 @@ const MLSection = () => {
             </svg>
           </div>
           {ML.pipeline.map((s, idx) => (
-            <div 
-              key={s.step} 
+            <div
+              key={s.step}
               className="p-6 border border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/30 hover:border-blue-400/40 hover:bg-blue-500/5 transition-all group relative overflow-hidden transform hover:-translate-y-2"
               style={{ animation: `pv-up 0.6s ease both ${0.1 + idx * 0.1}s` }}
             >
@@ -437,8 +437,8 @@ const MLSection = () => {
         <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-6 pb-2 border-b border-gray-200 dark:border-gray-800">Security Safeguards</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ML.security.map((s, idx) => (
-            <div 
-              key={s.item} 
+            <div
+              key={s.item}
               className="flex items-start gap-4 p-5 border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-gray-900/20 hover:border-red-500/30 transition-all group"
               style={{ animation: `pv-up 0.5s ease both ${0.3 + idx * 0.05}s` }}
             >
@@ -457,8 +457,8 @@ const MLSection = () => {
         <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-6 pb-2 border-b border-gray-200 dark:border-gray-800">Model Capabilities</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {ML.capabilities.map((c, idx) => (
-            <div 
-              key={c.name} 
+            <div
+              key={c.name}
               className="boxy-card p-6 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 transition-all"
               style={{ animation: `pv-up 0.5s ease both ${0.4 + idx * 0.1}s` }}
             >
@@ -475,7 +475,6 @@ const MLSection = () => {
 /* ── MAIN ── */
 const Architecture = () => {
   const [activeTab, setActiveTab] = useState("frontend")
-  const [hRef, hVis] = useReveal()
 
   const TABS = [
     { id: "frontend", label: "Frontend", sub: FRONTEND.subtitle, icon: "UI" },
@@ -486,140 +485,126 @@ const Architecture = () => {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }, [activeTab])
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative pb-24 selection:bg-purple-500/30">
+    <div className="pv-docs-page min-h-screen bg-gray-50 dark:bg-gray-900 relative selection:bg-purple-500/30 pt-24 pb-24">
       {/* Ambient orbs */}
       <div className="pv-glow pointer-events-none fixed top-1/3 -left-40 w-[500px] h-[500px] rounded-full hidden sm:block z-0"
-        style={{ background:'radial-gradient(circle,rgba(139,92,246,.1) 0%,transparent 70%)' }} />
+        style={{ background: 'radial-gradient(circle,rgba(139,92,246,.1) 0%,transparent 70%)' }} />
       <div className="pv-glow pointer-events-none fixed bottom-1/4 -right-40 w-[500px] h-[500px] rounded-full hidden sm:block z-0"
-        style={{ background:'radial-gradient(circle,rgba(96,165,250,.08) 0%,transparent 70%)', animationDelay:'1.8s' }} />
+        style={{ background: 'radial-gradient(circle,rgba(96,165,250,.08) 0%,transparent 70%)', animationDelay: '1.8s' }} />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
 
-
-      {/* Hero */}
-      <header className="relative pt-20 pb-12 overflow-hidden z-10 border-b border-gray-200 dark:border-gray-800">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div
-          ref={hRef}
-          className="max-w-7xl mx-auto px-4 text-center relative"
-          style={{ opacity: 0, animation: hVis ? 'pv-up .8s ease forwards' : 'none' }}
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[10px] font-bold tracking-widest uppercase border border-purple-200 dark:border-purple-800 mb-6">
-            <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
-            Technical Infrastructure
+        {/* Sidebar Nav */}
+        <aside className="pv-docs-sidebar w-full md:w-64 lg:w-72 flex-shrink-0 md:sticky top-28 md:border-r border-gray-200 dark:border-gray-800 md:pr-6 hidden md:block md:min-h-[calc(100vh-8rem)]">
+          <div className="text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-6 pb-2 border-b border-gray-200 dark:border-gray-800">
+            Architecture
           </div>
-          <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
-            System <span className="pv-grad-text">Architecture</span>
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed font-normal">
-            A comprehensive deep-dive into the multi-modal orchestration engine, 
-            serverless data backbone, and the high-fidelity UI framework of PromptVista ML.
-          </p>
-        </div>
-
-        {/* Floating System Health Ticker - Moved to Middle */}
-        <div className="mt-16 bg-white/60 dark:bg-gray-950/60 backdrop-blur-md border-y border-gray-200 dark:border-gray-800 py-3 overflow-hidden">
-          <div className="flex whitespace-nowrap animate-[scroll_40s_linear_infinite] text-[10px] font-mono text-gray-500 dark:text-gray-400 uppercase tracking-[0.3em] font-bold">
-            {[...Array(4)].map((_, i) => (
-              <span key={i} className="flex items-center gap-10 px-8">
-                <span>Uptime: <span className="text-green-600 dark:text-green-500">99.99%</span></span>
-                <span className="text-gray-300 dark:text-gray-700">/</span>
-                <span>Latency: <span className="text-purple-600 dark:text-purple-400">142ms</span></span>
-                <span className="text-gray-300 dark:text-gray-700">/</span>
-                <span>DB: <span className="text-blue-600 dark:text-blue-400">Connected</span></span>
-                <span className="text-gray-300 dark:text-gray-700">/</span>
-                <span>Edge: <span className="text-yellow-600 dark:text-yellow-500">Active</span></span>
-                <span className="text-gray-300 dark:text-gray-700">/</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </header>
-
-      {/* Tab nav */}
-      <div className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-y border-gray-200 dark:border-gray-800 shadow-xl">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex overflow-x-auto no-scrollbar">
+          <nav className="flex flex-col gap-1">
             {TABS.map(t => (
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`flex-shrink-0 text-left px-8 py-6 transition-all duration-500 relative border-r border-gray-100 dark:border-gray-800 last:border-0 group min-w-[200px] ${
-                  activeTab === t.id ? 'bg-gray-50/50 dark:bg-purple-500/5' : 'hover:bg-gray-50/30 dark:hover:bg-white/5'
-                }`}
+                className={`text-left px-4 py-2.5 transition-all duration-300 border-l-2 group flex items-center gap-3 ${activeTab === t.id
+                  ? 'border-purple-500 bg-purple-500/5 text-purple-600 dark:text-purple-400'
+                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white'
+                  }`}
               >
-                <div className="flex items-center gap-3">
-                  <div className={`text-[10px] font-mono font-bold border px-1.5 py-0.5 transition-colors ${activeTab === t.id ? 'border-purple-500 text-purple-500 bg-purple-500/10' : 'border-gray-500 text-gray-500'}`}>
-                    {t.icon}
-                  </div>
-                  <div className={`text-sm font-bold uppercase tracking-[0.2em] transition-colors ${activeTab === t.id ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300'}`}>{t.label}</div>
+                <div className={`text-[10px] font-mono font-bold px-1.5 py-0.5 transition-colors border ${activeTab === t.id ? 'border-purple-500/50 text-purple-500 bg-purple-500/10' : 'border-gray-400/50 text-gray-500 group-hover:border-gray-500'}`}>
+                  {t.icon}
                 </div>
-                <div className="text-[9px] text-gray-400 mt-1.5 hidden sm:block font-mono truncate max-w-[150px]">{t.sub}</div>
-                {activeTab === t.id && (
-                  <>
-                    <div className="absolute bottom-0 left-0 right-0 h-[4px] bg-purple-600 dark:bg-purple-500 animate-[width_0.4s_ease]" />
-                    <div className="absolute top-0 left-0 w-full h-full shadow-[inset_0_0_20px_rgba(139,92,246,0.1)] pointer-events-none" />
-                  </>
-                )}
+                <div className="text-sm font-bold uppercase tracking-widest">{t.label}</div>
               </button>
             ))}
-          </div>
-        </div>
-      </div>
+          </nav>
 
-      {/* Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 mt-20 relative z-10">
-        <div className="absolute inset-0 pv-grid pointer-events-none -z-10" />
-        <div className="animate-[fadeIn_0.6s_ease-out]">
-          {activeTab === "frontend" && <FrontendSection />}
-          {activeTab === "backend" && <BackendSection />}
-          {activeTab === "ml" && <MLSection />}
-        </div>
-      </main>
-
-      {/* Dynamic Activity Log (Moving Element) */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-20">
-        <div className="boxy-card bg-gray-50 dark:bg-gray-950 p-4 relative overflow-hidden group">
-          <div className="flex items-center gap-4 text-[10px] font-mono">
-            <span className="text-green-500 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping" />
-              LIVE SYSTEM LOGS
-            </span>
-            <div className="flex-1 overflow-hidden">
-              <div className="whitespace-nowrap animate-[scroll_30s_linear_infinite] text-gray-500 uppercase tracking-widest">
-                [SYSTEM] Querying Supabase models... [GEMINI] 1.5-Pro Latency: 1.2s... [AUTH] JWT Session Validated... [UI] Triggering pv-up animation... [STORAGE] Fetching multi-modal binary assets... [SYSTEM] Pipeline Step 04 active... [VISTA] Security scan complete: 0 threats detected...
+          {/* System Status Ticker (Mini) */}
+          <div className="mt-12 border border-gray-200 dark:border-gray-800 p-4 bg-white/60 dark:bg-gray-950/60 overflow-hidden backdrop-blur-md">
+            <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 mb-3 border-b border-gray-200 dark:border-gray-800 pb-2">System Status</div>
+            <div className="flex flex-col gap-2 text-[10px] font-mono">
+              <div className="flex justify-between items-center text-gray-500">
+                <span>Uptime</span>
+                <span className="text-green-500 font-bold">99.99%</span>
+              </div>
+              <div className="flex justify-between items-center text-gray-500">
+                <span>Latency</span>
+                <span className="text-purple-500 font-bold">142ms</span>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </aside>
 
-      {/* Footer CTA */}
-      <footer className="max-w-6xl mx-auto px-4 sm:px-6 mt-32 relative z-10">
-        <div className="boxy-card p-12 sm:p-16 bg-white dark:bg-gray-950 relative overflow-hidden text-center group border border-purple-500/30 shadow-2xl">
-          <div className="absolute inset-0 pv-grid pointer-events-none" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px]" />
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px]" />
-          
-          <div className="relative z-10 space-y-8">
-            <h3 className="text-4xl sm:text-5xl font-bold tracking-tighter text-gray-900 dark:text-white">Engineered for the Future</h3>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed font-normal">
-              PromptVista ML isn't just a project; it's a blueprint for multi-modal AI applications. 
-              Explore the documentation or start building today.
+        {/* Mobile Dropdown Nav */}
+        <div className="w-full md:hidden mb-6 boxy-card border border-gray-200 dark:border-gray-800 p-4 bg-white dark:bg-gray-950">
+          <select
+            className="w-full bg-transparent border-b border-gray-200 dark:border-gray-800 pb-2 text-sm font-bold uppercase tracking-widest outline-none text-gray-900 dark:text-white appearance-none"
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+          >
+            {TABS.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+          </select>
+        </div>
+
+        {/* Content */}
+        <main className="flex-1 min-w-0 max-w-4xl relative z-10 animate-[fadeIn_0.6s_ease-out]">
+          <div className="absolute inset-0 pv-grid pointer-events-none -z-10" />
+          <div className="mb-12 pb-8 border-b border-gray-200 dark:border-gray-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 border border-purple-500/20 mb-6">
+              Architecture Reference
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight uppercase">
+              {TABS.find(t => t.id === activeTab).label} <span className="pv-grad-text">Stack</span>
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400 font-light leading-relaxed">
+              {TABS.find(t => t.id === activeTab).sub}
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-6 pt-4">
-              <Link to="/api-docs" className="px-10 py-4 bg-purple-600 text-white font-bold uppercase tracking-[0.3em] text-xs hover:bg-purple-700 transition-all hover:scale-105 active:scale-95">
-                API Reference
-              </Link>
-              <Link to="/products" className="px-10 py-4 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-bold uppercase tracking-[0.3em] text-xs hover:bg-gray-50 dark:hover:bg-gray-800 transition-all hover:scale-105 active:scale-95">
-                View Products
-              </Link>
+          </div>
+          <div className="space-y-12">
+            {activeTab === "frontend" && <FrontendSection />}
+            {activeTab === "backend" && <BackendSection />}
+            {activeTab === "ml" && <MLSection />}
+          </div>
+
+          {/* Dynamic Activity Log */}
+          <div className="mt-20 border-t border-gray-200 dark:border-gray-800 pt-12">
+            <div className="boxy-card bg-gray-50 dark:bg-gray-950 p-4 relative overflow-hidden group">
+              <div className="flex items-center gap-4 text-[10px] font-mono">
+                <span className="text-green-500 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping" />
+                  LIVE SYSTEM LOGS
+                </span>
+                <div className="flex-1 overflow-hidden">
+                  <div className="whitespace-nowrap animate-[scroll_30s_linear_infinite] text-gray-500 uppercase tracking-widest">
+                    [SYSTEM] Querying Supabase models... [GEMINI] 1.5-Pro Latency: 1.2s... [AUTH] JWT Session Validated... [UI] Triggering pv-up animation... [STORAGE] Fetching multi-modal binary assets... [SYSTEM] Pipeline Step 04 active... [VISTA] Security scan complete: 0 threats detected...
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
 
-      {/* Global Animations Style */}
+          {/* Footer CTA */}
+          <div className="mt-16 boxy-card p-12 bg-white dark:bg-gray-950 relative overflow-hidden group border border-purple-500/30 shadow-2xl">
+            <div className="absolute inset-0 pv-grid pointer-events-none" />
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px]" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px]" />
 
+            <div className="relative z-10 space-y-6">
+              <h3 className="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white">Engineered for the Future</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-normal">
+                PromptVista ML isn't just a project; it's a blueprint for multi-modal AI applications.
+                Explore the documentation or start building today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Link to="/api-docs" className="px-8 py-3 bg-purple-600 text-white font-bold uppercase tracking-[0.2em] text-xs hover:bg-purple-700 transition-all active:scale-95 text-center">
+                  API Reference
+                </Link>
+                <Link to="/products" className="px-8 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-bold uppercase tracking-[0.2em] text-xs hover:bg-gray-50 dark:hover:bg-gray-800 transition-all active:scale-95 text-center">
+                  View Products
+                </Link>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   )
 }

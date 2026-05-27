@@ -131,6 +131,26 @@ const Careers = () => {
           </div>
         </header>
 
+        {/* Team Photo Section */}
+        <section className="max-w-5xl mx-auto pv-up" style={{ animationDelay: '0.05s' }}>
+          <div className="boxy-card overflow-hidden bg-white dark:bg-gray-950 p-4 sm:p-6 border border-gray-200 dark:border-gray-800">
+            <div className="relative group overflow-hidden border border-gray-100 dark:border-gray-900 aspect-[16/9]">
+              <img 
+                src="/team.jpg" 
+                alt="PromptVista ML Core Team" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-in-out transform scale-100 hover:scale-105" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-500 flex flex-col justify-end p-6 text-left">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-purple-400 mb-1">Our Core Team</div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-tight">The Minds behind PromptVista ML</h3>
+                <p className="text-xs sm:text-sm text-gray-300 max-w-2xl mt-1 font-medium leading-relaxed">
+                  We are a passionate team of developers and research scientists based out of Shillong, working to bridge the gap between technical complexity and real-world model valuation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Perks & Benefits */}
         <section className="pv-up" style={{ animationDelay: '0.1s' }}>
           <div className="text-center mb-12">
