@@ -1,3 +1,8 @@
+---
+name: tailwind-spacing-rules
+description: Vertical rhythm guidelines, component padding standards, and typographic scale hierarchies.
+---
+
 # Tailwind Spacing Rules
 
 ## Vertical Rhythm

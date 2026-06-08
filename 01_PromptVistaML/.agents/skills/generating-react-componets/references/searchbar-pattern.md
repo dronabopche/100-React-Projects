@@ -1,3 +1,8 @@
+---
+name: searchbar-pattern
+description: Standard wrapper, absolute icon placement, and input styling for search bars.
+---
+
 # Search Bar Pattern
 
 ## Structure

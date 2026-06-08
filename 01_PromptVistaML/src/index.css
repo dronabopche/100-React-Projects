@@ -1526,3 +1526,64 @@
   .pv-card:hover::after { opacity:0 }
   .pv-f1,.pv-f2 { animation:none }
 }
+
+/* ─── 3D Learning Glassmorphism & 3D Utilities ─── */
+.pv-glass-panel {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.1);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dark .pv-glass-panel {
+  background: rgba(11, 11, 15, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), 0 0 20px 0 rgba(139, 92, 246, 0.1);
+}
+
+.pv-glass-panel:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 12px 40px 0 rgba(139, 92, 246, 0.2);
+}
+
+.pv-glass-panel-active {
+  background: rgba(139, 92, 246, 0.15) !important;
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.3) !important;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.rotate-y-10 {
+  transform: rotateY(10deg);
+}
+
+.rotate-x-10 {
+  transform: rotateX(10deg);
+}
+
+.pv-cube-3d-button {
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pv-cube-3d-button:active {
+  transform: translateZ(-4px) rotateX(4deg);
+}
+
+.pv-math-tag {
+  font-family: 'Courier New', Courier, monospace;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  @apply px-1.5 py-0.5 text-xs text-purple-600 dark:text-purple-300 dark:bg-purple-950/40 dark:border-purple-800/40;
+}

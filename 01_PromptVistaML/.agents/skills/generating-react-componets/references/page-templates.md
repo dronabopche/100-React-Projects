@@ -1,3 +1,8 @@
+---
+name: page-templates
+description: Standard page sections template flow from the hero section to features, workflows, testimonials, and FAQs.
+---
+
 # Page Templates
 
 When generating an entire page, follow this structural template.

@@ -1,3 +1,8 @@
+---
+name: navbar-pattern
+description: Layout structure, semi-transparent blur styling, and active state indicators for the navigation bar.
+---
+
 # Navbar Pattern
 
 ## Structure

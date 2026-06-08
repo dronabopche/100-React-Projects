@@ -1,3 +1,8 @@
+---
+name: app-layout
+description: Guidelines and patterns for application-level shell, routing, and dark mode configuration.
+---
+
 # Application Layout and Routing
 
 ## App Shell

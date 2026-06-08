@@ -1,3 +1,8 @@
+---
+name: card-layout-guides
+description: Detailed design patterns and styling differences between standard and premium cards.
+---
+
 # Card Layout Guides
 
 ## Standard Cards (`.boxy-card`)

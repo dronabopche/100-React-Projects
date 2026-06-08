@@ -14,7 +14,6 @@ const Navbar = () => {
     { path: '/api-docs', label: 'API Docs' },
     { path: '/products', label: 'Products' },
     { path: '/architecture', label: 'Architecture' }
-    
   ]
 
   return (

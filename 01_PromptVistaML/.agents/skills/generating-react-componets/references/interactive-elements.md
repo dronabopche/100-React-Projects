@@ -1,3 +1,8 @@
+---
+name: interactive-elements
+description: Implementation rules for accordions, tab interfaces, and high-contrast badges/tags.
+---
+
 # Interactive Elements
 
 ## Accordions / FAQ

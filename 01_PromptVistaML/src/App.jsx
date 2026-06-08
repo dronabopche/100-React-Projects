@@ -9,6 +9,7 @@ import Architecture from './pages/Architecture'
 import Products from './pages/Products'
 import About from './pages/About'
 import Careers from './pages/Careers'
+import Learning3D from './pages/Learning3D'
 import VistaSecureAI from './pages/products/VistaSecureAI'
 import PromptHallucinationML from './pages/products/PromptHallucinationML'
 import VistaMeHR from './pages/products/VistaMeHR'
@@ -35,6 +36,7 @@ function App() {
             <Route path="/products/vista-me-hr" element={<VistaMeHR />} />
             <Route path="/about" element={<About />} />
             <Route path="/careers" element={<Careers />} />
+            <Route path="/3d-learning" element={<Learning3D />} />
           </Routes>
         </main>
         <Footer />
@@ -42,5 +44,6 @@ function App() {
     </Router>
   )
 }
+
 
 export default App

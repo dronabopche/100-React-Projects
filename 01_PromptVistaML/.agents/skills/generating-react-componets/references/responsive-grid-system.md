@@ -1,3 +1,8 @@
+---
+name: responsive-grid-system
+description: Mobile-first responsive columns, standard breakpoint transitions, and layout wrapping rules.
+---
+
 # Responsive Grid System
 
 ## Standard Breakpoints

@@ -1,3 +1,8 @@
+---
+name: home-pattern
+description: Standard structure, hero section designs, content layout, and animations for the home page.
+---
+
 # Home Page Pattern
 
 ## Structure

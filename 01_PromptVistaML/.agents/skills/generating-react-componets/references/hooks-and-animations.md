@@ -1,3 +1,8 @@
+---
+name: hooks-and-animations
+description: Specifications and code examples for intersection observers, counters, and scroll-triggered animations.
+---
+
 # Hooks and Animations
 
 ## 1. Intersection Observer (`useReveal`)

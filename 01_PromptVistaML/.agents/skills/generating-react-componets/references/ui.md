@@ -1,3 +1,8 @@
+---
+name: ui-design-standards
+description: Core color palette, monospace typography preferences, and specific implementation details of the Boxy aesthetic.
+---
+
 # UI Design Standards
 
 ## Color Palette

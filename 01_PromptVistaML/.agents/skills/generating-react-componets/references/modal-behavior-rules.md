@@ -1,3 +1,8 @@
+---
+name: modal-behavior-rules
+description: Formatting and interaction guidelines for sharp-edged dialog overlays and modal containers.
+---
+
 # Modal Behavior Rules
 
 ## Overlay
