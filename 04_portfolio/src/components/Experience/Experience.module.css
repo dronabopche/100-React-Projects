@@ -60,20 +60,42 @@
   transform: rotate(45deg);
 }
 
+.roleHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.companyLogo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px;
+  border: 1px solid var(--border);
+}
+
+.roleInfo {
+  display: flex;
+  flex-direction: column;
+}
+
 .role {
   font-family: 'Cinzel', serif;
   font-size: 0.85rem;
   letter-spacing: 0.06em;
   color: var(--cream);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.1rem;
 }
+
 .place {
   font-family: 'Cormorant Garamond', serif;
   font-size: 0.9rem;
   font-style: italic;
   color: var(--gold-dim);
   display: block;
-  margin-bottom: 0.8rem;
 }
 .desc {
   font-family: 'EB Garamond', serif;

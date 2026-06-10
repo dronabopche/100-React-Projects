@@ -6,24 +6,28 @@ const TIMELINE = [
     year: '2024 — Present',
     role: 'Full-Stack Developer & ML Engineer',
     place: 'Freelance / Open Source',
+    logo: '/experience/freelance.png',
     desc: 'Building end-to-end applications combining modern web frameworks with machine learning pipelines. Specialising in automation workflows with n8n and intelligent API integrations.',
   },
   {
     year: '2023',
     role: 'Machine Learning Projects',
     place: 'Personal Research',
+    logo: '/experience/research.png',
     desc: 'Developed classification, regression, and NLP models using Scikit-learn, TensorFlow, and Pandas. Focused on model explainability and production deployment.',
   },
   {
     year: '2022',
     role: 'Web Development',
     place: 'Learning & Building',
+    logo: '/experience/learning.png',
     desc: 'Mastered React, Node.js, and REST API design. Built full-stack applications with authentication, database integration, and responsive UI.',
   },
   {
     year: '2021',
     role: 'Python & Automation',
     place: 'Self-taught',
+    logo: '/experience/selftaught.png',
     desc: 'Started the journey with Python scripting, web scraping, data analysis, and process automation. Built tools that eliminated repetitive manual tasks.',
   },
 ]
@@ -61,8 +65,13 @@ export default function Experience() {
               </div>
               <div className={styles.content}>
                 <div className={styles.dot} />
-                <h3 className={styles.role}>{item.role}</h3>
-                <span className={styles.place}>{item.place}</span>
+                <div className={styles.roleHeader}>
+                  <img src={item.logo} alt={`${item.place} logo`} className={styles.companyLogo} onError={(e) => { e.target.style.display = 'none' }} />
+                  <div className={styles.roleInfo}>
+                    <h3 className={styles.role}>{item.role}</h3>
+                    <span className={styles.place}>{item.place}</span>
+                  </div>
+                </div>
                 <p className={styles.desc}>{item.desc}</p>
               </div>
             </motion.div>

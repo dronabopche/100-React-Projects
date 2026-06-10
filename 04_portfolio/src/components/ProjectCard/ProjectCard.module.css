@@ -1,14 +1,18 @@
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgba(26, 17, 8, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(238, 187, 47, 0.15);
   padding: 1.6rem;
   position: relative;
   cursor: pointer;
-  transition: border-color 0.25s, box-shadow 0.25s;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s, transform 0.25s;
 }
 .card:hover {
-  border-color: var(--border2);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.06);
+  background: rgba(26, 17, 8, 0.6);
+  border-color: rgba(238, 187, 47, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px rgba(238, 187, 47, 0.1);
 }
 
 .topLine {

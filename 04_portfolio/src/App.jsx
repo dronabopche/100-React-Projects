@@ -10,6 +10,7 @@ import Contact from './components/Contact/Contact'
 import Footer from './components/Footer/Footer'
 import { fetchRepos } from './services/github'
 import StarBackground from './components/StarBackground/StarBackground'
+import Sidebar from './components/Sidebar/Sidebar'
 
 export default function App() {
   const [repos, setRepos] = useState([])
@@ -34,6 +35,9 @@ export default function App() {
     <>
       {/* Background Layer */}
       <StarBackground />
+
+      {/* Floating Sidebar */}
+      <Sidebar />
 
       {/* Main Content */}
       <Hero />

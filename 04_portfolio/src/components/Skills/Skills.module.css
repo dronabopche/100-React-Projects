@@ -2,7 +2,9 @@
   padding: 6rem 2rem;
   background: var(--bg);
   position: relative;
+  overflow: hidden;
 }
+
 .section::before {
   content: '';
   position: absolute;
@@ -13,76 +15,40 @@
 
 .header {
   text-align: center;
-  max-width: 600px;
-  margin: 0 auto 4rem;
+  margin-bottom: 4rem;
 }
 
-.groups {
-  max-width: 1100px;
-  margin: 0 auto 4rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.5rem;
-}
-
-.group {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 1.8rem;
-  position: relative;
-}
-.group::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
-}
-
-.groupTitle {
-  font-family: 'Cinzel', serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: var(--gold-dim);
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-.pills {
+.beltsContainer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
 }
 
-.pill {
-  padding: 0.3rem 0.85rem;
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: 'EB Garamond', serif;
-  font-size: 0.9rem;
-  border-radius: 1px;
-  cursor: default;
-  transition: border-color 0.2s, color 0.2s;
-}
-.pill:hover {
-  border-color: var(--gold-dim);
-  color: var(--gold);
-}
-
-/* Scrolling belt */
+/* Scrolling Belt */
 .belt {
-  margin-top: 1rem;
   overflow: hidden;
   mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  padding: 0.5rem 0;
 }
-.beltInner { overflow: hidden; }
+
+.beltInner {
+  overflow: hidden;
+  width: 100%;
+}
+
 .beltRow {
   display: flex;
   width: max-content;
   gap: 0;
 }
+
+/* Tag Pill with Original Flat Border-Right Format */
 .beltTag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: 'Cinzel', serif;
   font-size: 0.65rem;
   letter-spacing: 0.12em;
@@ -91,9 +57,43 @@
   white-space: nowrap;
   padding: 0.6rem 1.8rem;
   border-right: 1px solid var(--border);
+  transition: color 0.2s;
+  cursor: pointer;
 }
-.beltDot { color: var(--gold-dim); margin-right: 0.3rem; }
 
-@media (max-width: 600px) {
-  .groups { grid-template-columns: 1fr; }
+.beltTag:hover {
+  color: var(--gold);
+}
+
+.iconContainer {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.techIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tagName {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 1rem;
+  }
+  .belt {
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  }
 }
