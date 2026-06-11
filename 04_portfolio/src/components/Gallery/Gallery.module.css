@@ -24,14 +24,15 @@
   position: relative;
   overflow: hidden;
   border-radius: 16px;
-  border: 1px solid rgba(238, 187, 47, 0.15);
+  border: 1px solid var(--border);
   transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .card:hover {
-  border-color: rgba(238, 187, 47, 0.4);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(238, 187, 47, 0.1);
+  border-color: var(--gold);
+  box-shadow: 0 15px 35px var(--shadow), 0 0 20px rgba(238, 187, 47, 0.1);
 }
+
 
 /* Image */
 .card img {

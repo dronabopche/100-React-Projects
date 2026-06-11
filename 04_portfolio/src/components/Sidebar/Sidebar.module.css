@@ -1,7 +1,7 @@
 .sidebarContainer {
   position: fixed;
-  left: 24px;
-  top: 30%;
+  left: 54px;
+  top: calc(30% - 90px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,13 +17,28 @@
 }
 
 .iconLink {
-  color: rgba(255, 255, 255, 0.7);
+  color: #ffffff !important;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
   width: 22px;
   height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: color 0.25s ease, filter 0.25s ease;
+}
+
+.iconLink:hover {
+  color: var(--gold) !important;
+}
+
+:global([data-theme='light']) .iconLink {
+  color: #000000 !important;
+  filter: none !important;
+}
+
+:global([data-theme='light']) .iconLink:hover {
+  color: var(--gold) !important;
 }
 
 .iconLink svg {
@@ -31,11 +46,52 @@
   height: 100%;
 }
 
+
 .lineBottom {
   width: 1px;
   height: 80px;
-  background: linear-gradient(to bottom, var(--border2) 50%, transparent 100%);
+  background: linear-gradient(to bottom, var(--gold) 30%, transparent 100%);
   margin-top: 10px;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 5px var(--gold));
+  transition: background 0.3s, filter 0.3s;
+}
+
+:global([data-theme='light']) .lineBottom {
+  background: linear-gradient(to bottom, #000000 30%, transparent 100%);
+  filter: none;
+}
+
+.lineTop {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to top, var(--gold) 30%, transparent 100%);
+  margin-bottom: 10px;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 5px var(--gold));
+  transition: background 0.3s, filter 0.3s;
+}
+
+:global([data-theme='light']) .lineTop {
+  background: linear-gradient(to top, #000000 30%, transparent 100%);
+  filter: none;
+}
+
+
+.iconLink:hover {
+  animation: jewelSparkle 1.5s infinite alternate;
+}
+
+@keyframes jewelSparkle {
+  0% {
+    filter: drop-shadow(0 0 5px var(--gold)) drop-shadow(0 0 10px var(--gold));
+    transform: scale(1.1);
+  }
+
+  100% {
+    filter: drop-shadow(0 0 15px #00f2fe) drop-shadow(0 0 25px #4facfe);
+    transform: scale(1.1);
+  }
 }
 
 @media (max-width: 768px) {

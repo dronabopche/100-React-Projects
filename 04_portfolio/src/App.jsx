@@ -11,11 +11,26 @@ import Footer from './components/Footer/Footer'
 import { fetchRepos } from './services/github'
 import StarBackground from './components/StarBackground/StarBackground'
 import Sidebar from './components/Sidebar/Sidebar'
+import Fort from './components/Fort/Fort'
+import MouseTrail from './components/MouseTrail/MouseTrail'
 
 export default function App() {
   const [repos, setRepos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isGameOpen, setIsGameOpen] = useState(false)
+  
+  // Theme state persisted in LocalStorage
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
+  }
 
   useEffect(() => {
     async function load() {
@@ -33,17 +48,25 @@ export default function App() {
 
   return (
     <>
+      {/* Global Cursor Trail */}
+      <MouseTrail />
+
       {/* Background Layer */}
       <StarBackground />
 
       {/* Floating Sidebar */}
-      <Sidebar />
+      <Sidebar 
+        openGame={() => setIsGameOpen(true)} 
+        toggleTheme={toggleTheme} 
+        theme={theme}
+      />
 
       {/* Main Content */}
       <Hero />
       <About />
       <LiveProjects />
       <Skills />
+      {isGameOpen && <Fort onClose={() => setIsGameOpen(false)} />}
       <Projects repos={repos} loading={loading} error={error} />
       <Gallery/>
       <Experience />

@@ -1,19 +1,20 @@
 .card {
-  background: rgba(26, 17, 8, 0.4);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(238, 187, 47, 0.15);
+  border: 1px solid var(--border);
   padding: 1.6rem;
   position: relative;
   cursor: pointer;
   transition: border-color 0.25s, box-shadow 0.25s, background 0.25s, transform 0.25s;
 }
 .card:hover {
-  background: rgba(26, 17, 8, 0.6);
-  border-color: rgba(238, 187, 47, 0.4);
+  background: var(--card-bg-hover);
+  border-color: var(--gold);
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px rgba(238, 187, 47, 0.1);
+  box-shadow: 0 12px 40px var(--shadow), 0 0 20px rgba(238, 187, 47, 0.1);
 }
+
 
 .topLine {
   position: absolute;

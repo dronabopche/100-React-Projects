@@ -18,7 +18,7 @@
 
   position: relative;
   border-radius: 18px;
-  border: 1px solid rgba(238, 187, 47, 0.15);
+  border: 1px solid var(--border);
   overflow: hidden;
   flex-shrink: 0;
 
@@ -31,9 +31,10 @@
   transform: scale(1.15);
   filter: blur(0) brightness(1);
   z-index: 3;
-  border-color: rgba(238, 187, 47, 0.4);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(238, 187, 47, 0.1);
+  border-color: var(--gold);
+  box-shadow: 0 15px 35px var(--shadow), 0 0 20px rgba(238, 187, 47, 0.1);
 }
+
 
 /* Image */
 .card img {

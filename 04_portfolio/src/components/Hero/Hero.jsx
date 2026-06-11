@@ -1,3 +1,4 @@
+import React from 'react'
 import { motion } from 'framer-motion'
 import styles from './Hero.module.css'
 
@@ -19,7 +20,9 @@ export default function Hero() {
         >
           <span className={styles.eyebrow}>✦ Portfolio</span>
 
-          <h1 className={styles.name}>{name}</h1>
+          <h1 className={styles.name}>
+            {name}
+          </h1>
 
           <div className={styles.titleRow}>
             <span className={styles.titleLine} />
@@ -67,10 +70,18 @@ export default function Hero() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       >
+        {/* Dark theme profile image */}
         <img
           src="/profile.png"
           alt={name}
-          className={styles.portrait}
+          className={`${styles.portrait} ${styles.portraitDark}`}
+        />
+
+        {/* Light theme profile image */}
+        <img
+          src="/profile-light.png"
+          alt={name}
+          className={`${styles.portrait} ${styles.portraitLight}`}
         />
 
         {/* Frame corners */}

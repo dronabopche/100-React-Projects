@@ -3,17 +3,17 @@ import styles from './Experience.module.css'
 
 const TIMELINE = [
   {
-    year: '2024 — Present',
-    role: 'Full-Stack Developer & ML Engineer',
-    place: 'Freelance / Open Source',
-    logo: '/experience/freelance.png',
+    year: '2026 — Present',
+    role: 'AI/ML Execution Internship',
+    place: 'Stairways Techonlogies LLP.',
+    logo: '/experience/stairways.png',
     desc: 'Building end-to-end applications combining modern web frameworks with machine learning pipelines. Specialising in automation workflows with n8n and intelligent API integrations.',
   },
   {
-    year: '2023',
+    year: '2025',
     role: 'Machine Learning Projects',
     place: 'Personal Research',
-    logo: '/experience/research.png',
+    logo: '/experience/v2.png',
     desc: 'Developed classification, regression, and NLP models using Scikit-learn, TensorFlow, and Pandas. Focused on model explainability and production deployment.',
   },
   {

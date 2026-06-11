@@ -1,0 +1,267 @@
+.widgetWrapper {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+}
+
+/* Floating Character Container */
+.kingContainer {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kingContainer:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 15px rgba(238, 187, 47, 0.4));
+}
+
+.kingContainer:hover .promptBubble {
+  opacity: 1;
+  transform: translateY(0) translateX(-50%);
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.5) translateY(20px);
+}
+
+/* Character Body & SVG */
+.kingCharacter {
+  width: 75px;
+  height: 75px;
+  background: rgba(18, 14, 22, 0.85);
+  border: 1.5px solid var(--gold-dim);
+  border-radius: 50%;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(168, 85, 247, 0.15);
+  animation: float 3.2s ease-in-out infinite;
+}
+
+.kingSvg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* Prompt Bubble */
+.promptBubble {
+  position: absolute;
+  top: -55px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #0c0806;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  animation: bouncePrompt 2s infinite alternate;
+  z-index: 10;
+  border: 1px solid #3d2c15;
+}
+
+.promptArrow {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: var(--gold2);
+  border-right: 1px solid #3d2c15;
+  border-bottom: 1px solid #3d2c15;
+}
+
+@keyframes bouncePrompt {
+  0% { transform: translateY(0) translateX(-50%); }
+  100% { transform: translateY(-4px) translateX(-50%); }
+}
+
+/* RPG Dialogue Panel Container */
+.dialogPanel {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 360px;
+  background: rgba(18, 14, 22, 0.98);
+  border: 2px solid var(--gold-dim);
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(168, 85, 247, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.85) translateY(30px);
+  transform-origin: right bottom;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.dialogPanel.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: all;
+}
+
+/* Header */
+.dialogHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(26, 18, 30, 0.95);
+  border-bottom: 1px solid rgba(238, 187, 47, 0.2);
+  padding: 0.9rem 1.2rem;
+}
+
+.dialogHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.dialogHeaderCrown {
+  font-size: 1.5rem;
+}
+
+.kingName {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  color: var(--gold);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.kingStatus {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.05em;
+  margin-top: 0.15rem;
+}
+
+.closeDialogBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.closeDialogBtn:hover {
+  color: #ff4757;
+}
+
+/* Dialogue Body */
+.dialogBody {
+  padding: 1.2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: radial-gradient(circle at center, rgba(30, 20, 35, 0.2) 0%, rgba(10, 6, 12, 0.4) 100%);
+}
+
+.kingAvatarLarge {
+  width: 60px;
+  height: 60px;
+  background: rgba(26, 18, 30, 0.8);
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 3px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.avatarLargeSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.dialogText {
+  flex: 1;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--cream);
+  font-style: italic;
+}
+
+/* Dialogue Options List */
+.dialogOptions {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: rgba(10, 6, 12, 0.4);
+  border-top: 1px solid rgba(238, 187, 47, 0.1);
+}
+
+.dialogOptBtn {
+  width: 100%;
+  text-align: left;
+  background: rgba(30, 20, 15, 0.8);
+  border: 1px solid var(--border2);
+  color: var(--gold2);
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.dialogOptBtn:hover {
+  background: rgba(238, 187, 47, 0.12);
+  border-color: var(--gold);
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(238, 187, 47, 0.25);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .widgetWrapper {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .kingCharacter {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .dialogPanel {
+    width: 290px;
+  }
+  
+  .dialogText {
+    font-size: 1rem;
+  }
+  
+  .dialogOptBtn {
+    font-size: 0.72rem;
+    padding: 0.55rem 0.8rem;
+  }
+}

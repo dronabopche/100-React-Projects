@@ -5,10 +5,10 @@ import styles from './Sidebar.module.css'
 const SOCIALS = [
   {
     name: 'LinkedIn',
-    href: 'https://linkedin.com/in/yourusername',
+    href: 'https://linkedin.com/in/dronabopche',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
       </svg>
     ),
   },
@@ -22,47 +22,78 @@ const SOCIALS = [
     ),
   },
   {
-    name: 'YouTube',
-    href: 'https://youtube.com/@yourchannel',
+    name: 'Kaggle',
+    href: 'https://kaggle.com/dronabopche',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.518 0 9.39-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        <path d="M18.825 2.25c-.22 0-.435.086-.6.24l-7.397 7.085-2.942-2.316V2.7a.45.45 0 0 0-.45-.45H5.568a.45.45 0 0 0-.45.45v18.6a.45.45 0 0 0 .45.45h1.868a.45.45 0 0 0 .45-.45v-5.267l1.792-1.41 5.753 6.945c.17.206.426.327.697.327h2.822c.41 0 .668-.456.44-.798l-6.852-8.27 6.444-6.17a.64.64 0 0 0-.44-1.096h-3.003c-.272 0-.528.121-.7.327L10.366 12.2l4.898-3.854 4.02-6.101z" />
       </svg>
     ),
   },
   {
-    name: 'Kaggle',
-    href: 'https://kaggle.com/yourusername',
+    name: 'Games',
+    isGame: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.825 2.25c-.22 0-.435.086-.6.24l-7.397 7.085-2.942-2.316V2.7a.45.45 0 0 0-.45-.45H5.568a.45.45 0 0 0-.45.45v18.6a.45.45 0 0 0 .45.45h1.868a.45.45 0 0 0 .45-.45v-5.267l1.792-1.41 5.753 6.945c.17.206.426.327.697.327h2.822c.41 0 .668-.456.44-.798l-6.852-8.27 6.444-6.17a.64.64 0 0 0-.44-1.096h-3.003c-.272 0-.528.121-.7.327L10.366 12.2l4.898-3.854 4.02-6.101z"/>
+        <path d="M21.58 6.9l-3.3-3.3A2.02 2.02 0 0 0 16.85 3H7.15c-.53 0-1.04.21-1.42.59L2.42 6.9C2.15 7.18 2 7.55 2 7.93v5.6c0 1.95 1.57 3.53 3.52 3.53h.05c.84 0 1.63-.3 2.27-.85l2.25-1.92h3.8l2.25 1.93c.64.55 1.43.84 2.27.84h.05c1.95 0 3.52-1.57 3.52-3.52v-5.6c0-.38-.15-.75-.42-1.03zM8 11.5H6.5V13H5v-1.5H3.5V10H5V8.5h1.5V10H8v1.5zm8 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2.5-2.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" />
       </svg>
     ),
   },
+  {
+    name: 'ThemeToggle',
+    isTheme: true,
+  }
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ openGame, toggleTheme, theme }) {
   return (
     <div className={styles.sidebarContainer}>
       <div className={styles.lineTop} />
       <div className={styles.iconList}>
-        {SOCIALS.map((soc, idx) => (
-          <motion.a
-            key={soc.name}
-            href={soc.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.iconLink}
-            aria-label={soc.name}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 * idx, duration: 0.5 }}
-            whileHover={{ scale: 1.2, x: -6, color: 'var(--gold)' }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {soc.icon}
-          </motion.a>
-        ))}
+        {SOCIALS.map((soc, idx) => {
+          let icon = soc.icon
+          let name = soc.name
+
+          if (soc.isTheme) {
+            name = theme === 'dark' ? 'Light Mode' : 'Dark Mode'
+            icon = theme === 'dark' ? (
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0-7a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 17a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zm9-9a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1zM4 12a1 1 0 0 1 0 2H3a1 1 0 1 1 0-2h1zm13.364-7.364a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0zM7.757 16.243a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0zm10.607.707a1 1 0 0 1 1.414 0l.707.707a1 1 0 1 1-1.414 1.414l-.707-.707a1 1 0 0 1 0-1.414zM7.757 7.757a1 1 0 0 1-1.414 0l-.707-.707a1 1 0 1 1 1.414-1.414l.707.707a1 1 0 0 1 0 1.414z" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a1 1 0 0 0-1.88-.18 7.004 7.004 0 0 1-8.28-8.28 1 1 0 0 0-1.18-1.18c-.44.06-.9.1-1.36.1z" />
+              </svg>
+            )
+          }
+
+          return (
+            <motion.a
+              key={soc.name}
+              href={soc.href}
+              target={soc.href ? "_blank" : undefined}
+              rel={soc.href ? "noopener noreferrer" : undefined}
+              className={styles.iconLink}
+              aria-label={name}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 * idx, duration: 0.5 }}
+              whileHover={{ scale: 1.2, x: -6 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                if (soc.isGame) {
+                  e.preventDefault()
+                  openGame()
+                } else if (soc.isTheme) {
+                  e.preventDefault()
+                  toggleTheme()
+                }
+              }}
+            >
+              {icon}
+            </motion.a>
+          )
+        })}
       </div>
       <div className={styles.lineBottom} />
     </div>
