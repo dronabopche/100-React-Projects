@@ -402,22 +402,6 @@ export default function GestureCanvas({ theme, onClose }) {
           p.vy *= 0.85
           
         } else if (isHandPresent && currentGesture === 'OPEN_PALM') {
-          // Levitating behavior: reverse gravity to float upward gently
-          p.vy -= 0.22
-          p.vx += (Math.random() - 0.5) * 0.4
-        } else if (currentGesture === 'THUMBS_UP') {
-          // Grid alignment over the whole screen
-          const cols = 5
-          const rows = 4
-          const col = i % cols
-          const row = Math.floor(i / cols)
-          const targetX = (col + 0.5) * (canvas.width / cols)
-          const targetY = (row + 0.5) * (canvas.height / rows)
-          const dx = targetX - p.x
-          const dy = targetY - p.y
-          p.vx += dx * 0.04
-          p.vy += dy * 0.04
-        } else if (currentGesture === 'THUMBS_DOWN') {
           // Spherical orbital projection around center
           const center = handCenter || { x: canvas.width / 2, y: canvas.height / 2 }
           const phi = Math.acos(-1 + (2 * i) / NUM_JEWELS)
@@ -434,6 +418,22 @@ export default function GestureCanvas({ theme, onClose }) {
           const dy = targetY - p.y
           p.vx += dx * 0.045
           p.vy += dy * 0.045
+        } else if (currentGesture === 'THUMBS_UP') {
+          // Grid alignment over the whole screen
+          const cols = 5
+          const rows = 4
+          const col = i % cols
+          const row = Math.floor(i / cols)
+          const targetX = (col + 0.5) * (canvas.width / cols)
+          const targetY = (row + 0.5) * (canvas.height / rows)
+          const dx = targetX - p.x
+          const dy = targetY - p.y
+          p.vx += dx * 0.04
+          p.vy += dy * 0.04
+        } else if (currentGesture === 'THUMBS_DOWN') {
+          // Levitating behavior: reverse gravity to float upward gently
+          p.vy -= 0.22
+          p.vx += (Math.random() - 0.5) * 0.4
         } else if (currentGesture === 'VICTORY' || currentGesture === 'SPIDERMAN') {
           // Different cool shape: Heart formation
           const center = handCenter || { x: canvas.width / 2, y: canvas.height / 2 }
@@ -583,7 +583,7 @@ export default function GestureCanvas({ theme, onClose }) {
       : gestureState === 'FIST'
       ? '✊ Fist — Clustering'
       : gestureState === 'OPEN_PALM'
-      ? '🖐 Open Palm — Levitating'
+      ? '🖐 Open Palm — Spherical Swarm'
       : gestureState === 'SWIPE_RIGHT'
       ? '👉 Swipe Right — Throw'
       : gestureState === 'SWIPE_LEFT'
@@ -599,7 +599,7 @@ export default function GestureCanvas({ theme, onClose }) {
       : gestureState === 'THUMBS_UP'
       ? '👍 Thumbs Up — Grid Dispersion'
       : gestureState === 'THUMBS_DOWN'
-      ? '👎 Thumbs Down — Spherical Swarm'
+      ? '👎 Thumbs Down — Levitating'
       : gestureState === 'VICTORY'
       ? '✌ Victory — Heart Formation'
       : gestureState === 'SPIDERMAN'
@@ -704,7 +704,7 @@ export default function GestureCanvas({ theme, onClose }) {
           }}
         >
           {isCameraActive 
-            ? 'Point to Orbit. Fist to Grab. Palm to Levit. Thumbs Up to Grid. Thumbs Down to Sphere. Victory to Heart.' 
+            ? 'Point to Orbit. Fist to Grab. Palm to Sphere. Thumbs Up to Grid. Thumbs Down to Levit. Victory to Heart.' 
             : 'Mouse to Orbit. Left-Click to Grab. Press 1, 2, 3 to Form Numbers.'}
         </p>
         {!isCameraActive && (
