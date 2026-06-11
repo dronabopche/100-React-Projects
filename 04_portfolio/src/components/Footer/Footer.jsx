@@ -10,7 +10,7 @@ const NAV = [
   { label: 'Contact', href: '#contact' },
 ]
 
-export default function Footer() {
+export default function Footer({ openSettings }) {
   const year = new Date().getFullYear()
 
   const name = 'Drona Bopche'
@@ -30,7 +30,7 @@ export default function Footer() {
         <div className={styles.brand}>
           <span className={styles.brandName}>{name}</span>
           <span className={styles.brandSub}>
-            Quantum Enthusiast · AI Engineer · ML Developer 
+            Quantum Enthusiast · AI Engineer · ML Developer
           </span>
         </div>
 
@@ -45,6 +45,13 @@ export default function Footer() {
 
         {/* Social */}
         <div className={styles.social}>
+          <button
+            onClick={openSettings}
+            className={styles.settingsBtn}
+            aria-label="Theme Settings"
+          >
+            ⚙️
+          </button>
           <a
             href="https://github.com/dronabopche"
             target="_blank"

@@ -112,3 +112,78 @@ a { color: inherit; text-decoration: none; }
   transform: rotate(45deg);
   flex-shrink: 0;
 }
+
+/* =========================================================
+   Theme View Transitions (Glass Morph / Direct Page Transition)
+   ========================================================= */
+
+::view-transition-group(root) {
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+/* 1. Circle (Top Left Center) */
+[data-animation="circle"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="circle"]::view-transition-new(root) {
+  animation: circle-reveal 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  z-index: 2;
+}
+@keyframes circle-reveal {
+  from { clip-path: circle(0% at 0% 0%); }
+  to { clip-path: circle(150% at 0% 0%); }
+}
+
+/* 2. Wipe */
+[data-animation="wipe"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="wipe"]::view-transition-new(root) {
+  animation: wipe-reveal 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  z-index: 2;
+}
+@keyframes wipe-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* 3. Split */
+[data-animation="split"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="split"]::view-transition-new(root) {
+  animation: split-reveal 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  z-index: 2;
+}
+@keyframes split-reveal {
+  from { clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* 4. Fade (Glass Effect) */
+[data-animation="fade"]::view-transition-old(root) {
+  animation: fade-out 0.8s forwards;
+}
+[data-animation="fade"]::view-transition-new(root) {
+  animation: fade-in 0.8s forwards;
+}
+@keyframes fade-out { 
+  from { opacity: 1; filter: blur(0px); } 
+  to { opacity: 0; filter: blur(20px); } 
+}
+@keyframes fade-in { 
+  from { opacity: 0; filter: blur(20px); } 
+  to { opacity: 1; filter: blur(0px); } 
+}
+
+/* 5. Wave (Angled Sweep) */
+[data-animation="wave"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="wave"]::view-transition-new(root) {
+  animation: wave-reveal 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  z-index: 2;
+}
+@keyframes wave-reveal {
+  from { clip-path: polygon(0% 0%, 0% 0%, -30% 100%, -30% 100%); }
+  to { clip-path: polygon(0% 0%, 150% 0%, 150% 100%, -30% 100%); }
+}

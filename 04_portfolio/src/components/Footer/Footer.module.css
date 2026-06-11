@@ -51,6 +51,12 @@
 }
 .navLink:hover { color: var(--gold-dim); }
 
+.social {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
 .socialLink {
   font-family: 'Cinzel', serif;
   font-size: 0.65rem;
@@ -59,6 +65,20 @@
   transition: color 0.2s;
 }
 .socialLink:hover { color: var(--gold); }
+
+.settingsBtn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-transform: uppercase;
+  padding: 0;
+}
+.settingsBtn:hover { color: var(--gold); }
 
 .bottom {
   max-width: 1100px;

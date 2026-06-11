@@ -13,6 +13,7 @@ import StarBackground from './components/StarBackground/StarBackground'
 import Sidebar from './components/Sidebar/Sidebar'
 import Fort from './components/Fort/Fort'
 import MouseTrail from './components/MouseTrail/MouseTrail'
+import SettingsModal from './components/SettingsModal/SettingsModal'
 
 export default function App() {
   const [repos, setRepos] = useState([])
@@ -22,14 +23,41 @@ export default function App() {
   
   // Theme state persisted in LocalStorage
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
+  
+  // Animation settings and states
+  const [themeAnimation, setThemeAnimation] = useState(() => localStorage.getItem('themeAnimation') || 'wave')
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
+    // Sync the DOM attribute immediately if not already set by view transition
+    if (document.documentElement.getAttribute('data-theme') !== theme) {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  useEffect(() => {
+    localStorage.setItem('themeAnimation', themeAnimation)
+  }, [themeAnimation])
+
   const toggleTheme = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    
+    // Fallback if browser doesn't support View Transitions
+    if (!document.startViewTransition) {
+      document.documentElement.setAttribute('data-theme', newTheme)
+      setTheme(newTheme)
+      return
+    }
+
+    // Set animation type for CSS
+    document.documentElement.setAttribute('data-animation', themeAnimation)
+
+    // Trigger transition
+    document.startViewTransition(() => {
+      document.documentElement.setAttribute('data-theme', newTheme)
+      setTheme(newTheme)
+    })
   }
 
   useEffect(() => {
@@ -71,7 +99,14 @@ export default function App() {
       <Gallery/>
       <Experience />
       <Contact />
-      <Footer />
+      <Footer openSettings={() => setIsSettingsOpen(true)} />
+
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)}
+        currentAnimation={themeAnimation}
+        onSelectAnimation={setThemeAnimation}
+      />
     </>
   )
 }
