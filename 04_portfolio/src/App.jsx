@@ -11,7 +11,7 @@ import Footer from './components/Footer/Footer'
 import { fetchRepos } from './services/github'
 import StarBackground from './components/StarBackground/StarBackground'
 import Sidebar from './components/Sidebar/Sidebar'
-import Fort from './components/Fort/Fort'
+import GestureRealityController from './components/GestureReality/GestureRealityController'
 import MouseTrail from './components/MouseTrail/MouseTrail'
 import SettingsModal from './components/SettingsModal/SettingsModal'
 import Testimonials from './components/Testimonials/Testimonials'
@@ -95,7 +95,7 @@ export default function App() {
       <About />
       <LiveProjects />
       <Skills />
-      {isGameOpen && <Fort onClose={() => setIsGameOpen(false)} />}
+      {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
       <Projects repos={repos} loading={loading} error={error} />
       <Gallery/>
       <Experience />

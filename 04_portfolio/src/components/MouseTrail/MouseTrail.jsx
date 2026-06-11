@@ -1,8 +1,16 @@
 import React, { useEffect, useRef } from 'react'
+import { useGestureStore } from '../../store/useGestureStore'
 import styles from './MouseTrail.module.css'
 
 export default function MouseTrail() {
   const canvasRef = useRef(null)
+  const particleMultiplier = useGestureStore(state => state.particleMultiplier)
+
+  // Use a ref to always have the latest multiplier in the event listeners
+  const multiplierRef = useRef(particleMultiplier)
+  useEffect(() => {
+    multiplierRef.current = particleMultiplier
+  }, [particleMultiplier])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -67,9 +75,12 @@ export default function MouseTrail() {
     render()
 
     const handleMouseMove = (e) => {
-      particles.push(createParticle(e.clientX, e.clientY))
-      if (Math.random() > 0.4) {
+      const count = multiplierRef.current;
+      for (let i = 0; i < count; i++) {
         particles.push(createParticle(e.clientX, e.clientY))
+        if (Math.random() > 0.4) {
+          particles.push(createParticle(e.clientX, e.clientY))
+        }
       }
     }
 

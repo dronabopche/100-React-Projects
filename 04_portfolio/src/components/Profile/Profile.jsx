@@ -1,5 +1,5 @@
 // ─── components/Profile/Profile.jsx ──────────────────────────────────────────
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import styles from './Profile.module.css'
 
 export default function Profile({ profile }) {

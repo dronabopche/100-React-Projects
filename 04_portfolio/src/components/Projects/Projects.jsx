@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import ProjectCard from '../ProjectCard/ProjectCard'
 import styles from './Projects.module.css'
 

@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useAnimationFrame } from 'framer-motion'
+import { motion, useMotionValue, useAnimationFrame } from 'motion/react'
 import { useState } from 'react'
 import styles from './LiveProjects.module.css'
 

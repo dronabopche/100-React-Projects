@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion, useAnimation } from 'framer-motion'
+import { motion, useAnimation } from 'motion/react'
 import styles from './Skills.module.css'
 import IconRenderer from './Icons'
 
