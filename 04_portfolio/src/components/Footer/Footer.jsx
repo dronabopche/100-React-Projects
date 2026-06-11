@@ -53,14 +53,6 @@ export default function Footer({ openSettings }) {
           >
             ⚙️
           </button>
-          <a
-            href="https://github.com/dronabopche"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.socialLink}
-          >
-            Proof ↗
-          </a>
         </div>
       </div>
 

@@ -54,7 +54,7 @@
 
 /* Subtext */
 .sub {
-  font-family: 'EB Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 1.05rem;
   color: var(--muted);
   line-height: 1.8;

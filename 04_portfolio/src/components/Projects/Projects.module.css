@@ -56,11 +56,11 @@
   border-radius: 50%;
 }
 .error { color: #c0504d; font-family: 'Cinzel', serif; font-size: 0.75rem; }
-.hint { font-size: 0.75rem; color: var(--muted); font-family: 'EB Garamond', serif; }
+.hint { font-size: 0.75rem; color: var(--muted); font-family: var(--font-family-body); }
 .hint code { color: var(--gold); }
 .empty {
   grid-column: 1/-1; text-align: center;
-  color: var(--muted); font-family: 'EB Garamond', serif;
+  color: var(--muted); font-family: var(--font-family-body);
   padding: 4rem 0; font-style: italic;
 }
 

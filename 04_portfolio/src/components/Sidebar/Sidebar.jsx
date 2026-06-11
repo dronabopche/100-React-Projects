@@ -22,11 +22,11 @@ const SOCIALS = [
     ),
   },
   {
-    name: 'Kaggle',
-    href: 'https://kaggle.com/dronabopche',
+    name: 'Vista',
+    isVista: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.825 2.25c-.22 0-.435.086-.6.24l-7.397 7.085-2.942-2.316V2.7a.45.45 0 0 0-.45-.45H5.568a.45.45 0 0 0-.45.45v18.6a.45.45 0 0 0 .45.45h1.868a.45.45 0 0 0 .45-.45v-5.267l1.792-1.41 5.753 6.945c.17.206.426.327.697.327h2.822c.41 0 .668-.456.44-.798l-6.852-8.27 6.444-6.17a.64.64 0 0 0-.44-1.096h-3.003c-.272 0-.528.121-.7.327L10.366 12.2l4.898-3.854 4.02-6.101z" />
+        <path d="M14 6l-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z" />
       </svg>
     ),
   },
@@ -45,7 +45,7 @@ const SOCIALS = [
   }
 ]
 
-export default function Sidebar({ openGame, toggleTheme, theme }) {
+export default function Sidebar({ openGame, openVista, toggleTheme, theme }) {
   return (
     <div className={styles.sidebarContainer}>
       <div className={styles.lineTop} />
@@ -84,6 +84,9 @@ export default function Sidebar({ openGame, toggleTheme, theme }) {
                 if (soc.isGame) {
                   e.preventDefault()
                   openGame()
+                } else if (soc.isVista) {
+                  e.preventDefault()
+                  openVista()
                 } else if (soc.isTheme) {
                   e.preventDefault()
                   toggleTheme()

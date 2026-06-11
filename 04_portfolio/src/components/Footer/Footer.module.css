@@ -30,7 +30,7 @@
   letter-spacing: 0.05em;
 }
 .brandSub {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 0.8rem;
   font-style: italic;
   color: var(--muted);

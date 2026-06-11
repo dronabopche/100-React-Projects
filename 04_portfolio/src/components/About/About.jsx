@@ -1,5 +1,6 @@
 import { motion } from 'motion/react'
 import styles from './About.module.css'
+import WavePath from '../WavePath/WavePath'
 
 const STATS = [
   { value: '20+', label: 'Projects Built' },
@@ -26,7 +27,11 @@ export default function About({ profile }) {
         <div className={styles.left}>
           <span className="section-label">✦ About Me</span>
           <h2 className="section-title">The Mind Behind the Code</h2>
-          <div className="divider"><div className="divider-gem" /></div>
+          <div className="divider-interactive">
+            <WavePath />
+            <div className="divider-gem" />
+            <WavePath />
+          </div>
 
           <p className={styles.para}>
             I'm a developer passionate about building intelligent systems and elegant

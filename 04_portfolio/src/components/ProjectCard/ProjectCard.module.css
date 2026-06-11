@@ -53,7 +53,7 @@
 .card:hover .arrow { color: var(--gold); }
 
 .desc {
-  font-family: 'EB Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.7;

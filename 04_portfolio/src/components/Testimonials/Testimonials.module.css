@@ -19,7 +19,7 @@
 }
 
 .subtext {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 1.2rem;
   font-style: italic;
   color: var(--muted);
@@ -237,7 +237,7 @@
 }
 
 .deliveryTarget {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 1.1rem;
   color: var(--text);
 }
@@ -359,7 +359,7 @@
 
 .letterBody {
   position: relative;
-  font-family: 'EB Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 1.35rem;
   line-height: 1.7;
   color: var(--text);
@@ -406,7 +406,7 @@
 }
 
 .signatureRole {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 1rem;
   font-style: italic;
   color: var(--gold-dim);

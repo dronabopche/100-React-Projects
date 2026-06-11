@@ -10,7 +10,13 @@ const ANIMATIONS = [
   { id: 'split', label: 'Split', description: 'Vertical split reveal' },
 ]
 
-export default function SettingsModal({ isOpen, onClose, currentAnimation, onSelectAnimation }) {
+const FONTS = [
+  { id: 'garamond', label: 'Classical Serif' },
+  { id: 'inter', label: 'Modern Sans' },
+  { id: 'cormorant', label: 'Warm Serif' },
+]
+
+export default function SettingsModal({ isOpen, onClose, currentAnimation, onSelectAnimation, currentFont, onSelectFont }) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -37,11 +43,12 @@ export default function SettingsModal({ isOpen, onClose, currentAnimation, onSel
             </div>
             
             <div className={styles.content}>
+              <div className={styles.sectionHeader}>Page Transitions</div>
               <p className={styles.description}>
                 Select the animation effect that plays when switching between light and dark mode.
               </p>
               
-              <div className={styles.animationList}>
+              <div className={styles.animationList} style={{ maxHeight: '180px', overflowY: 'auto', paddingRight: '4px', marginBottom: '1.2rem' }}>
                 {ANIMATIONS.map((anim) => (
                   <button
                     key={anim.id}
@@ -55,6 +62,20 @@ export default function SettingsModal({ isOpen, onClose, currentAnimation, onSel
                       )}
                     </div>
                     <span className={styles.optionDesc}>{anim.description}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className={styles.sectionHeader}>Website Font</div>
+              <div className={styles.fontGrid}>
+                {FONTS.map((font) => (
+                  <button
+                    key={font.id}
+                    style={{ fontFamily: font.id === 'inter' ? 'Inter, sans-serif' : font.id === 'cormorant' ? 'Cormorant Garamond, serif' : 'EB Garamond, serif' }}
+                    className={`${styles.fontOption} ${currentFont === font.id ? styles.selected : ''}`}
+                    onClick={() => onSelectFont(font.id)}
+                  >
+                    {font.label}
                   </button>
                 ))}
               </div>

@@ -91,14 +91,14 @@
 }
 
 .place {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 0.9rem;
   font-style: italic;
   color: var(--gold-dim);
   display: block;
 }
 .desc {
-  font-family: 'EB Garamond', serif;
+  font-family: var(--font-family-body);
   font-size: 1rem;
   color: var(--muted);
   line-height: 1.8;

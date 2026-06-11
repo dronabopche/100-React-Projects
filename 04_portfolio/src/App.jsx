@@ -15,12 +15,14 @@ import GestureRealityController from './components/GestureReality/GestureReality
 import MouseTrail from './components/MouseTrail/MouseTrail'
 import SettingsModal from './components/SettingsModal/SettingsModal'
 import Testimonials from './components/Testimonials/Testimonials'
+import MountainVistaParallax from './components/MountainVistaParallax/MountainVistaParallax'
 
 export default function App() {
   const [repos, setRepos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isGameOpen, setIsGameOpen] = useState(false)
+  const [isVistaOpen, setIsVistaOpen] = useState(false)
   
   // Theme state persisted in LocalStorage
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
@@ -28,6 +30,15 @@ export default function App() {
   // Animation settings and states
   const [themeAnimation, setThemeAnimation] = useState(() => localStorage.getItem('themeAnimation') || 'wave')
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
+  // Font state persisted in LocalStorage
+  const [activeFont, setActiveFont] = useState(() => localStorage.getItem('activeFont') || 'garamond')
+
+  const FONT_MAP = {
+    garamond: "'EB Garamond', Georgia, serif",
+    inter: "'Inter', system-ui, -apple-system, sans-serif",
+    cormorant: "'Cormorant Garamond', Georgia, serif"
+  }
 
   useEffect(() => {
     // Sync the DOM attribute immediately if not already set by view transition
@@ -40,6 +51,11 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('themeAnimation', themeAnimation)
   }, [themeAnimation])
+
+  useEffect(() => {
+    localStorage.setItem('activeFont', activeFont)
+    document.documentElement.style.setProperty('--font-family-body', FONT_MAP[activeFont] || FONT_MAP.garamond)
+  }, [activeFont])
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
@@ -86,6 +102,7 @@ export default function App() {
       {/* Floating Sidebar */}
       <Sidebar 
         openGame={() => setIsGameOpen(true)} 
+        openVista={() => setIsVistaOpen(true)}
         toggleTheme={toggleTheme} 
         theme={theme}
       />
@@ -96,6 +113,7 @@ export default function App() {
       <LiveProjects />
       <Skills />
       {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
+      {isVistaOpen && <MountainVistaParallax theme={theme} onClose={() => setIsVistaOpen(false)} />}
       <Projects repos={repos} loading={loading} error={error} />
       <Gallery/>
       <Experience />
@@ -108,6 +126,8 @@ export default function App() {
         onClose={() => setIsSettingsOpen(false)}
         currentAnimation={themeAnimation}
         onSelectAnimation={setThemeAnimation}
+        currentFont={activeFont}
+        onSelectFont={setActiveFont}
       />
     </>
   )

@@ -21,6 +21,7 @@
   --grid-dot:  rgba(255, 255, 255, 0.08);
   --card-bg:   rgba(26, 17, 8, 0.45);
   --card-bg-hover: rgba(26, 17, 8, 0.65);
+  --font-family-body: 'EB Garamond', Georgia, serif;
 }
 
 [data-theme='light'] {
@@ -44,12 +45,15 @@
 
 
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  font-size: clamp(14px, 0.35vw + 12.5px, 18px);
+}
 
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'EB Garamond', Georgia, serif;
+  font-family: var(--font-family-body);
   line-height: 1.7;
   overflow-x: hidden;
 }
@@ -186,4 +190,12 @@ a { color: inherit; text-decoration: none; }
 @keyframes wave-reveal {
   from { clip-path: polygon(0% 0%, 0% 0%, -30% 100%, -30% 100%); }
   to { clip-path: polygon(0% 0%, 150% 0%, 150% 100%, -30% 100%); }
+}
+
+.divider-interactive {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 1.5rem 0;
+  width: 100%;
 }
