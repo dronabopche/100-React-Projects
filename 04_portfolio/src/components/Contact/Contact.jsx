@@ -4,25 +4,29 @@ import styles from './Contact.module.css'
 export default function Contact() {
   const links = [
     {
-      label: 'GitHub Profile',
-      href: 'https://github.com/yourusername',
-    },
-    {
       label: 'LinkedIn Profile',
-      href: 'https://linkedin.com/in/yourusername',
+      href: 'https://linkedin.com/in/dronabopche',
     },
     {
       label: 'Kaggle Profile',
-      href: 'https://kaggle.com/yourusername',
-    },
-    {
-      label: 'Send Email',
-      href: 'mailto:your@email.com',
+      href: 'https://kaggle.com/dronabopche',
     },
     {
       label: 'YouTube Channel',
-      href: 'https://youtube.com/@yourchannel',
+      href: 'https://www.youtube.com/@cherry_rxch',
     },
+    {
+      label: 'LeetCode',
+      href: 'https://leetcode.com/dronabopche',
+    },
+    {
+      label: 'GitHub',
+      href: 'https://github.com/dronabopche',
+    },
+    {
+      label: 'Email',
+      href: 'mailto:dronabopche@gmail.com',
+    }
   ]
 
   const container = {
@@ -50,7 +54,7 @@ export default function Contact() {
       transition={{ duration: 0.8 }}
     >
       <div className={styles.inner}>
-        
+
         {/* Ornament */}
         <div className={styles.ornament}>
           <span className={styles.ornLine} />

@@ -14,6 +14,7 @@ import Sidebar from './components/Sidebar/Sidebar'
 import Fort from './components/Fort/Fort'
 import MouseTrail from './components/MouseTrail/MouseTrail'
 import SettingsModal from './components/SettingsModal/SettingsModal'
+import Testimonials from './components/Testimonials/Testimonials'
 
 export default function App() {
   const [repos, setRepos] = useState([])
@@ -98,6 +99,7 @@ export default function App() {
       <Projects repos={repos} loading={loading} error={error} />
       <Gallery/>
       <Experience />
+      <Testimonials />
       <Contact />
       <Footer openSettings={() => setIsSettingsOpen(true)} />
 

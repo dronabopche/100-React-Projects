@@ -22,7 +22,7 @@ export default function MouseTrail() {
     window.addEventListener('resize', handleResize)
 
     const createParticle = (x, y, isScroll = false) => {
-      const colors = ['#ffce54ff', '  #fff7a2ff', '#785a00ff', '#fffcf2ff']
+      const colors = ['#ffce54ff', '  #c8870cff', '#ffc518ff', '#fffcf2ff']
       const color = colors[Math.floor(Math.random() * colors.length)]
       return {
         x,
