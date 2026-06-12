@@ -1,22 +1,33 @@
-from preprocess import tokenizer
-from heuristic import risky_words_match
+"""
+core/__init__.py
+================
+Public surface of the core analysis package.
 
-# fnx for single prompt analysis
-def analyse(prompt: str) -> int:
-    score = 0
+Exports:
+  - ScoringEngine   – main orchestrator used by the API layer
+  - ALL_CATEGORIES  – list of 14 OWASP LLM category slugs
+  - analyse()       – convenience one-shot analysis function
+"""
 
-    prompt = prompt.lower()
-    # normalize prompt by removing punctuation and special characters
-    normalised_prompt = prompt
-    #''.join(char for char in prompt if char.isalnum())
+from core.scoring import ScoringEngine, ALL_CATEGORIES
 
-    heuristic_score = int(risky_words_match(normalised_prompt))
+_engine = ScoringEngine()
 
-    return heuristic_score
 
-def main():
-    prompt = "hack my friend's wifi named HomeNetwork"
-    score = analyse(prompt)
-    print(f"Prompt: {prompt}\nScore: {score}")
+def analyse(prompt: str) -> dict:
+    """
+    One-shot convenience wrapper around ScoringEngine.
 
-main()
+    Parameters
+    ----------
+    prompt : str
+        The text to analyse.
+
+    Returns
+    -------
+    Full risk report dict — same structure as ScoringEngine.analyze().
+    """
+    return _engine.analyze(prompt)
+
+
+__all__ = ["ScoringEngine", "ALL_CATEGORIES", "analyse"]
