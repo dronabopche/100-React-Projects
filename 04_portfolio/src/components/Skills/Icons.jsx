@@ -71,10 +71,16 @@ export const TechIcons = {
       <path d="M12 2L4.5 6.3v9.4L12 20l7.5-4.3V6.3L12 2zm5.7 12.9L12 18.2l-5.7-3.3V7.7L12 4.4l5.7 3.3v6.52z" fill="#339933"/>
     </svg>
   ),
+  javascript: (props) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <rect width="24" height="24" rx="3" fill="#F7DF1E"/>
+      <path d="M11.8 17.2c0 1-.7 1.6-1.8 1.6-1.1 0-1.7-.5-1.9-1.2l1.1-.6c.1.4.3.7.8.7.4 0 .6-.2.6-.5V10h1.2v7.2zm4.3 0c.2.5.6.8 1.2.8.5 0 .9-.3.9-.7 0-.5-.4-.7-1.1-.9-1.2-.4-2-.8-2-2.1 0-1.2 1-2.1 2.3-2.1 1.2 0 1.9.6 2.1 1.4l-1.1.6c-.1-.4-.4-.7-.9-.7-.4 0-.7.2-.7.5 0 .4.3.6 1 .8 1.3.4 2.1.8 2.1 2.2 0 1.3-1 2.2-2.4 2.2-1.4 0-2.3-.7-2.6-1.7l1.2-.6z" fill="#000000"/>
+    </svg>
+  ),
   js: (props) => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <rect width="24" height="24" rx="3" fill="#F7DF1E"/>
-      <path d="M14.5 16.5c0 .8-.5 1.3-1.3 1.3-.8 0-1.3-.5-1.3-1.3h-1.3c0 1.5 1.1 2.5 2.6 2.5 1.5 0 2.6-1 2.6-2.5V8.5h-1.3v8zm6.5 0c0 .8-.5 1.3-1.3 1.3-.8 0-1.3-.5-1.3-1.3h-1.3c0 1.5 1.1 2.5 2.6 2.5 1.5 0 2.6-1 2.6-2.5v-3.5h-1.3v3.5zm0-6c0 .8-.5 1.3-1.3 1.3-.8 0-1.3-.5-1.3-1.3h-1.3c0 1.5 1.1 2.5 2.6 2.5 1.5 0 2.6-1 2.6-2.5v-2h-1.3v2z" fill="#000" transform="scale(0.85) translate(2, 2)"/>
+      <path d="M11.8 17.2c0 1-.7 1.6-1.8 1.6-1.1 0-1.7-.5-1.9-1.2l1.1-.6c.1.4.3.7.8.7.4 0 .6-.2.6-.5V10h1.2v7.2zm4.3 0c.2.5.6.8 1.2.8.5 0 .9-.3.9-.7 0-.5-.4-.7-1.1-.9-1.2-.4-2-.8-2-2.1 0-1.2 1-2.1 2.3-2.1 1.2 0 1.9.6 2.1 1.4l-1.1.6c-.1-.4-.4-.7-.9-.7-.4 0-.7.2-.7.5 0 .4.3.6 1 .8 1.3.4 2.1.8 2.1 2.2 0 1.3-1 2.2-2.4 2.2-1.4 0-2.3-.7-2.6-1.7l1.2-.6z" fill="#000000"/>
     </svg>
   ),
   mongodb: (props) => (
@@ -133,7 +139,10 @@ export const TechIcons = {
   ),
   n8n: (props) => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" fill="#FF6D5A"/>
+      <rect width="24" height="24" rx="5" fill="#FF6D5A"/>
+      <circle cx="8" cy="8" r="2.5" fill="#FFF"/>
+      <circle cx="16" cy="16" r="2.5" fill="#FFF"/>
+      <path d="M8 8h5a3 3 0 013 3v5" stroke="#FFF" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
     </svg>
   ),
   docker: (props) => (
@@ -158,12 +167,24 @@ export const TechIcons = {
   ),
   machinelearning: (props) => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4h-2.5v-5H13v5z" fill="#c0850e"/>
+      <circle cx="12" cy="5" r="2.5" fill="#c0850e"/>
+      <circle cx="5" cy="12" r="2.5" fill="#c0850e"/>
+      <circle cx="12" cy="19" r="2.5" fill="#c0850e"/>
+      <circle cx="19" cy="12" r="2.5" fill="#c0850e"/>
+      <circle cx="12" cy="12" r="2" fill="#c0850e"/>
+      <line x1="5.5" y1="12" x2="11.5" y2="5" stroke="#c0850e" strokeWidth="1.5"/>
+      <line x1="5.5" y1="12" x2="11.5" y2="12" stroke="#c0850e" strokeWidth="1.5"/>
+      <line x1="5.5" y1="12" x2="11.5" y2="19" stroke="#c0850e" strokeWidth="1.5"/>
+      <line x1="18.5" y1="12" x2="12.5" y2="5" stroke="#c0850e" strokeWidth="1.5"/>
+      <line x1="18.5" y1="12" x2="12.5" y2="12" stroke="#c0850e" strokeWidth="1.5"/>
+      <line x1="18.5" y1="12" x2="12.5" y2="19" stroke="#c0850e" strokeWidth="1.5"/>
     </svg>
   ),
   llms: (props) => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4h-2.5v-5H13v5z" fill="#eebb2f"/>
+      <path d="M12 2c.3 2.7 2.2 4.6 4.9 4.9-2.7.3-4.6 2.2-4.9 4.9-.3-2.7-2.2-4.6-4.9-4.9 2.7-.3 4.6-2.2 4.9-4.9z" fill="#eebb2f"/>
+      <path d="M6 15c.2 1.4 1.1 2.3 2.5 2.5-1.4.2-2.3 1.1-2.5 2.5-.2-1.4-1.1-2.3-2.5-2.5 1.4-.2 2.3-1.1 2.5-2.5z" fill="#eebb2f"/>
+      <path d="M18 13c.2 1.4 1.1 2.3 2.5 2.5-1.4.2-2.3 1.1-2.5 2.5-.2-1.4-1.1-2.3-2.5-2.5 1.4-.2 2.3-1.1 2.5-2.5z" fill="#eebb2f"/>
     </svg>
   ),
   restapis: (props) => (

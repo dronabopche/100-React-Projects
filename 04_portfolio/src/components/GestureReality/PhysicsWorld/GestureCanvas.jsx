@@ -13,19 +13,20 @@ const GESTURE_MAP = {
   ILoveYou: 'SPIDERMAN',
 }
 
-const NUM_JEWELS = 20
+const NUM_JEWELS = 40
 const TRAIL_LENGTH = 15
 
 export default function GestureCanvas({ theme, onClose }) {
   const [isReady, setIsReady] = useState(false)
   const [isCameraActive, setIsCameraActive] = useState(true)
-  
+
   const setMode = useGestureStore((s) => s.setMode)
   const gestureState = useGestureStore((s) => s.gestureState)
   const setGestureState = useGestureStore((s) => s.setGestureState)
   const setHandCursor = useGestureStore((s) => s.setHandCursor)
 
   const canvasRef = useRef(null)
+  const lastGestureStateRef = useRef('IDLE')
 
   // Initialize Camera & Tracker
   useEffect(() => {
@@ -78,7 +79,9 @@ export default function GestureCanvas({ theme, onClose }) {
 
     let animationId
     let particles = []
-    let lastWristPos = null
+    let lastWristPosArray = [null, null]
+    let currentGestureArray = ['IDLE', 'IDLE']
+    let lastGestureTimeArray = [0, 0]
 
     const handleResize = () => {
       canvas.width = window.innerWidth
@@ -93,46 +96,174 @@ export default function GestureCanvas({ theme, onClose }) {
     const colors = theme === 'light' ? lightColors : darkColors
     const shapes = ['circle', 'diamond', 'square', 'star']
 
-    // Initialize 20 fixed jewels
+    // Initialize 40 fixed jewels with pre-rendered offscreen canvases for performance
     for (let i = 0; i < NUM_JEWELS; i++) {
+      const color = colors[Math.floor(Math.random() * colors.length)]
+      const shape = shapes[Math.floor(Math.random() * shapes.length)]
+      const size = 5 + Math.random() * 4
+      
+      // Pre-render shape to offscreen canvas to prevent lag
+      const offCanvas = document.createElement('canvas')
+      const offCtx = offCanvas.getContext('2d')
+      const padding = size * 3 + 15 // space for shadows and rotations
+      offCanvas.width = padding * 2
+      offCanvas.height = padding * 2
+      const cx = padding
+      const cy = padding
+
+      offCtx.save()
+      offCtx.translate(cx, cy)
+      
+      // Drop shadow for 3D float effect (light shadow in light mode, dark in dark mode)
+      offCtx.shadowColor = theme === 'light' ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.5)'
+      offCtx.shadowBlur = 12
+      offCtx.shadowOffsetX = 4
+      offCtx.shadowOffsetY = 6
+
+      // Glassy / clear gem effect
+      offCtx.globalAlpha = 0.85
+
+      if (shape === 'circle') {
+        const grad = offCtx.createRadialGradient(-size * 0.3, -size * 0.3, size * 0.1, 0, 0, size)
+        grad.addColorStop(0, 'rgba(255, 255, 255, 0.9)')
+        grad.addColorStop(0.4, color)
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.3)') // Softer edge for clear look
+        offCtx.fillStyle = grad
+        offCtx.beginPath()
+        offCtx.arc(0, 0, size, 0, Math.PI * 2)
+        offCtx.fill()
+      } else if (shape === 'diamond') {
+        offCtx.fillStyle = color
+        offCtx.beginPath()
+        offCtx.moveTo(0, -size * 1.5)
+        offCtx.lineTo(0, size * 1.5)
+        offCtx.lineTo(-size, 0)
+        offCtx.closePath()
+        offCtx.fill()
+        offCtx.fillStyle = 'rgba(255, 255, 255, 0.6)' // Stronger highlight
+        offCtx.fill()
+        
+        offCtx.fillStyle = color
+        offCtx.beginPath()
+        offCtx.moveTo(0, -size * 1.5)
+        offCtx.lineTo(size, 0)
+        offCtx.lineTo(0, size * 1.5)
+        offCtx.closePath()
+        offCtx.fill()
+        offCtx.fillStyle = 'rgba(0, 0, 0, 0.2)' // Softer shade
+        offCtx.fill()
+        
+        offCtx.beginPath()
+        offCtx.moveTo(0, -size * 1.5)
+        offCtx.lineTo(-size * 0.4, -size * 0.6)
+        offCtx.lineTo(size * 0.4, -size * 0.6)
+        offCtx.closePath()
+        offCtx.fillStyle = 'rgba(255, 255, 255, 0.8)' // Specular highlight
+        offCtx.fill()
+      } else if (shape === 'square') {
+        offCtx.fillStyle = color
+        offCtx.fillRect(-size, -size, size * 2, size * 2)
+        
+        offCtx.fillStyle = 'rgba(255, 255, 255, 0.8)'
+        offCtx.beginPath()
+        offCtx.moveTo(-size, -size)
+        offCtx.lineTo(size, -size)
+        offCtx.lineTo(size * 0.6, -size * 0.6)
+        offCtx.lineTo(-size * 0.6, -size * 0.6)
+        offCtx.closePath()
+        offCtx.fill()
+        
+        offCtx.fillStyle = 'rgba(255, 255, 255, 0.4)'
+        offCtx.beginPath()
+        offCtx.moveTo(-size, -size)
+        offCtx.lineTo(-size * 0.6, -size * 0.6)
+        offCtx.lineTo(-size * 0.6, size * 0.6)
+        offCtx.lineTo(-size, size)
+        offCtx.closePath()
+        offCtx.fill()
+        
+        offCtx.fillStyle = 'rgba(0, 0, 0, 0.2)'
+        offCtx.beginPath()
+        offCtx.moveTo(-size, size)
+        offCtx.lineTo(-size * 0.6, size * 0.6)
+        offCtx.lineTo(size * 0.6, size * 0.6)
+        offCtx.lineTo(size, size)
+        offCtx.closePath()
+        offCtx.fill()
+
+        offCtx.fillStyle = 'rgba(0, 0, 0, 0.4)'
+        offCtx.beginPath()
+        offCtx.moveTo(size, -size)
+        offCtx.lineTo(size, size)
+        offCtx.lineTo(size * 0.6, size * 0.6)
+        offCtx.lineTo(size * 0.6, -size * 0.6)
+        offCtx.closePath()
+        offCtx.fill()
+      } else if (shape === 'star') {
+        const grad = offCtx.createRadialGradient(0, 0, size * 0.1, 0, 0, size * 1.5)
+        grad.addColorStop(0, 'rgba(255, 255, 255, 0.9)')
+        grad.addColorStop(0.4, color)
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.3)')
+        offCtx.fillStyle = grad
+        let rot = (Math.PI / 2) * 3
+        let x = 0, y = 0
+        let step = Math.PI / 4
+        offCtx.beginPath()
+        offCtx.moveTo(0, -size * 1.5)
+        for (let j = 0; j < 4; j++) {
+          x = Math.cos(rot) * size * 1.5
+          y = Math.sin(rot) * size * 1.5
+          offCtx.lineTo(x, y)
+          rot += step
+          x = Math.cos(rot) * size * 0.5
+          y = Math.sin(rot) * size * 0.5
+          offCtx.lineTo(x, y)
+          rot += step
+        }
+        offCtx.lineTo(0, -size * 1.5)
+        offCtx.closePath()
+        offCtx.fill()
+      }
+      offCtx.restore()
+
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 4,
         vy: (Math.random() - 0.5) * 4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        shape: shapes[Math.floor(Math.random() * shapes.length)],
-        size: 5 + Math.random() * 4,
-        angle: Math.random() * Math.PI * 2, // Continuous rotation angle
-        rotationSpeed: (Math.random() - 0.5) * 0.2, // Spin velocity
-        orbitOffset: Math.random() * Math.PI * 2, // Phase offset for orbiting
-        history: [], // For trailing effect
+        color,
+        shape,
+        size,
+        angle: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.2,
+        orbitOffset: Math.random() * Math.PI * 2,
+        history: [],
+        offCanvas,
+        padding
       })
     }
 
-    const digit1Points = Array.from({ length: NUM_JEWELS }, (_, i) => ({
-      x: 0,
-      y: -180 + 360 * (i / (NUM_JEWELS - 1))
-    }))
-
-    const getDigit2Points = () => {
+    const getDigit2Points = (count) => {
       const pts = []
-      for (let i = 0; i < 8; i++) {
-        const t = Math.PI - (Math.PI * i / 7)
+      const part1 = Math.round(count * 8 / 20)
+      const part2 = Math.round(count * 6 / 20)
+      const part3 = count - part1 - part2
+      for (let i = 0; i < part1; i++) {
+        const t = Math.PI - (Math.PI * i / (part1 - 1))
         pts.push({
           x: Math.cos(t) * 90,
           y: -120 + Math.sin(t) * 70
         })
       }
-      for (let i = 1; i <= 6; i++) {
-        const ratio = i / 7
+      for (let i = 1; i <= part2; i++) {
+        const ratio = i / (part2 + 1)
         pts.push({
           x: 90 - 180 * ratio,
           y: -120 + 240 * ratio
         })
       }
-      for (let i = 1; i <= 6; i++) {
-        const ratio = i / 6
+      for (let i = 1; i <= part3; i++) {
+        const ratio = i / part3
         pts.push({
           x: -90 + 180 * ratio,
           y: 120
@@ -141,17 +272,19 @@ export default function GestureCanvas({ theme, onClose }) {
       return pts
     }
 
-    const getDigit3Points = () => {
+    const getDigit3Points = (count) => {
       const pts = []
-      for (let i = 0; i < 10; i++) {
-        const t = Math.PI * 1.25 - (Math.PI * 1.5 * i / 9)
+      const part1 = Math.floor(count / 2)
+      const part2 = count - part1
+      for (let i = 0; i < part1; i++) {
+        const t = Math.PI * 1.25 - (Math.PI * 1.5 * i / (part1 - 1))
         pts.push({
           x: Math.cos(t) * 85,
           y: -80 + Math.sin(t) * 80
         })
       }
-      for (let i = 0; i < 10; i++) {
-        const t = Math.PI * 0.25 - (Math.PI * 1.5 * i / 9)
+      for (let i = 0; i < part2; i++) {
+        const t = Math.PI * 0.25 - (Math.PI * 1.5 * i / (part2 - 1))
         pts.push({
           x: Math.cos(t) * 85,
           y: 80 + Math.sin(t) * 80
@@ -160,13 +293,10 @@ export default function GestureCanvas({ theme, onClose }) {
       return pts
     }
 
-    const digit2Points = getDigit2Points()
-    const digit3Points = getDigit3Points()
-
-    const getHeartPoints = () => {
+    const getHeartPoints = (count) => {
       const pts = []
-      for (let i = 0; i < NUM_JEWELS; i++) {
-        const t = (i / NUM_JEWELS) * Math.PI * 2
+      for (let i = 0; i < count; i++) {
+        const t = (i / count) * Math.PI * 2
         const x = 16 * Math.pow(Math.sin(t), 3)
         const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)
         pts.push({
@@ -176,7 +306,22 @@ export default function GestureCanvas({ theme, onClose }) {
       }
       return pts
     }
-    const heartPoints = getHeartPoints()
+
+    const digit1Points20 = Array.from({ length: 20 }, (_, i) => ({
+      x: 0,
+      y: -180 + 360 * (i / 19)
+    }))
+    const digit1Points40 = Array.from({ length: 40 }, (_, i) => ({
+      x: 0,
+      y: -180 + 360 * (i / 39)
+    }))
+
+    const digit2Points20 = getDigit2Points(20)
+    const digit2Points40 = getDigit2Points(40)
+    const digit3Points20 = getDigit3Points(20)
+    const digit3Points40 = getDigit3Points(40)
+    const heartPoints20 = getHeartPoints(20)
+    const heartPoints40 = getHeartPoints(40)
 
     const drawStar = (ctx, cx, cy, spikes, outerRadius, innerRadius) => {
       let rot = (Math.PI / 2) * 3
@@ -200,9 +345,6 @@ export default function GestureCanvas({ theme, onClose }) {
       ctx.lineTo(cx, cy - outerRadius)
       ctx.closePath()
     }
-
-    let currentGesture = 'IDLE'
-    let lastGestureTime = 0
 
     let mousePos = { x: canvas.width / 2, y: canvas.height / 2 }
     let isMouseDown = false
@@ -238,174 +380,219 @@ export default function GestureCanvas({ theme, onClose }) {
 
       // 1. Detect Hand & Gestures
       const results = isCameraActive ? handTracker.detect() : null
-      let handCenter = null
-      let pointerTip = null
-      let isHandPresent = false
-      let activeGesture = 'IDLE'
-      let currentSwipe = null
+      const detectedHands = []
 
       if (isCameraActive && results && results.landmarks && results.landmarks.length > 0) {
-        isHandPresent = true
-        const landmarks = results.landmarks[0]
+        for (let h = 0; h < results.landmarks.length; h++) {
+          const landmarks = results.landmarks[h]
 
-        const toScreenX = (x) => (1 - x) * canvas.width
-        const toScreenY = (y) => y * canvas.height
+          const toScreenX = (x) => (1 - x) * canvas.width
+          const toScreenY = (y) => y * canvas.height
 
-        const indexTip = landmarks[8]
-        const wrist = landmarks[0]
-        const middleBase = landmarks[9]
+          const indexTip = landmarks[8]
+          const wrist = landmarks[0]
+          const middleBase = landmarks[9]
 
-        if (indexTip) {
-          pointerTip = { x: toScreenX(indexTip.x), y: toScreenY(indexTip.y) }
-          setHandCursor(pointerTip.x, pointerTip.y)
+          let pointerTip = null
+          let handCenter = null
+
+          if (indexTip) {
+            pointerTip = { x: toScreenX(indexTip.x), y: toScreenY(indexTip.y) }
+          }
+
+          if (wrist && middleBase) {
+            handCenter = {
+              x: toScreenX((wrist.x + middleBase.x) / 2),
+              y: toScreenY((wrist.y + middleBase.y) / 2)
+            }
+          }
+
+          // Swipe Detection
+          let currentSwipe = null
+          if (wrist) {
+            const screenWristX = toScreenX(wrist.x)
+            if (lastWristPosArray[h]) {
+              const dx = screenWristX - lastWristPosArray[h].x
+              if (dx > 50) currentSwipe = 'SWIPE_RIGHT'
+              if (dx < -50) currentSwipe = 'SWIPE_LEFT'
+            }
+            lastWristPosArray[h] = { x: screenWristX, y: toScreenY(wrist.y) }
+          }
+
+          // Determine Gesture
+          let activeGesture = 'IDLE'
+          if (currentSwipe) {
+            activeGesture = currentSwipe
+          } else if (results.gestures && results.gestures[h] && results.gestures[h].length > 0) {
+            const top = results.gestures[h][0]
+            if (top && top.score > 0.5) {
+              activeGesture = GESTURE_MAP[top.categoryName] || 'IDLE'
+            }
+          }
+
+          // Custom finger counting overrides for 1, 2, 3
+          const isIndexUp = landmarks[8].y < landmarks[6].y
+          const isMiddleUp = landmarks[12].y < landmarks[10].y
+          const isRingUp = landmarks[16].y < landmarks[14].y
+          const isPinkyUp = landmarks[20].y < landmarks[18].y
+
+          let fingerCount = 0
+          if (isIndexUp) fingerCount++
+          if (isMiddleUp) fingerCount++
+          if (isRingUp) fingerCount++
+          if (isPinkyUp) fingerCount++
+
+          if (!currentSwipe) {
+            if (
+              activeGesture === 'FIST' ||
+              activeGesture === 'PINCH' ||
+              activeGesture === 'THUMBS_UP' ||
+              activeGesture === 'THUMBS_DOWN' ||
+              activeGesture === 'VICTORY' ||
+              activeGesture === 'SPIDERMAN'
+            ) {
+              // keep detected gestures
+            } else if (fingerCount === 1) {
+              activeGesture = 'PINCH'
+            } else if (fingerCount === 2) {
+              activeGesture = 'TWO'
+            } else if (fingerCount === 3) {
+              activeGesture = 'THREE'
+            } else if (fingerCount >= 4) {
+              activeGesture = 'OPEN_PALM'
+            }
+          }
+
+          detectedHands.push({
+            pointerTip,
+            handCenter,
+            activeGesture,
+          })
         }
 
-        if (wrist && middleBase) {
-          handCenter = {
-            x: toScreenX((wrist.x + middleBase.x) / 2),
-            y: toScreenY((wrist.y + middleBase.y) / 2)
-          }
-        }
-
-        // Swipe Detection
-        if (wrist) {
-          const screenWristX = toScreenX(wrist.x)
-          if (lastWristPos) {
-            const dx = screenWristX - lastWristPos.x
-            if (dx > 50) currentSwipe = 'SWIPE_RIGHT'
-            if (dx < -50) currentSwipe = 'SWIPE_LEFT'
-          }
-          lastWristPos = { x: screenWristX, y: toScreenY(wrist.y) }
-        }
-
-        // Determine Gesture
-        if (currentSwipe) {
-          activeGesture = currentSwipe
-        } else if (results.gestures && results.gestures.length > 0) {
-          const top = results.gestures[0][0]
-          if (top && top.score > 0.5) {
-            activeGesture = GESTURE_MAP[top.categoryName] || 'IDLE'
-          }
-        }
-
-        // Custom finger counting overrides for 1, 2, 3
-        const isIndexUp = landmarks[8].y < landmarks[6].y
-        const isMiddleUp = landmarks[12].y < landmarks[10].y
-        const isRingUp = landmarks[16].y < landmarks[14].y
-        const isPinkyUp = landmarks[20].y < landmarks[18].y
-
-        let fingerCount = 0
-        if (isIndexUp) fingerCount++
-        if (isMiddleUp) fingerCount++
-        if (isRingUp) fingerCount++
-        if (isPinkyUp) fingerCount++
-
-        if (!currentSwipe) {
-          if (
-            activeGesture === 'FIST' ||
-            activeGesture === 'PINCH' ||
-            activeGesture === 'THUMBS_UP' ||
-            activeGesture === 'THUMBS_DOWN' ||
-            activeGesture === 'VICTORY' ||
-            activeGesture === 'SPIDERMAN'
-          ) {
-            // keep detected gestures
-          } else if (fingerCount === 1) {
-            activeGesture = 'ONE'
-          } else if (fingerCount === 2) {
-            activeGesture = 'TWO'
-          } else if (fingerCount === 3) {
-            activeGesture = 'THREE'
-          } else if (fingerCount >= 4) {
-            activeGesture = 'OPEN_PALM'
-          }
+        // Clear wrist tracking for hands that are no longer present
+        for (let h = results.landmarks.length; h < 2; h++) {
+          lastWristPosArray[h] = null
         }
       } else if (!isCameraActive) {
         // Fallback to mouse interaction ONLY if camera is completely off/disabled
-        lastWristPos = null
-        isHandPresent = true
-        pointerTip = mousePos
-        handCenter = mousePos
-        setHandCursor(mousePos.x, mousePos.y)
+        lastWristPosArray[0] = null
+        lastWristPosArray[1] = null
 
+        let activeGesture = 'PINCH'
         if (currentKeyGesture) {
           activeGesture = currentKeyGesture
         } else if (isMouseDown) {
           activeGesture = 'FIST'
-        } else {
-          activeGesture = 'PINCH'
         }
+
+        detectedHands.push({
+          pointerTip: mousePos,
+          handCenter: mousePos,
+          activeGesture,
+        })
       } else {
         // Camera is active but no hand is detected
-        isHandPresent = false
-        activeGesture = 'IDLE'
+        lastWristPosArray[0] = null
+        lastWristPosArray[1] = null
       }
 
-      // Responsive 2-second lock delay for shape transitions
+      // Resolve hand gestures and lock transitions
+      const resolvedHands = []
       const now = performance.now()
-      if (!isHandPresent) {
-        currentGesture = 'IDLE'
-      } else {
-        // Allow instant transition if coming from IDLE or going to IDLE, otherwise lock transitions between active states
-        if (now - lastGestureTime > 2000 || currentGesture === 'IDLE' || activeGesture === 'IDLE') {
-          if (activeGesture !== currentGesture) {
-            currentGesture = activeGesture
-            lastGestureTime = now
+
+      for (let h = 0; h < 2; h++) {
+        const detHand = detectedHands[h]
+        if (!detHand) {
+          currentGestureArray[h] = 'IDLE'
+          resolvedHands.push({
+            pointerTip: null,
+            handCenter: null,
+            gesture: 'IDLE'
+          })
+        } else {
+          const activeGesture = detHand.activeGesture
+          let currentGesture = currentGestureArray[h]
+          let lastGestureTime = lastGestureTimeArray[h]
+
+          if (now - lastGestureTime > 2000 || currentGesture === 'IDLE' || activeGesture === 'IDLE') {
+            if (activeGesture !== currentGesture) {
+              currentGesture = activeGesture
+              currentGestureArray[h] = activeGesture
+              lastGestureTimeArray[h] = now
+            }
           }
+
+          resolvedHands.push({
+            pointerTip: detHand.pointerTip,
+            handCenter: detHand.handCenter,
+            gesture: currentGesture
+          })
         }
       }
-      
-      setGestureState(currentGesture)
+
+
+      // Update Zustand store cursor position (using primary/first hand if available)
+      if (resolvedHands[0] && resolvedHands[0].pointerTip) {
+        setHandCursor(resolvedHands[0].pointerTip.x, resolvedHands[0].pointerTip.y)
+      }
+
+      // Update Zustand store gestureState (only if it changed)
+      let combinedState = 'IDLE'
+      if (detectedHands.length === 1) {
+        combinedState = resolvedHands[0].gesture
+      } else if (detectedHands.length === 2) {
+        combinedState = `${resolvedHands[0].gesture} & ${resolvedHands[1].gesture}`
+      }
+
+      if (lastGestureStateRef.current !== combinedState) {
+        lastGestureStateRef.current = combinedState
+        setGestureState(combinedState)
+      }
 
       // 3. Physics Update & Draw main Jewels
+      const numActiveHands = detectedHands.length
+
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i]
 
+        let hand = null
+        let subIdx = i
+        let isSingle = true
+
+        if (numActiveHands === 1) {
+          hand = resolvedHands[0]
+          subIdx = i
+          isSingle = true
+        } else if (numActiveHands === 2) {
+          if (i < 20) {
+            hand = resolvedHands[0]
+            subIdx = i
+            isSingle = false
+          } else {
+            hand = resolvedHands[1]
+            subIdx = i - 20
+            isSingle = false
+          }
+        }
+
+        const isHandPresent = hand !== null && hand.gesture !== 'IDLE'
+        const currentGesture = isHandPresent ? hand.gesture : 'IDLE'
+        const handCenter = isHandPresent ? hand.handCenter : null
+        const pointerTip = isHandPresent ? hand.pointerTip : null
+
+        const shapeLen = isSingle ? 40 : 20
+        const d1Points = isSingle ? digit1Points40 : digit1Points20
+        const d2Points = isSingle ? digit2Points40 : digit2Points20
+        const d3Points = isSingle ? digit3Points40 : digit3Points20
+        const hPoints = isSingle ? heartPoints40 : heartPoints20
+
         // Gesture Forces
         if (isHandPresent && currentGesture === 'FIST' && handCenter) {
-          // Circular ring around fist so they remain segregated
-          const angle = (i * Math.PI * 2) / NUM_JEWELS
-          const targetX = handCenter.x + Math.cos(angle) * 55
-          const targetY = handCenter.y + Math.sin(angle) * 55
-          const dx = targetX - p.x
-          const dy = targetY - p.y
-          
-          p.vx += dx * 0.04
-          p.vy += dy * 0.04
-          p.vx *= 0.82
-          p.vy *= 0.82
-        } else if (isHandPresent && currentGesture === 'PINCH' && pointerTip) {
-          // Tilted elliptical orbit around the pointer tip
-          p.orbitOffset += 0.025 + (i % 4) * 0.005
-          const a = 180 // semi-major axis
-          const b = 50  // semi-minor axis (for 3D depth perspective)
-          const tiltAngle = -0.4 // Tilted angle in radians (~23 degrees)
-          
-          const cosT = Math.cos(p.orbitOffset)
-          const sinT = Math.sin(p.orbitOffset)
-          
-          // Position relative to center
-          const rx = a * cosT
-          const ry = b * sinT
-          
-          // Rotate by tiltAngle
-          const targetX = pointerTip.x + rx * Math.cos(tiltAngle) - ry * Math.sin(tiltAngle)
-          const targetY = pointerTip.y + rx * Math.sin(tiltAngle) + ry * Math.cos(tiltAngle)
-          
-          // Spring force to attract particle to targetX, targetY
-          const dx = targetX - p.x
-          const dy = targetY - p.y
-          
-          p.vx += dx * 0.04
-          p.vy += dy * 0.04
-          p.vx *= 0.85
-          p.vy *= 0.85
-          
-        } else if (isHandPresent && currentGesture === 'OPEN_PALM') {
           // Spherical orbital projection around center
           const center = handCenter || { x: canvas.width / 2, y: canvas.height / 2 }
-          const phi = Math.acos(-1 + (2 * i) / NUM_JEWELS)
-          const theta = Math.sqrt(NUM_JEWELS * Math.PI) * phi + (performance.now() * 0.0015)
+          const phi = Math.acos(-1 + (2 * subIdx) / shapeLen)
+          const theta = Math.sqrt(shapeLen * Math.PI) * phi + (performance.now() * 0.0015)
           const sx = Math.sin(phi) * Math.cos(theta)
           const sy = Math.sin(phi) * Math.sin(theta)
           const sz = Math.cos(phi)
@@ -418,65 +605,89 @@ export default function GestureCanvas({ theme, onClose }) {
           const dy = targetY - p.y
           p.vx += dx * 0.045
           p.vy += dy * 0.045
-        } else if (currentGesture === 'THUMBS_UP') {
+        } else if (isHandPresent && currentGesture === 'PINCH' && pointerTip) {
+          // Snake follow chain: each particle follows the preceding particle (creating a sequential delayed trail)
+          let targetX = pointerTip.x
+          let targetY = pointerTip.y
+
+          if (subIdx > 0) {
+            const prevP = particles[i - 1]
+            if (prevP) {
+              targetX = prevP.x
+              targetY = prevP.y
+            }
+          }
+
+          const dx = targetX - p.x
+          const dy = targetY - p.y
+
+          p.vx += dx * 0.15
+          p.vy += dy * 0.15
+          p.vx *= 0.62
+          p.vy *= 0.62
+
+        } else if (isHandPresent && currentGesture === 'OPEN_PALM') {
+          // Levitating behavior: reverse gravity to float upward gently
+          p.vy -= 0.22
+          p.vx += (Math.random() - 0.5) * 0.4
+        } else if (isHandPresent && currentGesture === 'THUMBS_UP') {
           // Grid alignment over the whole screen
-          const cols = 5
-          const rows = 4
-          const col = i % cols
-          const row = Math.floor(i / cols)
+          const cols = shapeLen === 40 ? 8 : 5
+          const rows = shapeLen === 40 ? 5 : 4
+          const col = subIdx % cols
+          const row = Math.floor(subIdx / cols)
           const targetX = (col + 0.5) * (canvas.width / cols)
           const targetY = (row + 0.5) * (canvas.height / rows)
           const dx = targetX - p.x
           const dy = targetY - p.y
           p.vx += dx * 0.04
           p.vy += dy * 0.04
-        } else if (currentGesture === 'THUMBS_DOWN') {
-          // Levitating behavior: reverse gravity to float upward gently
-          p.vy -= 0.22
-          p.vx += (Math.random() - 0.5) * 0.4
-        } else if (currentGesture === 'VICTORY' || currentGesture === 'SPIDERMAN') {
+        } else if (isHandPresent && (currentGesture === 'VICTORY' || currentGesture === 'SPIDERMAN')) {
           // Different cool shape: Heart formation
           const center = handCenter || { x: canvas.width / 2, y: canvas.height / 2 }
-          const pt = heartPoints[i]
+          const pt = hPoints[subIdx]
           const targetX = center.x + pt.x
           const targetY = center.y + pt.y
           const dx = targetX - p.x
           const dy = targetY - p.y
           p.vx += dx * 0.045
           p.vy += dy * 0.045
-        } else if (currentGesture === 'ONE') {
-          const pt = digit1Points[i]
-          const targetX = canvas.width / 2 + pt.x
-          const targetY = canvas.height / 2 + pt.y
+        } else if (isHandPresent && currentGesture === 'ONE') {
+          const center = handCenter || { x: canvas.width / 2, y: canvas.height / 2 }
+          const pt = d1Points[subIdx]
+          const targetX = center.x + pt.x
+          const targetY = center.y + pt.y
           const dx = targetX - p.x
           const dy = targetY - p.y
           p.vx += dx * 0.035
           p.vy += dy * 0.035
           p.vx *= 0.82
           p.vy *= 0.82
-        } else if (currentGesture === 'TWO') {
-          const pt = digit2Points[i]
-          const targetX = canvas.width / 2 + pt.x
-          const targetY = canvas.height / 2 + pt.y
+        } else if (isHandPresent && currentGesture === 'TWO') {
+          const center = handCenter || { x: canvas.width / 2, y: canvas.height / 2 }
+          const pt = d2Points[subIdx]
+          const targetX = center.x + pt.x
+          const targetY = center.y + pt.y
           const dx = targetX - p.x
           const dy = targetY - p.y
           p.vx += dx * 0.035
           p.vy += dy * 0.035
           p.vx *= 0.82
           p.vy *= 0.82
-        } else if (currentGesture === 'THREE') {
-          const pt = digit3Points[i]
-          const targetX = canvas.width / 2 + pt.x
-          const targetY = canvas.height / 2 + pt.y
+        } else if (isHandPresent && currentGesture === 'THREE') {
+          const center = handCenter || { x: canvas.width / 2, y: canvas.height / 2 }
+          const pt = d3Points[subIdx]
+          const targetX = center.x + pt.x
+          const targetY = center.y + pt.y
           const dx = targetX - p.x
           const dy = targetY - p.y
           p.vx += dx * 0.035
           p.vy += dy * 0.035
           p.vx *= 0.82
           p.vy *= 0.82
-        } else if (currentGesture === 'SWIPE_RIGHT') {
+        } else if (isHandPresent && currentGesture === 'SWIPE_RIGHT') {
           p.vx += 10 // Throw right
-        } else if (currentGesture === 'SWIPE_LEFT') {
+        } else if (isHandPresent && currentGesture === 'SWIPE_LEFT') {
           p.vx -= 10 // Throw left
         } else {
           // Idle / Release: Gravity takes over (lower gravity)
@@ -494,7 +705,6 @@ export default function GestureCanvas({ theme, onClose }) {
           'TWO',
           'THREE',
           'THUMBS_UP',
-          'THUMBS_DOWN',
           'VICTORY',
           'SPIDERMAN',
         ].includes(currentGesture)
@@ -528,33 +738,14 @@ export default function GestureCanvas({ theme, onClose }) {
           p.vy *= -bounceDamping
         }
 
-        // Draw Jewel Shape
-        ctx.fillStyle = p.color
-        
+        // Draw Jewel Shape from pre-rendered offscreen canvas for extreme performance
+        ctx.save()
         ctx.translate(p.x, p.y)
         ctx.rotate(p.angle)
 
-        if (p.shape === 'circle') {
-          ctx.beginPath()
-          ctx.arc(0, 0, p.size, 0, Math.PI * 2)
-          ctx.fill()
-        } else if (p.shape === 'diamond') {
-          ctx.beginPath()
-          ctx.moveTo(0, -p.size * 1.5)
-          ctx.lineTo(p.size, 0)
-          ctx.lineTo(0, p.size * 1.5)
-          ctx.lineTo(-p.size, 0)
-          ctx.closePath()
-          ctx.fill()
-        } else if (p.shape === 'square') {
-          ctx.fillRect(-p.size, -p.size, p.size * 2, p.size * 2)
-        } else if (p.shape === 'star') {
-          drawStar(ctx, 0, 0, 4, p.size * 1.5, p.size * 0.5)
-          ctx.fill()
-        }
+        ctx.drawImage(p.offCanvas, -p.padding, -p.padding)
 
-        ctx.rotate(-p.angle)
-        ctx.translate(-p.x, -p.y)
+        ctx.restore()
       }
 
       animationId = requestAnimationFrame(render)
@@ -577,34 +768,51 @@ export default function GestureCanvas({ theme, onClose }) {
     onClose()
   }
 
-  const gestureLabel =
-    gestureState === 'IDLE'
-      ? 'No gesture detected — Falling'
-      : gestureState === 'FIST'
-      ? '✊ Fist — Clustering'
-      : gestureState === 'OPEN_PALM'
-      ? '🖐 Open Palm — Spherical Swarm'
-      : gestureState === 'SWIPE_RIGHT'
-      ? '👉 Swipe Right — Throw'
-      : gestureState === 'SWIPE_LEFT'
-      ? '👈 Swipe Left — Throw'
-      : gestureState === 'PINCH'
-      ? '☝ Pointing — Orbiting'
-      : gestureState === 'ONE'
-      ? '1️⃣ One — Shape Formation'
-      : gestureState === 'TWO'
-      ? '2️⃣ Two — Shape Formation'
-      : gestureState === 'THREE'
-      ? '3️⃣ Three — Shape Formation'
-      : gestureState === 'THUMBS_UP'
-      ? '👍 Thumbs Up — Grid Dispersion'
-      : gestureState === 'THUMBS_DOWN'
-      ? '👎 Thumbs Down — Levitating'
-      : gestureState === 'VICTORY'
-      ? '✌ Victory — Heart Formation'
-      : gestureState === 'SPIDERMAN'
-      ? '🤟 Spider-Man — Heart Formation'
-      : gestureState
+  const getGestureText = (state) => {
+    switch (state) {
+      case 'IDLE': return 'Idle'
+      case 'FIST': return '✊ Fist'
+      case 'OPEN_PALM': return '🖐 Open Palm'
+      case 'SWIPE_RIGHT': return '👉 Swipe Right'
+      case 'SWIPE_LEFT': return '👈 Swipe Left'
+      case 'PINCH': return '☝ Pointing'
+      case 'ONE': return '1️⃣ One'
+      case 'TWO': return '2️⃣ Two'
+      case 'THREE': return '3️⃣ Three'
+      case 'THUMBS_UP': return '👍 Thumbs Up'
+      case 'THUMBS_DOWN': return '👎 Thumbs Down'
+      case 'VICTORY': return '✌ Victory'
+      case 'SPIDERMAN': return '🤟 Spider-Man'
+      default: return state
+    }
+  }
+
+  const formatGestureLabel = (state) => {
+    if (!state) return 'No gesture detected — Falling'
+    if (state.includes('&')) {
+      const parts = state.split('&').map(s => s.trim())
+      return `Hand 1: ${getGestureText(parts[0])}  |  Hand 2: ${getGestureText(parts[1])}`
+    }
+
+    switch (state) {
+      case 'IDLE': return 'No gesture detected — Falling'
+      case 'FIST': return '✊ Fist — Clustering'
+      case 'OPEN_PALM': return '🖐 Open Palm — Spherical Swarm'
+      case 'SWIPE_RIGHT': return '👉 Swipe Right — Throw'
+      case 'SWIPE_LEFT': return '👈 Swipe Left — Throw'
+      case 'PINCH': return '☝ Pointing — Orbiting'
+      case 'ONE': return '1️⃣ One — Shape Formation'
+      case 'TWO': return '2️⃣ Two — Shape Formation'
+      case 'THREE': return '3️⃣ Three — Shape Formation'
+      case 'THUMBS_UP': return '👍 Thumbs Up — Grid Dispersion'
+      case 'THUMBS_DOWN': return '👎 Thumbs Down — Levitating'
+      case 'VICTORY': return '✌ Victory — Heart Formation'
+      case 'SPIDERMAN': return '🤟 Spider-Man — Heart Formation'
+      default: return state
+    }
+  }
+
+  const gestureLabel = formatGestureLabel(gestureState)
 
   const textColor = theme === 'light' ? 'var(--text)' : 'var(--cream)'
   const bgStyle = {
@@ -647,16 +855,16 @@ export default function GestureCanvas({ theme, onClose }) {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, ...bgStyle }}>
-      
-      <canvas 
-        ref={canvasRef} 
-        style={{ 
-          position: 'absolute', 
-          inset: 0, 
-          width: '100%', 
+
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
           height: '100%',
           pointerEvents: 'none',
-        }} 
+        }}
       />
 
       {/* UI Overlay — Top */}
@@ -703,8 +911,8 @@ export default function GestureCanvas({ theme, onClose }) {
             maxWidth: 300,
           }}
         >
-          {isCameraActive 
-            ? 'Point to Orbit. Fist to Grab. Palm to Sphere. Thumbs Up to Grid. Thumbs Down to Levit. Victory to Heart.' 
+          {isCameraActive
+            ? 'Point to Orbit. Fist to Grab. Palm to Sphere. Thumbs Up to Grid. Thumbs Down to Levit. Victory to Heart.'
             : 'Mouse to Orbit. Left-Click to Grab. Press 1, 2, 3 to Form Numbers.'}
         </p>
         {!isCameraActive && (
