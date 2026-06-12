@@ -1,8 +1,8 @@
-# types.py - Response schemas and data models
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Dict, Any
 
 @dataclass
 class ScanResult:
-    score: float
+    score: int
     risk_level: str
-    flags: list
+    details: Dict[str, float] = field(default_factory=dict)
