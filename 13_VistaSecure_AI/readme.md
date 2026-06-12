@@ -4,6 +4,8 @@ VistaSecure AI is a secure, AI-powered prompt analysis engine designed to evalua
 
 ---
 
+![VistaSecure AI](docs/01.jpeg)
+
 ## How to Setup and Run
 
 ### 1. Backend API Server
