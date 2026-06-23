@@ -55,6 +55,11 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: nowrap;
+}
+
+.mobileBreak {
+  display: none;
 }
 
 .titleRow {
@@ -265,6 +270,12 @@
   .portrait { object-position: center 20%; }
   .right::before {
     background: linear-gradient(to top, var(--bg) 0%, transparent 20%);
+  }
+  .mobileBreak {
+    display: block;
+  }
+  .name {
+    white-space: normal;
   }
 }
 

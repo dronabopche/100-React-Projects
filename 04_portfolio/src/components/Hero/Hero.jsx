@@ -21,7 +21,7 @@ export default function Hero() {
           <span className={styles.eyebrow}>✦ Portfolio</span>
 
           <h1 className={styles.name}>
-            {name}
+            Drona <br className={styles.mobileBreak} /> Bopche
           </h1>
 
           <div className={styles.titleRow}>
