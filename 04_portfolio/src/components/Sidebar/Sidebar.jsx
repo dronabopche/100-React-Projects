@@ -22,11 +22,11 @@ const SOCIALS = [
     ),
   },
   {
-    name: 'Vista',
-    isVista: true,
+    name: 'AI Playground',
+    isVisualizerHub: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M14 6l-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z" />
+        <path d="M19 2H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 11H9v-2h9v2zm0-4H9V7h9v2zm0 8H9v-2h9v2z" />
       </svg>
     ),
   },
@@ -45,7 +45,7 @@ const SOCIALS = [
   }
 ]
 
-export default function Sidebar({ openGame, openVista, toggleTheme, theme }) {
+export default function Sidebar({ openGame, openVisualizerHub, toggleTheme, theme }) {
   return (
     <div className={styles.sidebarContainer}>
       <div className={styles.lineTop} />
@@ -84,9 +84,9 @@ export default function Sidebar({ openGame, openVista, toggleTheme, theme }) {
                 if (soc.isGame) {
                   e.preventDefault()
                   openGame()
-                } else if (soc.isVista) {
+                } else if (soc.isVisualizerHub) {
                   e.preventDefault()
-                  openVista()
+                  openVisualizerHub()
                 } else if (soc.isTheme) {
                   e.preventDefault()
                   toggleTheme()

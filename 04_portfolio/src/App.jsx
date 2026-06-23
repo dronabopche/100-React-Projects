@@ -15,14 +15,21 @@ import GestureRealityController from './components/GestureReality/GestureReality
 import MouseTrail from './components/MouseTrail/MouseTrail'
 import SettingsModal from './components/SettingsModal/SettingsModal'
 import Testimonials from './components/Testimonials/Testimonials'
-import MountainVistaParallax from './components/MountainVistaParallax/MountainVistaParallax'
+import AiVisualizerHub from './playgrounds/AiVisualizerHub/AiVisualizerHub'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+import PdfRagVisualizer from './playgrounds/PdfRagVisualizer/PdfRagVisualizer'
+import NeuralNetworkPlayground from './playgrounds/NeuralNetworkPlayground/NeuralNetworkPlayground'
+import KMeansPlayground from './playgrounds/KMeansPlayground/KMeansPlayground'
+import QuantumPlayground from './playgrounds/QuantumPlayground/QuantumPlayground'
+import GitSandbox from './playgrounds/GitSandbox/GitSandbox'
+import GradientDescentPlayground from './playgrounds/GradientDescentPlayground/GradientDescentPlayground'
 
 export default function App() {
+  const navigate = useNavigate()
   const [repos, setRepos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isGameOpen, setIsGameOpen] = useState(false)
-  const [isVistaOpen, setIsVistaOpen] = useState(false)
   
   // Theme state persisted in LocalStorage
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
@@ -92,43 +99,53 @@ export default function App() {
   }, [])
 
   return (
-    <>
-      {/* Global Cursor Trail */}
-      <MouseTrail />
+    <Routes>
+      <Route path="/playground/nn" element={<NeuralNetworkPlayground theme={theme} isStandalone={true} />} />
+      <Route path="/k-meanas" element={<KMeansPlayground theme={theme} isStandalone={true} />} />
+      <Route path="/rag" element={<PdfRagVisualizer theme={theme} isStandalone={true} />} />
+      <Route path="/playground/quantum" element={<QuantumPlayground theme={theme} isStandalone={true} />} />
+      <Route path="/playground/git" element={<GitSandbox theme={theme} isStandalone={true} />} />
+      <Route path="/playground/gradient" element={<GradientDescentPlayground theme={theme} isStandalone={true} />} />
+      <Route path="/playground" element={<AiVisualizerHub theme={theme} isStandalone={true} />} />
+      <Route path="/" element={
+        <>
+          {/* Global Cursor Trail */}
+          <MouseTrail />
 
-      {/* Background Layer */}
-      <StarBackground />
+          {/* Background Layer */}
+          <StarBackground />
 
-      {/* Floating Sidebar */}
-      <Sidebar 
-        openGame={() => setIsGameOpen(true)} 
-        openVista={() => setIsVistaOpen(true)}
-        toggleTheme={toggleTheme} 
-        theme={theme}
-      />
+           {/* Floating Sidebar */}
+          <Sidebar 
+            openGame={() => setIsGameOpen(true)} 
+            openVisualizerHub={() => navigate('/playground')}
+            toggleTheme={toggleTheme} 
+            theme={theme}
+          />
 
-      {/* Main Content */}
-      <Hero />
-      <About />
-      <LiveProjects />
-      <Skills />
-      {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
-      {isVistaOpen && <MountainVistaParallax theme={theme} onClose={() => setIsVistaOpen(false)} />}
-      <Projects repos={repos} loading={loading} error={error} />
-      <Gallery/>
-      <Experience />
-      <Testimonials />
-      <Contact />
-      <Footer openSettings={() => setIsSettingsOpen(true)} />
+          {/* Main Content */}
+          <Hero />
+          <About />
+          <LiveProjects />
+          <Skills />
+          {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
+          <Projects repos={repos} loading={loading} error={error} />
+          <Gallery/>
+          <Experience />
+          <Testimonials />
+          <Contact />
+          <Footer openSettings={() => setIsSettingsOpen(true)} />
 
-      <SettingsModal 
-        isOpen={isSettingsOpen} 
-        onClose={() => setIsSettingsOpen(false)}
-        currentAnimation={themeAnimation}
-        onSelectAnimation={setThemeAnimation}
-        currentFont={activeFont}
-        onSelectFont={setActiveFont}
-      />
-    </>
+          <SettingsModal 
+            isOpen={isSettingsOpen} 
+            onClose={() => setIsSettingsOpen(false)}
+            currentAnimation={themeAnimation}
+            onSelectAnimation={setThemeAnimation}
+            currentFont={activeFont}
+            onSelectFont={setActiveFont}
+          />
+        </>
+      } />
+    </Routes>
   )
 }

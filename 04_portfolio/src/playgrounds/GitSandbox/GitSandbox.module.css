@@ -1,0 +1,292 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem;
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-y: auto;
+}
+
+.standaloneContainer {
+  min-height: 100vh;
+  background: var(--bg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.titleArea h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  color: var(--gold-dim);
+  margin: 0;
+}
+
+.titleArea p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.25rem 0 0 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.actionBtn, .clearBtn {
+  background: var(--card-bg);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  border-color: var(--gold-dim);
+  background: rgba(192, 133, 14, 0.1);
+}
+
+.clearBtn {
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.clearBtn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: var(--text);
+}
+
+.contentBody {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+  flex-grow: 1;
+}
+
+.sidebar {
+  background: var(--card-bg);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold-dim);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.commandList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cmdGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cmdGroup label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.textInput {
+  flex-grow: 1;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: var(--gold-dim);
+}
+
+.btnPrimary {
+  background: var(--gold);
+  color: #0c0806;
+  border: 1px solid var(--gold);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnPrimary:hover {
+  background: var(--cream);
+  border-color: var(--cream);
+  color: #0c0806;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.graphContainer {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 1.5rem;
+  height: 400px;
+  position: relative;
+  overflow: auto;
+}
+
+.graphSvg {
+  width: 100%;
+  height: 100%;
+  min-width: 800px;
+}
+
+.commitNode {
+  cursor: pointer;
+}
+
+.commitCircle {
+  fill: rgba(192, 133, 14, 0.05);
+  stroke: rgba(192, 133, 14, 0.35);
+  stroke-width: 3;
+  transition: all 0.3s;
+}
+
+.commitCircleActive {
+  fill: var(--gold-dim);
+  stroke: var(--gold);
+  filter: drop-shadow(0 0 10px rgba(192, 133, 14, 0.6));
+}
+
+.nodeText {
+  font-size: 0.75rem;
+  fill: #0c0806;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.msgText {
+  font-size: 0.75rem;
+  fill: var(--muted);
+  pointer-events: none;
+}
+
+.branchTag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  fill: #0c0806;
+}
+
+.linkLine {
+  stroke: rgba(192, 133, 14, 0.2);
+  stroke-width: 3;
+  fill: none;
+}
+
+.linkLineMerge {
+  stroke: var(--gold-dim);
+  stroke-dasharray: 4;
+}
+
+.terminalContainer {
+  background: #0d0e12;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 1rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.terminalHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.5rem;
+}
+
+.terminalDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminalLogs {
+  height: 150px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  color: #e3e4e8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.terminalLine {
+  display: flex;
+  align-items: flex-start;
+}
+
+.prompt {
+  color: #a78bfa;
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.infoLine {
+  color: #38bdf8;
+}
