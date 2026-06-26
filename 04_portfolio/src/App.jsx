@@ -23,6 +23,7 @@ import KMeansPlayground from './playgrounds/KMeansPlayground/KMeansPlayground'
 import QuantumPlayground from './playgrounds/QuantumPlayground/QuantumPlayground'
 import GitSandbox from './playgrounds/GitSandbox/GitSandbox'
 import GradientDescentPlayground from './playgrounds/GradientDescentPlayground/GradientDescentPlayground'
+import EquationVisualizerPlayground from './playgrounds/EquationVisualizer/EquationVisualizerPlayground'
 
 export default function App() {
   const navigate = useNavigate()
@@ -106,6 +107,7 @@ export default function App() {
       <Route path="/playground/quantum" element={<QuantumPlayground theme={theme} isStandalone={true} />} />
       <Route path="/playground/git" element={<GitSandbox theme={theme} isStandalone={true} />} />
       <Route path="/playground/gradient" element={<GradientDescentPlayground theme={theme} isStandalone={true} />} />
+      <Route path="/playground/equation" element={<EquationVisualizerPlayground theme={theme} isStandalone={true} />} />
       <Route path="/playground" element={<AiVisualizerHub theme={theme} isStandalone={true} />} />
       <Route path="/" element={
         <>

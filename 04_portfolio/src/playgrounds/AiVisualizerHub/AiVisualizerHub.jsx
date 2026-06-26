@@ -17,7 +17,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
   const textColor = theme === 'light' ? 'var(--text)' : 'var(--cream)'
 
   return (
-    <motion.div 
+    <motion.div
       className={styles.overlay}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -82,65 +82,129 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
           </div>
           <div className={styles.hubGrid}>
             {/* RAG Card */}
-            <div className={styles.hubCard} onClick={() => { onClose && onClose(); navigate('/rag') }}>
-              <svg className={styles.hubCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-              </svg>
-              <h3>RAG Pipeline</h3>
-              <p>Upload a PDF document. Observe text chunk overlaps, semantic vector projections, and test query matches using Cosine Similarity.</p>
-              <button className={styles.hubCardBtn}>Launch Simulator</button>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/rag') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>RAG.ENV</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/rag.png" alt="RAG Pipeline" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>RAG Pipeline</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
             </div>
 
             {/* NN Card */}
-            <div className={styles.hubCard} onClick={() => { onClose && onClose(); navigate('/playground/nn') }}>
-              <svg className={styles.hubCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.75a9 9 0 11-18 0 9 9 0 0118 0zM12 2.25v4.5m0 10.5v4.5M2.25 12h4.5m10.5 0h4.5M5.25 5.25l3.182 3.182m6.364 6.364l3.182 3.182M5.25 18.75l3.182-3.182m6.364-6.364l3.182-3.182" />
-              </svg>
-              <h3>Neural Network</h3>
-              <p>Configure custom layers and neurons. Run backpropagation on XOR/Circle data clusters and watch decision boundaries form in real-time.</p>
-              <button className={styles.hubCardBtn}>Launch Simulator</button>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/nn') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>NEURAL.NET</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/nn.png" alt="Neural Network" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>Neural Network</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
             </div>
 
             {/* K-Means Card */}
-            <div className={styles.hubCard} onClick={() => { onClose && onClose(); navigate('/k-meanas') }}>
-              <svg className={styles.hubCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-              </svg>
-              <h3>K-Means Clustering</h3>
-              <p>Step through clustering point densities. Adjust centroids ($K$), place custom nodes, and visualize centroids adjusting paths to coordinate means.</p>
-              <button className={styles.hubCardBtn}>Launch Simulator</button>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/k-meanas') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>K-MEANS.ALG</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/kmeans.png" alt="K-Means Clustering" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>K-Means Clustering</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
             </div>
 
             {/* Quantum Card */}
-            <div className={styles.hubCard} onClick={() => { onClose && onClose(); navigate('/playground/quantum') }}>
-              <svg className={styles.hubCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="12" cy="12" r="3" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8a4 4 0 100 8 4 4 0 000-8z" />
-              </svg>
-              <h3>Quantum Circuit</h3>
-              <p>Construct 2-qubit quantum circuits. View state superpositions, phase rotations, and create quantum entanglement live.</p>
-              <button className={styles.hubCardBtn}>Launch Simulator</button>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/quantum') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>QUANTUM.SIM</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/quantum.png" alt="Quantum Circuit" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>Quantum Circuit</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
             </div>
 
             {/* Git Card */}
-            <div className={styles.hubCard} onClick={() => { onClose && onClose(); navigate('/playground/git') }}>
-              <svg className={styles.hubCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-              </svg>
-              <h3>Git Sandbox</h3>
-              <p>Visualize commit DAG trees, checkouts, branching, and rebasing. Build branch models with interactive terminal logs.</p>
-              <button className={styles.hubCardBtn}>Launch Simulator</button>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/git') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>GIT.BOX</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/git.png" alt="Git Sandbox" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>Git Sandbox</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
             </div>
 
             {/* Gradient Descent Card */}
-            <div className={styles.hubCard} onClick={() => { onClose && onClose(); navigate('/playground/gradient') }}>
-              <svg className={styles.hubCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-              </svg>
-              <h3>Gradient Descent</h3>
-              <p>Adjust optimization parameters on multi-dimensional loss contours. Watch particles converge using SGD, Momentum, or Adam.</p>
-              <button className={styles.hubCardBtn}>Launch Simulator</button>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/gradient') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>GRADIENT.OPT</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/gradient.png" alt="Gradient Descent" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>Gradient Descent</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
+            </div>
+
+            {/* Equation Visualizer Card */}
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/equation') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>EQUATION.VIS</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/equation.png" alt="Equation Visualizer" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>Equation Visualizer</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

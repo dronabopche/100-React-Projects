@@ -7,7 +7,10 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--grid-dot) 1px,
+      transparent 1px);
+  background-size: 24px 24px;
   backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
@@ -18,8 +21,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(1.01); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(1.01);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .header {
@@ -36,7 +46,10 @@
   font-size: 1.8rem;
   font-weight: 400;
   margin: 0;
-  color: var(--gold);
+  background: linear-gradient(135deg, var(--cream) 0%, var(--gold2) 50%, var(--cream) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   letter-spacing: 0.05em;
 }
 
@@ -104,6 +117,7 @@
 .vectorScrollList::-webkit-scrollbar {
   width: 6px;
 }
+
 .contentBody::-webkit-scrollbar-thumb,
 .sidebar::-webkit-scrollbar-thumb,
 .tabContent::-webkit-scrollbar-thumb,
@@ -132,7 +146,10 @@
 .hubHeader h2 {
   font-family: 'Cinzel Decorative', Georgia, serif;
   font-size: 2.2rem;
-  color: var(--gold);
+  background: linear-gradient(135deg, var(--cream) 0%, var(--gold2) 50%, var(--cream) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
 }
 
@@ -145,7 +162,7 @@
 
 .hubGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 2rem;
   width: 100%;
   margin-top: 1rem;
@@ -157,36 +174,172 @@
   }
 }
 
+.folderCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  height: 100%;
+}
+
+.folderCard:hover {
+  transform: translateY(-8px);
+}
+
+.folderTab {
+  width: fit-content;
+  min-width: 120px;
+  height: 32px;
+  background: rgba(26, 17, 8, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: none;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.3);
+  align-self: flex-start;
+  z-index: 2;
+  position: relative;
+}
+
+:global([data-theme='light']) .folderTab {
+  background: rgba(28, 20, 10, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: none;
+  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.02);
+}
+
+.folderTabText {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #ffffff;
+  opacity: 0.75;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+:global([data-theme='light']) .folderTabText {
+  color: var(--text);
+  opacity: 0.85;
+}
+
+.folderCard:hover .folderTabText {
+  color: var(--gold);
+  opacity: 1;
+}
+
 .hubCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 2.5rem 1.8rem;
+  background: rgba(26, 17, 8, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top-right-radius: 16px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  border-top-left-radius: 0;
+  /* Align with folder tab */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  margin-top: -1px;
+  /* Overlap border line */
+  position: relative;
+}
+
+:global([data-theme='light']) .hubCard {
+  background: rgba(28, 20, 10, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.03), 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.folderCard:hover .hubCard {
+  border-color: var(--gold);
+  box-shadow: 0 15px 35px var(--shadow), 0 0 20px rgba(238, 187, 47, 0.15);
+}
+
+.folderCard:hover .folderTab {
+  border-color: var(--gold);
+  border-bottom-color: transparent;
+}
+
+.glassHighlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  pointer-events: none;
+}
+
+:global([data-theme='light']) .glassHighlight {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+}
+
+.cardImageContainer {
+  width: 100%;
+  height: 125px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+:global([data-theme='light']) .cardImageContainer {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:global([data-theme='light']) .cardImage {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.folderCard:hover .cardImage {
+  transform: scale(1.06);
+}
+
+.cardContent {
+  padding: 1.2rem 1.2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  cursor: pointer;
-  transition: all 0.35s ease;
-}
-
-.hubCard:hover {
-  border-color: var(--gold);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px var(--shadow);
-}
-
-.hubCardIcon {
-  width: 56px;
-  height: 56px;
-  color: var(--gold2);
+  gap: 0.8rem;
+  flex: 1;
+  text-align: center;
 }
 
 .hubCard h3 {
   font-family: 'Cinzel', serif;
   font-size: 1.3rem;
-  color: var(--gold);
+  color: #ffffff;
   margin: 0;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+:global([data-theme='light']) .hubCard h3 {
+  color: var(--text);
+}
+
+.folderCard:hover h3 {
+  color: var(--gold);
 }
 
 .hubCard p {
@@ -199,17 +352,19 @@
 }
 
 .hubCardBtn {
-  background: var(--surface);
+  background: transparent;
   color: var(--gold);
   border: 1px solid var(--gold);
-  padding: 0.5rem 1.8rem;
-  border-radius: 4px;
+  padding: 0.6rem 2rem;
+  border-radius: 6px;
   font-family: var(--font-family-body);
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
 }
 
-.hubCard:hover .hubCardBtn {
+.folderCard:hover .hubCardBtn {
   background: var(--gold);
   color: var(--bg);
+  box-shadow: 0 0 15px rgba(238, 187, 47, 0.4);
 }
