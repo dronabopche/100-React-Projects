@@ -206,6 +206,25 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
               </div>
             </div>
+
+            {/* Fourier Visualizer Card */}
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/fourier') }}>
+              <div className={styles.folderTab}>
+                <div className={styles.glassHighlight}></div>
+                <span className={styles.folderTabText}>FOURIER.VIS</span>
+              </div>
+              <div className={styles.hubCard}>
+                <div className={styles.glassHighlight}></div>
+                <div className={styles.cardImageContainer}>
+                  <img src="playground/fourier.png" alt="Fourier Visualizer" className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                  <h3>Fourier Visualizer</h3>
+                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

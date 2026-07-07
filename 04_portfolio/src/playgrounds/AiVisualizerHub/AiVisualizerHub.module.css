@@ -179,8 +179,8 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  height: 100%;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 380px;
 }
 
 .folderCard:hover {
@@ -189,34 +189,34 @@
 
 .folderTab {
   width: fit-content;
-  min-width: 120px;
-  height: 32px;
-  background: rgba(26, 17, 8, 0.25);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 130px;
+  height: 36px;
+  background: rgba(20, 14, 8, 0.45);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: none;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  padding: 0 16px;
+  padding: 0 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.3);
   align-self: flex-start;
   z-index: 2;
   position: relative;
 }
 
 :global([data-theme='light']) .folderTab {
-  background: rgba(28, 20, 10, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-bottom: none;
-  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.02);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.02);
 }
 
 .folderTabText {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 2px;
   color: #ffffff;
@@ -237,35 +237,33 @@
 }
 
 .hubCard {
-  background: rgba(26, 17, 8, 0.25);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(20, 14, 8, 0.45);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-top-right-radius: 16px;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   border-top-left-radius: 0;
-  /* Align with folder tab */
   display: flex;
   flex-direction: column;
-  flex: 1;
+  height: calc(100% - 36px);
   overflow: hidden;
-  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.25);
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.5), 0 15px 35px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   margin-top: -1px;
-  /* Overlap border line */
   position: relative;
 }
 
 :global([data-theme='light']) .hubCard {
-  background: rgba(28, 20, 10, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.03), 0 10px 30px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.03), 0 15px 30px rgba(0, 0, 0, 0.05);
 }
 
 .folderCard:hover .hubCard {
   border-color: var(--gold);
-  box-shadow: 0 15px 35px var(--shadow), 0 0 20px rgba(238, 187, 47, 0.15);
+  box-shadow: 0 15px 35px var(--shadow), 0 0 20px rgba(238, 187, 47, 0.2);
 }
 
 .folderCard:hover .folderTab {
@@ -279,17 +277,17 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   pointer-events: none;
 }
 
 :global([data-theme='light']) .glassHighlight {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
 }
 
 .cardImageContainer {
   width: 100%;
-  height: 125px;
+  height: 60%;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
@@ -316,22 +314,27 @@
 }
 
 .cardContent {
-  padding: 1.2rem 1.2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
-  flex: 1;
+  justify-content: space-between;
+  height: 40%;
+  box-sizing: border-box;
   text-align: center;
 }
 
 .hubCard h3 {
   font-family: 'Cinzel', serif;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   color: #ffffff;
   margin: 0;
   letter-spacing: 1px;
   transition: color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 :global([data-theme='light']) .hubCard h3 {
@@ -343,24 +346,26 @@
 }
 
 .hubCard p {
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: var(--text);
-  opacity: 0.85;
+  opacity: 0.8;
   margin: 0;
-  flex: 1;
+  display: none; /* Hide description to enforce single-line title + button layout consistency */
 }
 
 .hubCardBtn {
   background: transparent;
   color: var(--gold);
   border: 1px solid var(--gold);
-  padding: 0.6rem 2rem;
+  padding: 0.5rem 1.8rem;
   border-radius: 6px;
   font-family: var(--font-family-body);
   font-weight: 500;
   transition: all 0.3s ease;
   letter-spacing: 1px;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 .folderCard:hover .hubCardBtn {
