@@ -104,8 +104,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/playground/nn" element={<NeuralNetworkPlayground theme={theme} isStandalone={true} />} />
-      <Route path="/k-meanas" element={<KMeansPlayground theme={theme} isStandalone={true} />} />
-      <Route path="/rag" element={<PdfRagVisualizer theme={theme} isStandalone={true} />} />
+      <Route path="/playground/kmeans" element={<KMeansPlayground theme={theme} isStandalone={true} />} />
+      <Route path="/playground/rag" element={<PdfRagVisualizer theme={theme} isStandalone={true} />} />
       <Route path="/playground/quantum" element={<QuantumPlayground theme={theme} isStandalone={true} />} />
       <Route path="/playground/git" element={<GitSandbox theme={theme} isStandalone={true} />} />
       <Route path="/playground/gradient" element={<GradientDescentPlayground theme={theme} isStandalone={true} />} />

@@ -82,7 +82,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
           </div>
           <div className={styles.hubGrid}>
             {/* RAG Card */}
-            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/rag') }}>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/rag') }}>
               <div className={styles.folderTab}>
                 <div className={styles.glassHighlight}></div>
                 <span className={styles.folderTabText}>RAG.ENV</span>
@@ -118,7 +118,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
             </div>
 
             {/* K-Means Card */}
-            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/k-meanas') }}>
+            <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/kmeans') }}>
               <div className={styles.folderTab}>
                 <div className={styles.glassHighlight}></div>
                 <span className={styles.folderTabText}>K-MEANS.ALG</span>
