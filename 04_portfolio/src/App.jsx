@@ -6,6 +6,7 @@ import Projects from './components/Projects/Projects'
 import Experience from './components/Experience/Experience'
 import Gallery from './components/Gallery/Gallery'
 import LiveProjects from './components/LiveProjectCard/LiveProject'
+import ThreeSixtyViewer from './components/ThreeSixtyViewer/ThreeSixtyViewer'
 import Contact from './components/Contact/Contact'
 import Footer from './components/Footer/Footer'
 import { fetchRepos } from './services/github'
@@ -133,6 +134,7 @@ export default function App() {
           <Hero />
           <About />
           <LiveProjects />
+          <ThreeSixtyViewer theme={theme} />
           <Skills />
           {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
           <Projects repos={repos} loading={loading} error={error} />

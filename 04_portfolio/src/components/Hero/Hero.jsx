@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import styles from './Hero.module.css'
 
@@ -8,8 +8,57 @@ export default function Hero() {
   const tagline =
     'Crafting elegant solutions through code, automation, and machine intelligence.'
 
+  const darkVideoRef = useRef(null)
+  const lightVideoRef = useRef(null)
+  const heroRef = useRef(null)
+
+  useEffect(() => {
+    const darkVideo = darkVideoRef.current
+    const lightVideo = lightVideoRef.current
+
+    if (darkVideo) darkVideo.pause()
+    if (lightVideo) lightVideo.pause()
+
+    const handleScroll = () => {
+      if (!heroRef.current) return
+      const rect = heroRef.current.getBoundingClientRect()
+      const heroHeight = rect.height || window.innerHeight
+      const scrolled = -rect.top
+      let progress = scrolled / heroHeight
+      progress = Math.max(0, Math.min(1, progress))
+
+      if (darkVideo && darkVideo.duration) {
+        darkVideo.currentTime = progress * darkVideo.duration
+      }
+      if (lightVideo && lightVideo.duration) {
+        lightVideo.currentTime = progress * lightVideo.duration
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    
+    if (darkVideo) {
+      darkVideo.addEventListener('loadedmetadata', handleScroll)
+    }
+    if (lightVideo) {
+      lightVideo.addEventListener('loadedmetadata', handleScroll)
+    }
+
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (darkVideo) {
+        darkVideo.removeEventListener('loadedmetadata', handleScroll)
+      }
+      if (lightVideo) {
+        lightVideo.removeEventListener('loadedmetadata', handleScroll)
+      }
+    }
+  }, [])
+
   return (
-    <section className={styles.hero}>
+    <section ref={heroRef} className={styles.hero}>
       {/* Left — text side */}
       <div className={styles.left}>
         <motion.div
@@ -63,24 +112,30 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Right — image side */}
+      {/* Right — video side */}
       <motion.div
         className={styles.right}
         initial={{ opacity: 0, scale: 1.04 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Dark theme profile image */}
-        <img
-          src="/profile.png"
-          alt={name}
+        {/* Dark theme profile video */}
+        <video
+          ref={darkVideoRef}
+          src="/landing_page/profile.webm"
+          muted
+          playsInline
+          preload="auto"
           className={`${styles.portrait} ${styles.portraitDark}`}
         />
 
-        {/* Light theme profile image */}
-        <img
-          src="/profile-light.png"
-          alt={name}
+        {/* Light theme profile video */}
+        <video
+          ref={lightVideoRef}
+          src="/landing_page/profile-light.webm"
+          muted
+          playsInline
+          preload="auto"
           className={`${styles.portrait} ${styles.portraitLight}`}
         />
 
