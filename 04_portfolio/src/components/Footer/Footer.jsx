@@ -1,4 +1,5 @@
 import { motion } from 'motion/react'
+import { Link } from 'react-router-dom'
 import styles from './Footer.module.css'
 
 const NAV = [
@@ -42,6 +43,9 @@ export default function Footer({ openSettings }) {
               {n.label}
             </a>
           ))}
+          <Link to="/sitemap" className={styles.navLink}>
+            Sitemap
+          </Link>
         </nav>
 
         {/* Social */}

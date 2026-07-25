@@ -26,6 +26,8 @@ import GitSandbox from './playgrounds/GitSandbox/GitSandbox'
 import GradientDescentPlayground from './playgrounds/GradientDescentPlayground/GradientDescentPlayground'
 import EquationVisualizerPlayground from './playgrounds/EquationVisualizer/EquationVisualizerPlayground'
 import FourierVisualizerPlayground from './playgrounds/FourierVisualizer/FourierVisualizerPlayground'
+import Sitemap from './components/Sitemap/Sitemap'
+
 
 
 export default function App() {
@@ -114,6 +116,7 @@ export default function App() {
       <Route path="/playground/fourier" element={<FourierVisualizerPlayground theme={theme} isStandalone={true} />} />
 
       <Route path="/playground" element={<AiVisualizerHub theme={theme} isStandalone={true} />} />
+      <Route path="/sitemap" element={<Sitemap />} />
       <Route path="/" element={
         <>
           {/* Global Cursor Trail */}
