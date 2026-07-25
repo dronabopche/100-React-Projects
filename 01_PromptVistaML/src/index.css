@@ -31,8 +31,8 @@
   --input-focus: var(--brand-purple);
 
   /* Buttons */
-  --btn-primary-bg: var(--brand-black);
-  --btn-primary-hover: #1f2937;
+  --btn-primary-bg: #8b5cf6; /* Light purple */
+  --btn-primary-hover: #7c3aed;
   --btn-primary-text: #ffffff;
 
   --btn-secondary-bg: #ffffff;
@@ -70,8 +70,8 @@
   --input-border: #3b4252;
   --input-focus: var(--brand-light-purple);
 
-  --btn-primary-bg: var(--brand-purple);
-  --btn-primary-hover: #4c1d95;
+  --btn-primary-bg: #6d28d9; /* Dark purple */
+  --btn-primary-hover: #5b21b6;
   --btn-primary-text: #ffffff;
 
   --btn-secondary-bg: #111827;
@@ -1586,4 +1586,56 @@
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.1);
   @apply px-1.5 py-0.5 text-xs text-purple-600 dark:text-purple-300 dark:bg-purple-950/40 dark:border-purple-800/40;
+}
+
+/* Edge divider lines for full screen video showcase */
+.video-divider-top {
+  height: 2px;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: linear-gradient(to right, transparent, #000000 15%, #8b5cf6 50%, #000000 85%, transparent); /* black-purple */
+  z-index: 30;
+}
+.dark .video-divider-top {
+  background: linear-gradient(to right, transparent, #6d28d9 15%, #facc15 50%, #6d28d9 85%, transparent); /* purple-golden */
+}
+
+.video-divider-bottom {
+  height: 2px;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: linear-gradient(to right, transparent, #000000 15%, #8b5cf6 50%, #000000 85%, transparent); /* black-purple */
+  z-index: 30;
+}
+.dark .video-divider-bottom {
+  background: linear-gradient(to right, transparent, #6d28d9 15%, #facc15 50%, #6d28d9 85%, transparent); /* purple-golden */
+}
+
+/* Custom View Transition: Left-to-Right Sweep Reveal */
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+::view-transition-new(root) {
+  animation: sweep-reveal 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  mix-blend-mode: normal;
+}
+
+@keyframes sweep-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }

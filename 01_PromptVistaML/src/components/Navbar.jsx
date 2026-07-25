@@ -1,8 +1,20 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 
 const Navbar = () => {
   const location = useLocation()
+  const [isTransparent, setIsTransparent] = useState(false)
+
+  useEffect(() => {
+    const handleVideoInView = (e) => {
+      setIsTransparent(e.detail.inView)
+    }
+    window.addEventListener('video-in-view', handleVideoInView)
+    return () => {
+      window.removeEventListener('video-in-view', handleVideoInView)
+    }
+  }, [])
   
   const isActive = (path) => {
     return location.pathname === path
@@ -17,7 +29,11 @@ const Navbar = () => {
   ]
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-purple-400 dark:border-purple-800">
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${
+      isTransparent 
+        ? 'bg-transparent border-transparent backdrop-blur-none shadow-none' 
+        : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-purple-400 dark:border-purple-800'
+    }`}>
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useEffect, useState, useRef } from 'react'
 import ModelCard from '../components/ModelCard'
 import { fetchAllModels } from '../services/supabase'
+import ScrollVideoShowcase from '../components/ScrollVideoShowcase'
 
 /* ─── Intersection observer hook ─── */
 function useReveal(threshold = 0.08) {
@@ -144,8 +145,10 @@ const Home = () => {
 
       <div className="space-y-16 sm:space-y-20">
 
-        {/* ══════ HERO ══════ */}
-        <section className="relative min-h-[calc(100vh-80px)] flex items-center overflow-hidden">
+        {/* Group Hero and Video together to avoid space-y margins */}
+        <div>
+          {/* ══════ HERO ══════ */}
+          <section className="relative min-h-[calc(100vh-80px)] flex items-center overflow-hidden">
           <div className="absolute inset-0 pv-grid pointer-events-none" />
 
           {/* Ambient orbs */}
@@ -238,7 +241,12 @@ const Home = () => {
             </div>
           </header>
         </section>
- {/* ══════ MODELS PREVIEW ══════ */}
+
+        {/* ══════ VIDEO SHOWCASE ══════ */}
+        <ScrollVideoShowcase />
+        </div>
+
+        {/* ══════ MODELS PREVIEW ══════ */}
         <section>
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10">
             <div>
