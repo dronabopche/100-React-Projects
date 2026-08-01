@@ -11,25 +11,25 @@ export default function LiveProjects() {
     {
       title: 'House Price Prediction',
       desc: 'ML model predicting real estate prices',
-      img: '/data.png',
+      img: '/data.webp',
       link: '#',
     },
     {
       title: 'Employee Retention',
       desc: 'Predict employee churn',
-      img: '/leetcode.png',
+      img: '/leetcode.webp',
       link: '#',
     },
     {
       title: 'AI Dashboard',
       desc: 'Real-time analytics system',
-      img: '/codeforce.png',
+      img: '/codeforce.webp',
       link: '#',
     },
     {
       title: 'Prompt Tool',
       desc: 'Smart prompt generator',
-      img: '/prompt.png',
+      img: '/prompt.webp',
       link: '#',
     },
   ]

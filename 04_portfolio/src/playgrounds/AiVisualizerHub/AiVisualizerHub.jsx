@@ -90,7 +90,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/rag.png" alt="RAG Pipeline" className={styles.cardImage} />
+                  <img src="playground/rag.webp" alt="RAG Pipeline" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>RAG Pipeline</h3>
@@ -108,7 +108,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/nn.png" alt="Neural Network" className={styles.cardImage} />
+                  <img src="playground/nn.webp" alt="Neural Network" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Neural Network</h3>
@@ -126,7 +126,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/kmeans.png" alt="K-Means Clustering" className={styles.cardImage} />
+                  <img src="playground/kmeans.webp" alt="K-Means Clustering" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>K-Means Clustering</h3>
@@ -144,7 +144,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/quantum.png" alt="Quantum Circuit" className={styles.cardImage} />
+                  <img src="playground/quantum.webp" alt="Quantum Circuit" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Quantum Circuit</h3>
@@ -162,7 +162,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/git.png" alt="Git Sandbox" className={styles.cardImage} />
+                  <img src="playground/git.webp" alt="Git Sandbox" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Git Sandbox</h3>
@@ -180,7 +180,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/gradient.png" alt="Gradient Descent" className={styles.cardImage} />
+                  <img src="playground/gradient.webp" alt="Gradient Descent" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Gradient Descent</h3>
@@ -198,7 +198,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/equation.png" alt="Equation Visualizer" className={styles.cardImage} />
+                  <img src="playground/equation.webp" alt="Equation Visualizer" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Equation Visualizer</h3>
@@ -216,7 +216,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
               <div className={styles.hubCard}>
                 <div className={styles.glassHighlight}></div>
                 <div className={styles.cardImageContainer}>
-                  <img src="playground/fourier.png" alt="Fourier Visualizer" className={styles.cardImage} />
+                  <img src="playground/fourier.webp" alt="Fourier Visualizer" className={styles.cardImage} />
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Fourier Visualizer</h3>

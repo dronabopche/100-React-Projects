@@ -3,12 +3,12 @@ import styles from './Gallery.module.css'
 
 export default function Gallery() {
   const images = [
-    { src: '/codefest.jpeg', subtitle: 'Runner UP in Offline Coding Competition' },
-    { src: '/youtube.png', subtitle: 'Documented Project in YouTube' },
-    { src: '/host.png', subtitle: 'Hosted Coding Competition at St. Edmunt' },
-    { src: '/profile.png', subtitle: 'Data Visualization' },
-    { src: '/profile.png', subtitle: 'Training Pipeline' },
-    { src: '/profile.png', subtitle: 'Deployment View' },
+    { src: '/codefest.webp', subtitle: 'Runner UP in Offline Coding Competition' },
+    { src: '/youtube.webp', subtitle: 'Documented Project in YouTube' },
+    { src: '/host.webp', subtitle: 'Hosted Coding Competition at St. Edmunt' },
+    { src: '/profile.webp', subtitle: 'Data Visualization' },
+    { src: '/profile.webp', subtitle: 'Training Pipeline' },
+    { src: '/profile.webp', subtitle: 'Deployment View' },
   ]
 
   const container = {
