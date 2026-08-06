@@ -12,6 +12,7 @@ const LANDING_SECTIONS = [
   { label: 'Skills & Tech Stack', href: '/#skills' },
   { label: 'Featured Projects', href: '/#projects' },
   { label: 'Gallery', href: '/#gallery' },
+  { label: 'Certificates & Milestones', href: '/#certificates' },
   { label: 'Experience & Timeline', href: '/#experience' },
   { label: 'Testimonials', href: '/#testimonials' },
   { label: 'Contact', href: '/#contact' },

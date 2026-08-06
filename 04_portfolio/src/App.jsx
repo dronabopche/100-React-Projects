@@ -5,6 +5,7 @@ import Skills from './components/Skills/Skills'
 import Projects from './components/Projects/Projects'
 import Experience from './components/Experience/Experience'
 import Gallery from './components/Gallery/Gallery'
+import Certificates from './components/Certificates/Certificates'
 import LiveProjects from './components/LiveProjectCard/LiveProject'
 import ThreeSixtyViewer from './components/ThreeSixtyViewer/ThreeSixtyViewer'
 import Contact from './components/Contact/Contact'
@@ -142,6 +143,7 @@ export default function App() {
           {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
           <Projects repos={repos} loading={loading} error={error} />
           <Gallery/>
+          <Certificates />
           <Experience />
           <Testimonials />
           <Contact />
