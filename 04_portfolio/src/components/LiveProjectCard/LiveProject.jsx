@@ -69,32 +69,23 @@ export default function LiveProjects() {
             handleCardClick(card.link)
           }}
         >
-          <span className={styles.fold} />
-          <div className={styles.points_wrapper}>
-            <i className={styles.point} />
-            <i className={styles.point} />
-            <i className={styles.point} />
-            <i className={styles.point} />
-            <i className={styles.point} />
-            <i className={styles.point} />
-            <i className={styles.point} />
-            <i className={styles.point} />
+          <div className={styles.btnWrap}>
+            <p>
+              <span>Know More</span>
+              <svg
+                className={styles.btnIcon}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </p>
           </div>
-          <span className={styles.innerBtn}>
-            <span>Know More</span>
-            <svg
-              className={styles.btnIcon}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg>
-          </span>
         </button>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import SpecularButton from '../SpecularButton/SpecularButton'
-import GhostCursor from '../GhostCursor/GhostCursor'
 import styles from './Hero.module.css'
 
 export default function Hero() {
@@ -63,19 +62,6 @@ export default function Hero() {
     <section ref={heroRef} className={styles.hero}>
       {/* Left — text side */}
       <div className={styles.left}>
-        {/* Ethereal Ghost Cursor Bloom Trail Effect */}
-        <GhostCursor
-          color="#e8c96a"
-          brightness={1.2}
-          bloomStrength={0.18}
-          bloomRadius={1.1}
-          grainIntensity={0.04}
-          trailLength={45}
-          inertia={0.5}
-          zIndex={1}
-          mixBlendMode="screen"
-        />
-
         <motion.div
           className={styles.textBlock}
           initial={{ opacity: 0, x: -40 }}
@@ -96,14 +82,16 @@ export default function Hero() {
           <p className={styles.tagline}>{tagline}</p>
 
           <div className={styles.ctas}>
-            <motion.a
+            <a
               href="#projects"
-              className={styles.ctaPrimary}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              className={styles.button}
             >
-              View Work
-            </motion.a>
+              <div className={styles.wrap}>
+                <p>
+                  <span>View Work</span>
+                </p>
+              </div>
+            </a>
 
             <SpecularButton
               href="#contact"

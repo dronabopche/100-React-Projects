@@ -166,7 +166,7 @@ export default function App() {
           {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
           <Projects repos={repos} loading={loading} error={error} />
           <Gallery />
-          <Certificates />
+          {/* <Certificates /> */}
           <Experience />
           <Testimonials />
           <ThreeSixtyViewer theme={theme} />

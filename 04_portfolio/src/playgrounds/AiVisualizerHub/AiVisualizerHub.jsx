@@ -19,6 +19,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
   return (
     <motion.div
       className={styles.overlay}
+      data-lenis-prevent
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -74,12 +75,8 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
       </div>
 
       {/* Main Switcher */}
-      <div className={styles.contentBody}>
+      <div className={styles.contentBody} data-lenis-prevent>
         <div className={styles.hubContainer}>
-          <div className={styles.hubHeader}>
-            <h2>Select a Playground</h2>
-            <p>Explore visual simulations of foundational AI, Machine Learning, and Data Science models.</p>
-          </div>
           <div className={styles.hubGrid}>
             {/* RAG Card */}
             <div className={styles.folderCard} onClick={() => { onClose && onClose(); navigate('/playground/rag') }}>

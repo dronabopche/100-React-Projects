@@ -182,206 +182,145 @@
   min-width: 0;
 }
 
-/* ── Yellow Cosmic Glow Know More Button ── */
+/* ── Pill Specular Glow Know More Button ── */
 .knowMoreButton {
-  --round: 0.45rem;
-  cursor: pointer;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  transition: all 0.25s ease;
-  background: radial-gradient(
-      65.28% 65.28% at 50% 100%,
-      rgba(255, 215, 0, 0.95) 0%,
-      rgba(218, 165, 32, 0) 100%
-    ),
-    linear-gradient(0deg, #c0850e, #b8860b);
-  border-radius: var(--round);
-  border: none;
+  --btn-bg: #140d07;
+  --btn-text: #fff3db;
+  --radius: 100px;
   outline: none;
-  padding: 5px 10px;
-  flex-shrink: 0;
-  box-shadow: 0 2px 10px rgba(238, 187, 47, 0.35);
-  pointer-events: auto;
-}
-
-.knowMoreButton::before,
-.knowMoreButton::after {
-  content: "";
-  position: absolute;
-  inset: var(--space);
-  transition: all 0.5s ease-in-out;
-  border-radius: calc(var(--round) - var(--space));
-  z-index: 0;
-}
-
-.knowMoreButton::before {
-  --space: 1px;
-  background: linear-gradient(
-    177.95deg,
-    rgba(255, 255, 255, 0.45) 0%,
-    rgba(255, 255, 255, 0) 100%
-  );
-}
-
-.knowMoreButton::after {
-  --space: 1.5px;
-  background: radial-gradient(
-      65.28% 65.28% at 50% 100%,
-      rgba(255, 220, 80, 0.9) 0%,
-      rgba(218, 165, 32, 0) 100%
-    ),
-    linear-gradient(0deg, #b8860b, #966705);
-}
-
-.knowMoreButton:active {
-  transform: scale(0.95);
-}
-
-.fold {
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 0.65rem;
-  width: 0.65rem;
-  display: inline-block;
-  transition: all 0.4s ease-in-out;
-  background: radial-gradient(
-    100% 75% at 55%,
-    rgba(255, 235, 120, 0.95) 0%,
-    rgba(218, 165, 32, 0) 100%
-  );
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
-  border-bottom-left-radius: 0.35rem;
-  border-top-right-radius: var(--round);
-}
-
-.fold::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 150%;
-  height: 150%;
-  transform: rotate(45deg) translateX(0%) translateY(-12px);
-  background-color: #fff4cc;
-  pointer-events: none;
-}
-
-.card:hover .fold,
-.knowMoreButton:hover .fold {
-  margin-top: -0.75rem;
-  margin-right: -0.75rem;
-}
-
-.points_wrapper {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.points_wrapper .point {
-  bottom: -6px;
-  position: absolute;
-  animation: floating-points infinite ease-in-out;
-  pointer-events: none;
-  width: 2px;
-  height: 2px;
-  background-color: #fffdf0;
-  border-radius: 9999px;
-  box-shadow: 0 0 3px #ffe066;
-}
-
-@keyframes floating-points {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  85% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translateY(-36px);
-    opacity: 0;
-  }
-}
-
-.points_wrapper .point:nth-child(1) {
-  left: 10%;
-  opacity: 1;
-  animation-duration: 2.1s;
-  animation-delay: 0.2s;
-}
-.points_wrapper .point:nth-child(2) {
-  left: 28%;
-  opacity: 0.7;
-  animation-duration: 2.3s;
-  animation-delay: 0.5s;
-}
-.points_wrapper .point:nth-child(3) {
-  left: 42%;
-  opacity: 0.8;
-  animation-duration: 1.9s;
-  animation-delay: 0.1s;
-}
-.points_wrapper .point:nth-child(4) {
-  left: 56%;
-  opacity: 0.6;
-  animation-duration: 1.8s;
-}
-.points_wrapper .point:nth-child(5) {
-  left: 70%;
-  opacity: 0.9;
-  animation-duration: 2.2s;
-  animation-delay: 0.3s;
-}
-.points_wrapper .point:nth-child(6) {
-  left: 84%;
-  opacity: 0.7;
-  animation-duration: 2.4s;
-  animation-delay: 0.1s;
-}
-.points_wrapper .point:nth-child(7) {
-  left: 92%;
-  opacity: 0.8;
-  animation-duration: 2s;
-  animation-delay: 0.4s;
-}
-.points_wrapper .point:nth-child(8) {
-  left: 18%;
-  opacity: 0.75;
-  animation-duration: 2.15s;
-  animation-delay: 0.25s;
-}
-
-.innerBtn {
-  z-index: 2;
-  gap: 4px;
+  cursor: pointer;
+  border: 0;
   position: relative;
-  width: 100%;
-  color: #1a1108;
+  border-radius: var(--radius);
+  background-color: var(--btn-bg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  pointer-events: auto;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow:
+    inset 0 0.18rem 0.5rem rgba(255, 215, 0, 0.55),
+    inset 0 -0.08rem 0.25rem rgba(0, 0, 0, 0.85),
+    inset 0 -0.25rem 0.6rem rgba(218, 165, 32, 0.65),
+    0 0.6rem 1.4rem rgba(0, 0, 0, 0.4),
+    0 0.3rem 0.6rem -0.2rem rgba(0, 0, 0, 0.8);
+}
+
+:global([data-theme='light']) .knowMoreButton {
+  --btn-bg: #f9f2e0;
+  --btn-text: #221508;
+  box-shadow:
+    inset 0 0.18rem 0.5rem rgba(255, 240, 180, 0.95),
+    inset 0 -0.08rem 0.25rem rgba(184, 134, 11, 0.4),
+    inset 0 -0.25rem 0.6rem rgba(218, 165, 32, 0.6),
+    0 0.5rem 1.2rem rgba(218, 165, 32, 0.25),
+    0 0.3rem 0.5rem -0.2rem rgba(0, 0, 0, 0.1);
+}
+
+.btnWrap {
   font-family: 'Cinzel', serif;
   font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  line-height: 1.2;
-  transition: color 0.2s ease-in-out;
+  color: var(--btn-text);
+  padding: 0.38rem 0.85rem;
+  border-radius: inherit;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnWrap p {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  transform: none;
+  mask-image: linear-gradient(to bottom, white 75%, rgba(255, 255, 255, 0.65));
+  -webkit-mask-image: linear-gradient(to bottom, white 75%, rgba(255, 255, 255, 0.65));
+}
+
+.btnWrap::before,
+.btnWrap::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.btnWrap::before {
+  left: -15%;
+  right: -15%;
+  bottom: 25%;
+  top: -100%;
+  border-radius: 50%;
+  background-color: rgba(255, 215, 0, 0.32);
+}
+
+:global([data-theme='light']) .btnWrap::before {
+  background-color: rgba(255, 225, 100, 0.55);
+}
+
+.btnWrap::after {
+  left: 6%;
+  right: 6%;
+  top: 8%;
+  bottom: 38%;
+  border-radius: 12px 12px 0 0;
+  box-shadow: inset 0 5px 5px -4px rgba(255, 245, 180, 0.95);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 215, 0, 0.55) 0%,
+    rgba(218, 165, 32, 0.15) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+:global([data-theme='light']) .btnWrap::after {
+  box-shadow: inset 0 5px 5px -4px rgba(255, 255, 255, 1);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 220, 110, 0.95) 0%,
+    rgba(218, 165, 32, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.knowMoreButton:hover {
+  box-shadow:
+    inset 0 0.22rem 0.6rem rgba(255, 230, 130, 0.8),
+    inset 0 -0.08rem 0.25rem rgba(0, 0, 0, 0.85),
+    inset 0 -0.3rem 0.75rem rgba(255, 195, 30, 0.85),
+    0 0.9rem 1.8rem rgba(218, 165, 32, 0.35),
+    0 0.4rem 0.7rem -0.3rem rgba(0, 0, 0, 0.85);
+}
+
+:global([data-theme='light']) .knowMoreButton:hover {
+  box-shadow:
+    inset 0 0.22rem 0.6rem rgba(255, 255, 255, 1),
+    inset 0 -0.08rem 0.25rem rgba(184, 134, 11, 0.4),
+    inset 0 -0.3rem 0.75rem rgba(218, 165, 32, 0.75),
+    0 0.8rem 1.5rem rgba(218, 165, 32, 0.35),
+    0 0.4rem 0.7rem -0.3rem rgba(0, 0, 0, 0.12);
+}
+
+.knowMoreButton:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 0.18rem 0.35rem rgba(255, 235, 150, 0.6),
+    inset 0 -0.08rem 0.25rem rgba(0, 0, 0, 0.9),
+    inset 0 -0.25rem 0.55rem rgba(218, 165, 32, 0.5),
+    0 0.5rem 1rem rgba(0, 0, 0, 0.4),
+    0 0.25rem 0.5rem -0.15rem rgba(0, 0, 0, 0.85);
 }
 
 .btnIcon {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   transition: transform 0.25s ease;
   flex-shrink: 0;
 }
