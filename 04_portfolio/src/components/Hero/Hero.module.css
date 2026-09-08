@@ -21,16 +21,20 @@
 .left::before {
   content: '';
   position: absolute;
-  top: 50%; left: 60%;
+  top: 50%;
+  left: 60%;
   transform: translate(-50%, -50%);
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.06) 0%, transparent 65%);
   pointer-events: none;
 }
 
 .textBlock {
   max-width: 480px;
   width: 100%;
+  position: relative;
+  z-index: 10;
 }
 
 .eyebrow {
@@ -110,11 +114,12 @@
   text-transform: uppercase;
   border-radius: 2px;
   transition: opacity 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 20px rgba(201,168,76,0.25);
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.25);
 }
+
 .ctaPrimary:hover {
   opacity: 0.9;
-  box-shadow: 0 6px 28px rgba(201,168,76,0.4);
+  box-shadow: 0 6px 28px rgba(201, 168, 76, 0.4);
 }
 
 .ctaGhost {
@@ -128,6 +133,7 @@
   border-radius: 2px;
   transition: border-color 0.2s, color 0.2s;
 }
+
 .ctaGhost:hover {
   border-color: var(--gold-dim);
   color: var(--gold);
@@ -187,67 +193,14 @@
 .right::after {
   content: '';
   position: absolute;
-  bottom: 0; left: 0; right: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   height: 30%;
   background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
   z-index: 1;
   pointer-events: none;
 }
-
-/* Golden corner ornaments */
-.frameCornerTL,
-.frameCornerTR,
-.frameCornerBL,
-.frameCornerBR {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  z-index: 3;
-  pointer-events: none;
-}
-.frameCornerTL {
-  top: 20px; left: 20px;
-  border-top: 1px solid var(--gold-dim);
-  border-left: 1px solid var(--gold-dim);
-}
-.frameCornerTR {
-  top: 20px; right: 20px;
-  border-top: 1px solid var(--gold-dim);
-  border-right: 1px solid var(--gold-dim);
-}
-.frameCornerBL {
-  bottom: 20px; left: 20px;
-  border-bottom: 1px solid var(--gold-dim);
-  border-left: 1px solid var(--gold-dim);
-}
-.frameCornerBR {
-  bottom: 20px; right: 20px;
-  border-bottom: 1px solid var(--gold-dim);
-  border-right: 1px solid var(--gold-dim);
-}
-
-/* Floating badge */
-.badge {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(12, 8, 6, 0.85);
-  border: 1px solid var(--border2);
-  padding: 0.5rem 1.2rem;
-  border-radius: 100px;
-  font-family: 'Cinzel', serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  color: var(--gold);
-  white-space: nowrap;
-  backdrop-filter: blur(8px);
-}
-.badgeIcon { font-size: 0.8rem; }
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 768px) {
@@ -255,25 +208,39 @@
     flex-direction: column-reverse;
     min-height: unset;
   }
+
   .left {
     width: 100%;
     padding: 3rem 1.5rem 3rem;
     justify-content: center;
     text-align: center;
   }
-  .titleRow { justify-content: center; }
-  .ctas { justify-content: center; }
+
+  .titleRow {
+    justify-content: center;
+  }
+
+  .ctas {
+    justify-content: center;
+  }
+
   .right {
     width: 100%;
     height: 60vw;
   }
-  .portrait { object-position: center 20%; }
+
+  .portrait {
+    object-position: center 20%;
+  }
+
   .right::before {
     background: linear-gradient(to top, var(--bg) 0%, transparent 20%);
   }
+
   .mobileBreak {
     display: block;
   }
+
   .name {
     white-space: normal;
   }
@@ -288,4 +255,3 @@
   pointer-events: none;
   z-index: 5;
 }
-

@@ -1,53 +1,90 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 :root {
-  --bg:        #0c0806;
-  --bg2:       #110d0a;
-  --surface:   #1a1108;
-  --border:    #2e200f;
-  --border2:   #3d2c15;
-  --text:      #e8dcc8;
-  --muted:     #7a6448;
-  --gold:      #eebb2f;
-  --gold2:     #e8c96a;
-  --gold-dim:  #c0850e;
-  --crimson:   #6b1a1a;
-  --cream:     #f0e6cc;
-  --shadow:    rgba(0,0,0,0.7);
-  --grid-dot:  rgba(255, 255, 255, 0.08);
-  --card-bg:   rgba(26, 17, 8, 0.45);
+  --bg: #0c0806;
+  --bg2: #110d0a;
+  --surface: #1a1108;
+  --border: #2e200f;
+  --border2: #3d2c15;
+  --text: #e8dcc8;
+  --muted: #7a6448;
+  --gold: #eebb2f;
+  --gold2: #e8c96a;
+  --gold-dim: #c0850e;
+  --crimson: #6b1a1a;
+  --cream: #f0e6cc;
+  --shadow: rgba(0, 0, 0, 0.7);
+  --grid-dot: rgba(255, 255, 255, 0.08);
+  --card-bg: rgba(26, 17, 8, 0.45);
   --card-bg-hover: rgba(26, 17, 8, 0.65);
   --font-family-body: 'EB Garamond', Georgia, serif;
 }
 
 [data-theme='light'] {
-  --bg:        #fdfcf7; /* Ivory/warm white */
-  --bg2:       #f7f4ea; /* Warm light-cream */
-  --surface:   #ffffff; /* Pure white for clean cards */
-  --border:    #e8e2d5; /* Soft warm border */
-  --border2:   #dfd8c7; /* Stronger warm border */
-  --text:      #1a120b; /* Deep charcoal brown (highly readable) */
-  --muted:     #5c4b37; /* Darker muted color for readability */
-  --gold:      #b8860b; /* Rich dark gold for contrast */
-  --gold2:     #d4af37; /* Medium gold */
-  --gold-dim:  #8b6508; /* Dark gold for text/accent highlights */
-  --crimson:   #9b1c1c; /* Deep crimson */
-  --cream:     #2c1e13; /* Dark brown for high-contrast headers */
-  --shadow:    rgba(28, 20, 10, 0.08); /* Soft warm shadows */
-  --grid-dot:  rgba(28, 20, 10, 0.06);
-  --card-bg:   #f7f4ea; /* Solid card background */
-  --card-bg-hover: #ffffff; /* Contrast popup card background */
+  --bg: #fdfcf7;
+  /* Ivory/warm white */
+  --bg2: #f7f4ea;
+  /* Warm light-cream */
+  --surface: #ffffff;
+  /* Pure white for clean cards */
+  --border: #e8e2d5;
+  /* Soft warm border */
+  --border2: #dfd8c7;
+  /* Stronger warm border */
+  --text: #1a120b;
+  /* Deep charcoal brown (highly readable) */
+  --muted: #5c4b37;
+  /* Darker muted color for readability */
+  --gold: #b8860b;
+  /* Rich dark gold for contrast */
+  --gold2: #d4af37;
+  /* Medium gold */
+  --gold-dim: #8b6508;
+  /* Dark gold for text/accent highlights */
+  --crimson: #9b1c1c;
+  /* Deep crimson */
+  --cream: #2c1e13;
+  /* Dark brown for high-contrast headers */
+  --shadow: rgba(28, 20, 10, 0.08);
+  /* Soft warm shadows */
+  --grid-dot: rgba(28, 20, 10, 0.06);
+  --card-bg: #f7f4ea;
+  /* Solid card background */
+  --card-bg-hover: #ffffff;
+  /* Contrast popup card background */
 }
 
 
 
 html {
-  scroll-behavior: smooth;
   font-size: clamp(14px, 0.35vw + 12.5px, 18px);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {
@@ -63,21 +100,33 @@ body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%);
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.35) 100%);
   pointer-events: none;
   z-index: 998;
 }
 
 [data-theme='light'] body::after {
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.06) 100%);
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.06) 100%);
 }
 
 
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+::-webkit-scrollbar {
+  width: 3px;
+}
 
-a { color: inherit; text-decoration: none; }
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 2px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 .section-label {
   font-family: 'Cinzel', serif;
@@ -91,27 +140,32 @@ a { color: inherit; text-decoration: none; }
 
 .section-title {
   font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(3.6rem, 3.5vw, 3.6rem);
+  font-size: clamp(2rem, 3.5vw + 0.8rem, 3.6rem);
   font-weight: 400;
   color: var(--cream);
   letter-spacing: 0.03em;
   line-height: 1.2;
+  word-break: break-word;
 }
 
 .divider {
   display: flex;
   align-items: center;
-  gap: 8rem;
+  gap: clamp(1.5rem, 5vw, 8rem);
   margin: 1.5rem 0;
 }
-.divider::before, .divider::after {
+
+.divider::before,
+.divider::after {
   content: '';
   flex: 1;
   height: 1px;
   background: linear-gradient(to right, transparent, var(--border2), transparent);
 }
+
 .divider-gem {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   background: var(--gold-dim);
   transform: rotate(45deg);
   flex-shrink: 0;
@@ -133,63 +187,120 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* 1. Circle (Top Left Center) */
-[data-animation="circle"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="circle"]::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
 [data-animation="circle"]::view-transition-new(root) {
   animation: circle-reveal 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   z-index: 2;
 }
+
 @keyframes circle-reveal {
-  from { clip-path: circle(0% at 0% 0%); }
-  to { clip-path: circle(150% at 0% 0%); }
+  from {
+    clip-path: circle(0% at 0% 0%);
+  }
+
+  to {
+    clip-path: circle(150% at 0% 0%);
+  }
 }
 
 /* 2. Wipe */
-[data-animation="wipe"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="wipe"]::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
 [data-animation="wipe"]::view-transition-new(root) {
   animation: wipe-reveal 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   z-index: 2;
 }
+
 @keyframes wipe-reveal {
-  from { clip-path: inset(0 100% 0 0); }
-  to { clip-path: inset(0 0 0 0); }
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 /* 3. Split */
-[data-animation="split"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="split"]::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
 [data-animation="split"]::view-transition-new(root) {
   animation: split-reveal 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   z-index: 2;
 }
+
 @keyframes split-reveal {
-  from { clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%); }
-  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  from {
+    clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%);
+  }
+
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
 }
 
 /* 4. Fade (Glass Effect) */
 [data-animation="fade"]::view-transition-old(root) {
   animation: fade-out 0.8s forwards;
 }
+
 [data-animation="fade"]::view-transition-new(root) {
   animation: fade-in 0.8s forwards;
 }
-@keyframes fade-out { 
-  from { opacity: 1; filter: blur(0px); } 
-  to { opacity: 0; filter: blur(20px); } 
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    filter: blur(0px);
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(20px);
+  }
 }
-@keyframes fade-in { 
-  from { opacity: 0; filter: blur(20px); } 
-  to { opacity: 1; filter: blur(0px); } 
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    filter: blur(20px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0px);
+  }
 }
 
 /* 5. Wave (Angled Sweep) */
-[data-animation="wave"]::view-transition-old(root) { animation: none; z-index: 1; }
+[data-animation="wave"]::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
 [data-animation="wave"]::view-transition-new(root) {
   animation: wave-reveal 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   z-index: 2;
 }
+
 @keyframes wave-reveal {
-  from { clip-path: polygon(0% 0%, 0% 0%, -30% 100%, -30% 100%); }
-  to { clip-path: polygon(0% 0%, 150% 0%, 150% 100%, -30% 100%); }
+  from {
+    clip-path: polygon(0% 0%, 0% 0%, -30% 100%, -30% 100%);
+  }
+
+  to {
+    clip-path: polygon(0% 0%, 150% 0%, 150% 100%, -30% 100%);
+  }
 }
 
 .divider-interactive {

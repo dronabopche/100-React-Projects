@@ -69,8 +69,6 @@ export default function Footer({ openSettings }) {
           <span>© {year} {name}. Built with React & Framer Motion.</span>
           <span className={styles.ornament}>✦</span>
           <span>Designed & Developed by {name}</span>
-          <span className={styles.ornament}>✦</span>
-          <span>Designed & Developed by {name}</span>
         </div>
       </div>
     </motion.footer>

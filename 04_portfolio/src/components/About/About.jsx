@@ -67,10 +67,10 @@ function AnimatedCounter({ value, duration = 1.5 }) {
     const updateCount = (currentTime) => {
       const elapsed = currentTime - startTime
       const progress = Math.min(elapsed / totalMiliseconds, 1)
-      
+
       // Easing out quad
       const easeProgress = progress * (2 - progress)
-      
+
       const currentCount = Math.floor(easeProgress * (end - start) + start)
       setCount(currentCount)
 

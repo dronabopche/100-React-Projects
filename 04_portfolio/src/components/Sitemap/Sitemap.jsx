@@ -40,9 +40,8 @@ export default function Sitemap() {
 
   return (
     <div className={styles.sitemapPage}>
-      {/* Background & Cursor Effect */}
+      {/* Background Layer */}
       <StarBackground />
-      <MouseTrail />
 
       <header className={styles.header}>
         <motion.button 

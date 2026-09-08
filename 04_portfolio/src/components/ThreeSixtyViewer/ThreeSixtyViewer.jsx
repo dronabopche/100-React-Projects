@@ -17,6 +17,8 @@ export default function ThreeSixtyViewer({ theme }) {
     { label: 'Left', time: 6 }
   ]
 
+  const animationFrameRef = useRef(null)
+
   useEffect(() => {
     if (isInView && videoRef.current) {
       videoRef.current.currentTime = 0
@@ -25,6 +27,14 @@ export default function ThreeSixtyViewer({ theme }) {
       })
     }
   }, [isInView])
+
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
+    }
+  }, [])
 
   const handleTimeUpdate = () => {
     const video = videoRef.current
@@ -35,19 +45,58 @@ export default function ThreeSixtyViewer({ theme }) {
     setActiveDot(sector)
   }
 
+  const handleViewClick = (targetTime) => {
+    const video = videoRef.current
+    if (!video) return
+
+    // Cancel any existing interpolation animation
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+    }
+
+    video.pause()
+    const duration = video.duration || 8
+    const startTime = video.currentTime % duration
+    let diff = (targetTime - startTime) % duration
+
+    // Find the shortest path around the 360 loop
+    if (diff > duration / 2) {
+      diff -= duration
+    } else if (diff < -duration / 2) {
+      diff += duration
+    }
+
+    const animDuration = 600 // ms
+    const startTimestamp = performance.now()
+
+    // Smooth cubic ease-in-out curve
+    const easeInOutCubic = (t) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+
+    const animateTransition = (currentTimestamp) => {
+      const elapsed = currentTimestamp - startTimestamp
+      const progress = Math.min(elapsed / animDuration, 1)
+      const easedProgress = easeInOutCubic(progress)
+
+      let newTime = (startTime + diff * easedProgress) % duration
+      if (newTime < 0) newTime += duration
+
+      video.currentTime = newTime
+
+      if (progress < 1) {
+        animationFrameRef.current = requestAnimationFrame(animateTransition)
+      } else {
+        video.currentTime = targetTime
+        video.play().catch(() => {})
+      }
+    }
+
+    animationFrameRef.current = requestAnimationFrame(animateTransition)
+  }
+
   return (
     <section className={styles.section} ref={containerRef}>
-      {/* Section Header - position layout-wise before/above the video */}
-      <div className={styles.header}>
-        <span className="section-label" align="center">
-          ✦ 360° View
-        </span>
-        <h2 className={`section-title ${styles.title}`} align="center">
-          Interactive Model
-        </h2>
-      </div>
-
-      {/* Video Container Layout */}
+      {/* Video Container Layout filling viewport */}
       <div className={styles.videoWrapper}>
         <video
           ref={videoRef}
@@ -58,24 +107,31 @@ export default function ThreeSixtyViewer({ theme }) {
           preload="auto"
           onTimeUpdate={handleTimeUpdate}
         />
-        
-        {/* Vignette Overlay */}
-        <div className={styles.vignetteOverlay} />
+      </div>
 
-        {/* Floating Indicators at the bottom center of the video */}
-        <div className={styles.overlayContent}>
-          <div className={styles.indicatorContainer}>
-            <div className={styles.controls}>
-              {VIEWS.map((view, index) => (
-                <div
-                  key={view.label}
-                  className={`${styles.indicatorNode} ${activeDot === index ? styles.activeDot : ''}`}
-                >
-                  <span className={styles.dot} />
-                  <span className={styles.dotLabel}>{view.label}</span>
-                </div>
-              ))}
-            </div>
+      {/* Section Header overlay */}
+      <div className={styles.header}>
+        <h2 className={styles.title}>
+          Interactive Model
+        </h2>
+      </div>
+
+      {/* Floating Indicators at bottom */}
+      <div className={styles.overlayContent}>
+        <div className={styles.indicatorContainer}>
+          <div className={styles.controls}>
+            {VIEWS.map((view, index) => (
+              <button
+                key={view.label}
+                type="button"
+                onClick={() => handleViewClick(view.time)}
+                className={`${styles.indicatorNode} ${activeDot === index ? styles.activeDot : ''}`}
+                aria-label={`View ${view.label}`}
+              >
+                <span className={styles.dot} />
+                <span className={styles.dotLabel}>{view.label}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

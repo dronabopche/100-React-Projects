@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
+import SpecularButton from '../SpecularButton/SpecularButton'
+import GhostCursor from '../GhostCursor/GhostCursor'
 import styles from './Hero.module.css'
 
 export default function Hero() {
@@ -36,7 +38,7 @@ export default function Hero() {
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    
+
     if (darkVideo) {
       darkVideo.addEventListener('loadedmetadata', handleScroll)
     }
@@ -61,6 +63,19 @@ export default function Hero() {
     <section ref={heroRef} className={styles.hero}>
       {/* Left — text side */}
       <div className={styles.left}>
+        {/* Ethereal Ghost Cursor Bloom Trail Effect */}
+        <GhostCursor
+          color="#e8c96a"
+          brightness={1.2}
+          bloomStrength={0.18}
+          bloomRadius={1.1}
+          grainIntensity={0.04}
+          trailLength={45}
+          inertia={0.5}
+          zIndex={1}
+          mixBlendMode="screen"
+        />
+
         <motion.div
           className={styles.textBlock}
           initial={{ opacity: 0, x: -40 }}
@@ -90,14 +105,18 @@ export default function Hero() {
               View Work
             </motion.a>
 
-            <motion.a
+            <SpecularButton
               href="#contact"
-              className={styles.ctaGhost}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              size="lg"
+              radius={2}
+              intensity={1.1}
+              thickness={1.1}
+              proximity={300}
+              speed={0.4}
+              followMouse={true}
             >
               Get in Touch
-            </motion.a>
+            </SpecularButton>
           </div>
 
           <div className={styles.scroll}>
@@ -139,21 +158,6 @@ export default function Hero() {
           className={`${styles.portrait} ${styles.portraitLight}`}
         />
 
-        {/* Frame corners */}
-        <div className={styles.frameCornerTL} />
-        <div className={styles.frameCornerTR} />
-        <div className={styles.frameCornerBL} />
-        <div className={styles.frameCornerBR} />
-
-        {/* Floating badge */}
-        <motion.div
-          className={styles.badge}
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <span className={styles.badgeIcon}>⚡</span>
-          <span>Open to Work</span>
-        </motion.div>
       </motion.div>
     </section>
   )

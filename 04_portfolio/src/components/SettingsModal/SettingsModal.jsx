@@ -48,7 +48,7 @@ export default function SettingsModal({ isOpen, onClose, currentAnimation, onSel
                 Select the animation effect that plays when switching between light and dark mode.
               </p>
               
-              <div className={styles.animationList} style={{ maxHeight: '180px', overflowY: 'auto', paddingRight: '4px', marginBottom: '1.2rem' }}>
+              <div data-lenis-prevent className={styles.animationList} style={{ maxHeight: '180px', overflowY: 'auto', paddingRight: '4px', marginBottom: '1.2rem' }}>
                 {ANIMATIONS.map((anim) => (
                   <button
                     key={anim.id}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Lenis from 'lenis'
 import Hero from './components/Hero/Hero'
 import About from './components/About/About'
 import Skills from './components/Skills/Skills'
@@ -37,10 +38,10 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isGameOpen, setIsGameOpen] = useState(false)
-  
+
   // Theme state persisted in LocalStorage
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
-  
+
   // Animation settings and states
   const [themeAnimation, setThemeAnimation] = useState(() => localStorage.getItem('themeAnimation') || 'wave')
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -53,6 +54,32 @@ export default function App() {
     inter: "'Inter', system-ui, -apple-system, sans-serif",
     cormorant: "'Cormorant Garamond', Georgia, serif"
   }
+
+  // Initialize Lenis smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.8,
+    })
+
+    let animationFrameId
+    function raf(time) {
+      lenis.raf(time)
+      animationFrameId = requestAnimationFrame(raf)
+    }
+
+    animationFrameId = requestAnimationFrame(raf)
+
+    return () => {
+      cancelAnimationFrame(animationFrameId)
+      lenis.destroy()
+    }
+  }, [])
 
   useEffect(() => {
     // Sync the DOM attribute immediately if not already set by view transition
@@ -73,7 +100,7 @@ export default function App() {
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
-    
+
     // Fallback if browser doesn't support View Transitions
     if (!document.startViewTransition) {
       document.documentElement.setAttribute('data-theme', newTheme)
@@ -120,17 +147,14 @@ export default function App() {
       <Route path="/sitemap" element={<Sitemap />} />
       <Route path="/" element={
         <>
-          {/* Global Cursor Trail */}
-          <MouseTrail />
-
           {/* Background Layer */}
           <StarBackground />
 
-           {/* Floating Sidebar */}
-          <Sidebar 
-            openGame={() => setIsGameOpen(true)} 
+          {/* Floating Sidebar */}
+          <Sidebar
+            openGame={() => setIsGameOpen(true)}
             openVisualizerHub={() => navigate('/playground')}
-            toggleTheme={toggleTheme} 
+            toggleTheme={toggleTheme}
             theme={theme}
           />
 
@@ -138,19 +162,19 @@ export default function App() {
           <Hero />
           <About />
           <LiveProjects />
-          <ThreeSixtyViewer theme={theme} />
           <Skills />
           {isGameOpen && <GestureRealityController theme={theme} onClose={() => setIsGameOpen(false)} />}
           <Projects repos={repos} loading={loading} error={error} />
-          <Gallery/>
+          <Gallery />
           <Certificates />
           <Experience />
           <Testimonials />
+          <ThreeSixtyViewer theme={theme} />
           <Contact />
           <Footer openSettings={() => setIsSettingsOpen(true)} />
 
-          <SettingsModal 
-            isOpen={isSettingsOpen} 
+          <SettingsModal
+            isOpen={isSettingsOpen}
             onClose={() => setIsSettingsOpen(false)}
             currentAnimation={themeAnimation}
             onSelectAnimation={setThemeAnimation}

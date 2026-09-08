@@ -1,0 +1,120 @@
+.specular-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sb-radius, 3px);
+  cursor: pointer;
+  border: 1px solid var(--border2, rgba(201, 168, 76, 0.25));
+  outline: none;
+  padding: 0.7rem 1.8rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s ease,
+              background-color 0.25s ease,
+              border-color 0.25s ease,
+              color 0.25s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  
+  /* Glassmorphic Core */
+  background: var(--sb-bg, rgba(26, 17, 8, 0.45));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--sb-text-color, var(--gold-dim));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Dark theme specific glass styling */
+:root:not([data-theme='light']) .specular-button {
+  background: var(--sb-bg, rgba(26, 17, 8, 0.45));
+  border-color: rgba(238, 187, 47, 0.22);
+  color: var(--gold-dim, #c0850e);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:root:not([data-theme='light']) .specular-button:hover {
+  background: var(--sb-bg, rgba(26, 17, 8, 0.7));
+  border-color: rgba(238, 187, 47, 0.55);
+  color: var(--gold, #eebb2f);
+  box-shadow: 0 6px 24px rgba(201, 168, 76, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Light theme specific glass styling */
+[data-theme='light'] .specular-button {
+  background: var(--sb-bg, rgba(255, 255, 255, 0.55));
+  border-color: rgba(184, 134, 11, 0.3);
+  color: var(--gold-dim, #8b6508);
+  box-shadow: 0 4px 16px rgba(28, 20, 10, 0.06), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+[data-theme='light'] .specular-button:hover {
+  background: var(--sb-bg, rgba(255, 255, 255, 0.85));
+  border-color: rgba(184, 134, 11, 0.6);
+  color: var(--gold, #b8860b);
+  box-shadow: 0 6px 22px rgba(184, 134, 11, 0.15), inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.specular-button:active {
+  transform: scale(0.98);
+}
+
+.specular-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.specular-button--sm {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.65rem;
+}
+
+.specular-button--md {
+  padding: 0.6rem 1.5rem;
+  font-size: 0.7rem;
+}
+
+.specular-button--lg {
+  padding: 0.7rem 1.8rem;
+  font-size: 0.72rem;
+}
+
+.specular-button__fx {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.specular-button__fx canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  display: block;
+}
+
+.specular-button__label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
