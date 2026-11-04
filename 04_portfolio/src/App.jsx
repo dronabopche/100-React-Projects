@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Lenis from 'lenis'
+import 'lenis/dist/lenis.css'
 import Hero from './components/Hero/Hero'
 import About from './components/About/About'
 import Skills from './components/Skills/Skills'
@@ -13,6 +14,8 @@ import Contact from './components/Contact/Contact'
 import Footer from './components/Footer/Footer'
 import { fetchRepos } from './services/github'
 import StarBackground from './components/StarBackground/StarBackground'
+import Reliefwave from './components/Reliefwave/Reliefwave'
+import UserCursor from './components/UserCursor/UserCursor'
 import Sidebar from './components/Sidebar/Sidebar'
 import GestureRealityController from './components/GestureReality/GestureRealityController'
 import MouseTrail from './components/MouseTrail/MouseTrail'
@@ -55,16 +58,18 @@ export default function App() {
     cormorant: "'Cormorant Garamond', Georgia, serif"
   }
 
-  // Initialize Lenis smooth scrolling
+  // Initialize Lenis smooth scrolling with ultra-smooth slow inertia
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
+      duration: 2.2, // Higher duration creates that slow, buttery glide
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -8 * t)), // Smooth exponential ease-out
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.8,
+      wheelMultiplier: 0.75, // Slows down wheel responsiveness for a gentle coast
+      touchMultiplier: 1.2,
+      infinite: false,
+      autoRaf: false,
     })
 
     let animationFrameId
@@ -147,7 +152,38 @@ export default function App() {
       <Route path="/sitemap" element={<Sitemap />} />
       <Route path="/" element={
         <>
-          {/* Background Layer */}
+          {/* Custom Animated User Cursor */}
+          <UserCursor
+            name="Drona"
+            color={theme === 'light' ? '#b8860b' : '#eebb2f'}
+            textColor={theme === 'light' ? '#ffffff' : '#0c0806'}
+            size={28}
+            showLabel={true}
+          />
+
+          {/* Background Layer — Reliefwave WebGL Canvas */}
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: -2,
+              pointerEvents: 'none',
+              overflow: 'hidden',
+              opacity: theme === 'light' ? 0.45 : 0.65,
+            }}
+          >
+            <Reliefwave
+              speed={25}
+              scale={70}
+              depth={22}
+              drift={20}
+              baseColor={theme === 'light' ? '#f4eedb' : '#080504'}
+              lightColor={theme === 'light' ? '#ffffff' : '#f5d77f'}
+              background={theme === 'light' ? '#fdfcf7' : '#0c0806'}
+            />
+          </div>
+
+          {/* Subtle star dot grid overlay */}
           <StarBackground />
 
           {/* Floating Sidebar */}
@@ -170,7 +206,7 @@ export default function App() {
           <Experience />
           <Testimonials />
           <ThreeSixtyViewer theme={theme} />
-          <Contact />
+          <Contact theme={theme} />
           <Footer openSettings={() => setIsSettingsOpen(true)} />
 
           <SettingsModal

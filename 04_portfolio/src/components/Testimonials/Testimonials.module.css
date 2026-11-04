@@ -414,18 +414,74 @@
 
 @media (max-width: 768px) {
   .section {
-    padding: 4rem 0;
+    padding: 3rem 0;
   }
-  .fullLetterInner {
-    padding: 2rem 1.5rem;
+  .header {
+    margin-bottom: 2rem;
   }
-  .letterBody {
-    font-size: 1.15rem;
+  .subtext {
+    font-size: 0.9rem;
   }
-  .closeBtn {
-    top: -3rem;
+  .marqueeContainer {
+    padding: 1rem 0;
   }
   .mailCard {
-    width: 280px; /* slightly smaller for mobile */
+    width: 220px;
+    height: 200px;
+  }
+  .deliveryLabel {
+    font-size: 0.58rem;
+  }
+  .deliveryTarget {
+    font-size: 0.72rem;
+  }
+  .letterAuthor {
+    font-size: 0.78rem;
+  }
+  .stamp {
+    width: 28px;
+    height: 28px;
+  }
+  .marqueeGroup {
+    gap: 1.2rem;
+    padding-right: 1.2rem;
+  }
+  .fullLetter {
+    width: 92%;
+    max-height: 85vh;
+  }
+  .fullLetterInner {
+    padding: 1.5rem 1.1rem;
+  }
+  .letterBody {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 1.2rem 0;
+  }
+  .quoteMark {
+    font-size: 2.4rem;
+    left: -0.4rem;
+    top: -1rem;
+  }
+  .signatureName {
+    font-size: 0.95rem;
+  }
+  .signatureRole {
+    font-size: 0.78rem;
+  }
+  .closeBtn {
+    top: -2.8rem;
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mailCard {
+    width: 195px;
+    height: 180px;
+  }
+  .marqueeGroup {
+    gap: 1rem;
+    padding-right: 1rem;
   }
 }

@@ -72,20 +72,45 @@
   }
 }
 
-@media (max-width: 1199px) and (min-width: 860px) {
+@media (max-width: 1199px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 859px) and (min-width: 580px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 768px) {
+  .section {
+    padding: 3.5rem 0.75rem;
+  }
+  .header {
+    margin-bottom: 2rem;
+  }
+  .filters {
+    margin-bottom: 2rem;
+    gap: 0.35rem;
+  }
+  .pill {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.52rem;
+    letter-spacing: 0.06em;
+  }
+  .grid { 
+    grid-template-columns: repeat(3, 1fr); 
   }
 }
 
-@media (max-width: 579px) {
-  .grid { 
-    grid-template-columns: 1fr; 
+@media (max-width: 480px) {
+  .section {
+    padding: 3rem 0.5rem;
+  }
+  .filters {
+    gap: 0.25rem;
+  }
+  .pill {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.48rem;
+  }
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

@@ -834,19 +834,22 @@ export default function GestureCanvas({ theme, onClose }) {
           justifyContent: 'center',
           fontFamily: "'EB Garamond', Georgia, serif",
           color: 'var(--text)',
-          gap: '1rem',
+          gap: '0.6rem',
+          padding: '1rem',
+          textAlign: 'center',
         }}
       >
         <span
           style={{
             fontFamily: "'Cinzel Decorative', serif",
-            fontSize: 'clamp(1.2rem, 2.5vw, 1.8rem)',
+            fontSize: 'clamp(1rem, 2vw, 1.35rem)',
             color: textColor,
+            whiteSpace: 'nowrap',
           }}
         >
           Initializing Camera & AI…
         </span>
-        <span style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>
+        <span style={{ color: 'var(--muted)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
           Please allow camera access when prompted
         </span>
       </div>
@@ -871,8 +874,8 @@ export default function GestureCanvas({ theme, onClose }) {
       <div
         style={{
           position: 'absolute',
-          top: 24,
-          left: 28,
+          top: 20,
+          left: 20,
           zIndex: 10,
           fontFamily: "'EB Garamond', Georgia, serif",
           color: 'var(--text)',
@@ -881,12 +884,12 @@ export default function GestureCanvas({ theme, onClose }) {
         <span
           style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: '0.6rem',
-            letterSpacing: '0.25em',
+            fontSize: '0.52rem',
+            letterSpacing: '0.2em',
             color: 'var(--gold-dim)',
             textTransform: 'uppercase',
             display: 'block',
-            marginBottom: '0.4rem',
+            marginBottom: '0.2rem',
           }}
         >
           ✦ Gesture Reality
@@ -894,11 +897,12 @@ export default function GestureCanvas({ theme, onClose }) {
         <h2
           style={{
             fontFamily: "'Cinzel Decorative', serif",
-            fontSize: '1.4rem',
+            fontSize: 'clamp(1rem, 2vw, 1.2rem)',
             fontWeight: 400,
             color: textColor,
             letterSpacing: '0.03em',
             margin: 0,
+            whiteSpace: 'nowrap',
           }}
         >
           Jewel Physics Active
@@ -906,13 +910,14 @@ export default function GestureCanvas({ theme, onClose }) {
         <p
           style={{
             color: 'var(--muted)',
-            fontSize: '0.85rem',
-            marginTop: '0.3rem',
-            maxWidth: 300,
+            fontSize: '0.72rem',
+            lineHeight: 1.4,
+            marginTop: '0.2rem',
+            maxWidth: 240,
           }}
         >
           {isCameraActive
-            ? 'Point to Orbit. Fist to Grab. Palm to Sphere. Thumbs Up to Grid. Thumbs Down to Levit. Victory to Heart.'
+            ? 'Point to Orbit. Fist to Grab. Palm to Sphere. Thumbs Up/Down to Disperse/Levitate. Victory to Heart.'
             : 'Mouse to Orbit. Left-Click to Grab. Press 1, 2, 3 to Form Numbers.'}
         </p>
         {!isCameraActive && (
@@ -940,20 +945,21 @@ export default function GestureCanvas({ theme, onClose }) {
       <div
         style={{
           position: 'absolute',
-          bottom: 28,
+          bottom: 20,
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 10,
           fontFamily: "'Cinzel', serif",
-          fontSize: '0.75rem',
-          letterSpacing: '0.15em',
+          fontSize: '0.65rem',
+          letterSpacing: '0.12em',
           color: 'var(--gold)',
           textTransform: 'uppercase',
           background: theme === 'light' ? 'rgba(253, 252, 247, 0.7)' : 'rgba(12, 8, 6, 0.7)',
           backdropFilter: 'blur(8px)',
           border: '1px solid var(--border)',
-          padding: '8px 24px',
+          padding: '6px 16px',
           borderRadius: '2px',
+          whiteSpace: 'nowrap',
         }}
       >
         {gestureLabel}
@@ -964,21 +970,22 @@ export default function GestureCanvas({ theme, onClose }) {
         onClick={handleRestore}
         style={{
           position: 'absolute',
-          top: 28,
-          right: 28,
+          top: 20,
+          right: 20,
           zIndex: 10,
           background: theme === 'light' ? 'rgba(253, 252, 247, 0.6)' : 'rgba(12, 8, 6, 0.6)',
           border: '1px solid var(--border2)',
           color: 'var(--muted)',
-          padding: '10px 24px',
+          padding: '6px 14px',
           borderRadius: '2px',
           fontFamily: "'Cinzel', serif",
-          fontSize: '0.75rem',
-          letterSpacing: '3px',
+          fontSize: '0.62rem',
+          letterSpacing: '1.5px',
           textTransform: 'uppercase',
           cursor: 'pointer',
           backdropFilter: 'blur(4px)',
           transition: 'all 0.3s',
+          whiteSpace: 'nowrap',
         }}
         onMouseEnter={(e) => {
           e.target.style.borderColor = 'var(--gold-dim)'

@@ -20,7 +20,7 @@ export default function ProjectCard({ repo, index }) {
   return (
     <motion.div
       className={styles.card}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.55, delay: (index % 6) * 0.07, ease: [0.22,1,0.36,1] }}

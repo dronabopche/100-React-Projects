@@ -100,10 +100,60 @@
 .topic {
   font-family: 'Cinzel', serif;
   font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  letter-spacing: 0.05em;
+  color: var(--gold-dim);
   border: 1px solid var(--border);
-  padding: 0.1rem 0.4rem;
+  padding: 0.15rem 0.4rem;
   border-radius: 1px;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 0.85rem 0.7rem;
+  }
+  .name {
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+  }
+  .arrow {
+    font-size: 0.75rem;
+  }
+  .desc {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    -webkit-line-clamp: 2;
+  }
+  .meta {
+    gap: 0.4rem;
+    padding-top: 0.5rem;
+  }
+  .lang {
+    font-size: 0.52rem;
+  }
+  .stars {
+    font-size: 0.52rem;
+  }
+  .topic {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.65rem 0.5rem;
+  }
+  .name {
+    font-size: 0.62rem;
+  }
+  .desc {
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+  .dot {
+    width: 5px;
+    height: 5px;
+  }
+  .lang {
+    font-size: 0.48rem;
+  }
 }

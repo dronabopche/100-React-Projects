@@ -105,8 +105,41 @@
 }
 
 @media (max-width: 600px) {
-  .item { grid-template-columns: 1fr; gap: 0.5rem; }
-  .yearCol { align-items: flex-start; flex-direction: row; gap: 1rem; align-items: center; }
-  .line { width: 40px; height: 1px; min-height: unset; margin: 0; }
-  .content { padding-left: 1rem; }
+  .section {
+    padding: 4rem 1.25rem;
+  }
+  .item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding-bottom: 2rem;
+  }
+  .yearCol {
+    align-items: center;
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+  .line {
+    width: 30px;
+    height: 1px;
+    min-height: unset;
+    margin: 0;
+  }
+  .content {
+    padding-left: 1.25rem;
+    padding-bottom: 0.5rem;
+  }
+  .role {
+    font-size: 0.95rem;
+  }
+  .place {
+    font-size: 0.85rem;
+  }
+  .desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  .companyLogo {
+    width: 40px;
+    height: 40px;
+  }
 }

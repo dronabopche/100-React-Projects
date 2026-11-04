@@ -7,7 +7,8 @@
   cursor: pointer;
   border: 1px solid var(--border2, rgba(201, 168, 76, 0.25));
   outline: none;
-  padding: 0.7rem 1.8rem;
+  height: 48px;
+  padding: 0 1.8rem;
   font-family: 'Cinzel', serif;
   font-size: 0.72rem;
   font-weight: 500;
@@ -47,7 +48,6 @@
   transform: translateY(-1px) scale(1.02);
 }
 
-/* Light theme specific glass styling */
 [data-theme='light'] .specular-button {
   background: var(--sb-bg, rgba(255, 255, 255, 0.55));
   border-color: rgba(184, 134, 11, 0.3);
@@ -117,4 +117,30 @@
   justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .specular-button {
+    height: 32px;
+    padding: 0 0.85rem;
+    font-size: 0.58rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .specular-button {
+    height: 28px;
+    padding: 0 0.65rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+}
+
+@media (max-width: 480px) {
+  .specular-button {
+    height: 28px;
+    padding: 0 0.65rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.06em;
+  }
 }

@@ -119,6 +119,8 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  height: 48px;
+  box-sizing: border-box;
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow:
     inset 0 0.28rem 0.75rem rgba(255, 215, 0, 0.55),
@@ -146,7 +148,8 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--btn-text);
-  padding: 0.72rem 2.1rem;
+  padding: 0 2.1rem;
+  height: 100%;
   border-radius: inherit;
   position: relative;
   overflow: hidden;
@@ -319,38 +322,104 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .hero {
-    flex-direction: column-reverse;
-    min-height: unset;
+    flex-direction: row;
+    width: 100%;
+    min-height: 480px;
+    height: auto;
+    align-items: stretch;
   }
 
   .left {
-    width: 100%;
-    padding: 3rem 1.5rem 3rem;
-    justify-content: center;
-    text-align: center;
+    width: 55%;
+    padding: 1.5rem 0.8rem 1.5rem 1.2rem;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+  }
+
+  .textBlock {
+    max-width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .eyebrow {
+    font-size: 0.52rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.2em;
   }
 
   .titleRow {
-    justify-content: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .titleLine {
+    width: 16px;
+  }
+
+  .role {
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+  }
+
+  .tagline {
+    margin: 0 0 1rem 0;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    max-width: 100%;
   }
 
   .ctas {
-    justify-content: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    flex-wrap: nowrap;
+  }
+
+  .button {
+    height: 32px;
+  }
+
+  .button .wrap {
+    padding: 0 0.85rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  .scroll {
+    display: none;
   }
 
   .right {
-    width: 100%;
-    height: 60vw;
+    width: 45%;
+    height: 100%;
+    min-height: 100%;
+    flex-shrink: 0;
+    position: relative;
   }
 
   .portrait {
-    object-position: center 20%;
+    object-position: center top;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
   }
 
   .right::before {
-    background: linear-gradient(to top, var(--bg) 0%, transparent 20%);
+    background: linear-gradient(to right, var(--bg) 0%, transparent 22%);
+  }
+
+  .right::after {
+    height: 35%;
+    background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
   }
 
   .mobileBreak {
@@ -359,5 +428,79 @@
 
   .name {
     white-space: normal;
+    font-size: clamp(1.3rem, 4vw, 2.2rem);
+    margin-bottom: 0.4rem;
+    line-height: 1.1;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: 420px;
+  }
+
+  .left {
+    width: 58%;
+    padding: 0.8rem 0.5rem 0.8rem 0.8rem;
+  }
+
+  .right {
+    width: 42%;
+  }
+
+  .eyebrow {
+    font-size: 0.45rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .name {
+    font-size: clamp(1.1rem, 3.8vw, 1.45rem);
+    line-height: 1.05;
+    margin-bottom: 0.3rem;
+  }
+
+  .titleRow {
+    gap: 0.35rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .titleLine {
+    width: 12px;
+  }
+
+  .role {
+    font-size: 0.56rem;
+    line-height: 1.2;
+  }
+
+  .tagline {
+    font-size: 0.58rem;
+    line-height: 1.4;
+    margin-bottom: 0.6rem;
+  }
+
+  .ctas {
+    gap: 0.4rem;
+    margin-bottom: 0;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .button {
+    height: 28px;
+  }
+
+  .button .wrap {
+    padding: 0 0.65rem;
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero {
+    min-height: 380px;
+  }
+  .tagline {
+    display: none;
   }
 }

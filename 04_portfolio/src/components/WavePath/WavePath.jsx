@@ -13,12 +13,14 @@ export function WavePath({ className, style, ...props }) {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const handleResize = () => {
-      setWidth(containerRef.current.getBoundingClientRect().width);
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        setWidth(containerRef.current.getBoundingClientRect().width || 100);
+      }
     };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
   useEffect(() => {
@@ -93,6 +95,8 @@ export function WavePath({ className, style, ...props }) {
         onMouseEnter={manageMouseEnter}
         onMouseMove={manageMouseMove}
         onMouseLeave={manageMouseLeave}
+        onTouchStart={manageMouseEnter}
+        onTouchEnd={manageMouseLeave}
         style={{
           position: 'absolute',
           top: isHovered ? '-150px' : '-20px',

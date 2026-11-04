@@ -46,7 +46,7 @@
 
 .titleArea h1 {
   font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
-  font-size: 1.8rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.8rem);
   font-weight: 400;
   margin: 0;
   background: linear-gradient(135deg, var(--cream) 0%, var(--gold2) 50%, var(--cream) 100%);
@@ -54,6 +54,37 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.backHomeBtn {
+  background: rgba(12, 8, 6, 0.6);
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  padding: 8px 18px;
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+:global([data-theme='light']) .backHomeBtn {
+  background: rgba(253, 252, 247, 0.6);
+}
+
+.backHomeBtn:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+  box-shadow: 0 0 15px rgba(192, 133, 14, 0.3);
 }
 
 .titleArea p {
@@ -170,15 +201,22 @@
 
 .hubGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
   width: 100%;
   margin-top: 1rem;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 1000px) {
   .hubGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .hubGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
   }
 }
 
@@ -363,21 +401,184 @@
 }
 
 .hubCardBtn {
-  background: transparent;
-  color: var(--gold);
-  border: 1px solid var(--gold);
-  padding: 0.5rem 1.8rem;
-  border-radius: 6px;
-  font-family: var(--font-family-body);
-  font-weight: 500;
-  transition: all 0.3s ease;
-  letter-spacing: 1px;
-  font-size: 0.8rem;
+  --btn-bg: #140d07;
+  --btn-text: #fff3db;
+  --radius: 100px;
+  outline: none;
   cursor: pointer;
+  border: 0;
+  position: relative;
+  border-radius: var(--radius);
+  background-color: var(--btn-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow:
+    inset 0 0.28rem 0.75rem rgba(255, 215, 0, 0.55),
+    inset 0 -0.1rem 0.3rem rgba(0, 0, 0, 0.85),
+    inset 0 -0.35rem 0.85rem rgba(218, 165, 32, 0.65),
+    0 0.8rem 1.6rem rgba(201, 168, 76, 0.25),
+    0 0.4rem 0.8rem -0.3rem rgba(0, 0, 0, 0.8);
+  width: auto;
+  margin-top: 0.4rem;
 }
 
-.folderCard:hover .hubCardBtn {
-  background: var(--gold);
-  color: var(--bg);
-  box-shadow: 0 0 15px rgba(238, 187, 47, 0.4);
+:global([data-theme='light']) .hubCardBtn {
+  --btn-bg: #f9f2e0;
+  --btn-text: #221508;
+  box-shadow:
+    inset 0 0.28rem 0.75rem rgba(255, 240, 180, 0.95),
+    inset 0 -0.1rem 0.3rem rgba(184, 134, 11, 0.4),
+    inset 0 -0.35rem 0.85rem rgba(218, 165, 32, 0.6),
+    0 0.6rem 1.2rem rgba(218, 165, 32, 0.25),
+    0 0.4rem 0.8rem -0.3rem rgba(0, 0, 0, 0.1);
+}
+
+.hubCardBtn .btnWrap {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--btn-text);
+  padding: 0.48rem 1.2rem;
+  border-radius: inherit;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.hubCardBtn .btnWrap p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  transform: none;
+  mask-image: linear-gradient(to bottom, white 70%, rgba(255, 255, 255, 0.6));
+  -webkit-mask-image: linear-gradient(to bottom, white 70%, rgba(255, 255, 255, 0.6));
+}
+
+.hubCardBtn .btnWrap::before,
+.hubCardBtn .btnWrap::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.hubCardBtn .btnWrap::before {
+  left: -15%;
+  right: -15%;
+  bottom: 25%;
+  top: -100%;
+  border-radius: 50%;
+  background-color: rgba(255, 215, 0, 0.32);
+}
+
+:global([data-theme='light']) .hubCardBtn .btnWrap::before {
+  background-color: rgba(255, 225, 100, 0.55);
+}
+
+.hubCardBtn .btnWrap::after {
+  left: 6%;
+  right: 6%;
+  top: 10%;
+  bottom: 38%;
+  border-radius: 22px 22px 0 0;
+  box-shadow: inset 0 8px 8px -6px rgba(255, 245, 180, 0.95);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 215, 0, 0.55) 0%,
+    rgba(218, 165, 32, 0.15) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+:global([data-theme='light']) .hubCardBtn .btnWrap::after {
+  box-shadow: inset 0 8px 8px -6px rgba(255, 255, 255, 1);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 220, 110, 0.95) 0%,
+    rgba(218, 165, 32, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.folderCard:hover .hubCardBtn,
+.hubCardBtn:hover {
+  box-shadow:
+    inset 0 0.32rem 0.8rem rgba(255, 230, 130, 0.75),
+    inset 0 -0.1rem 0.3rem rgba(0, 0, 0, 0.85),
+    inset 0 -0.45rem 1rem rgba(255, 195, 30, 0.8),
+    0 1.2rem 2.4rem rgba(218, 165, 32, 0.35),
+    0 0.5rem 1rem -0.4rem rgba(0, 0, 0, 0.85);
+  transform: translateY(-2px);
+}
+
+:global([data-theme='light']) .folderCard:hover .hubCardBtn,
+:global([data-theme='light']) .hubCardBtn:hover {
+  box-shadow:
+    inset 0 0.32rem 0.8rem rgba(255, 255, 255, 1),
+    inset 0 -0.1rem 0.3rem rgba(184, 134, 11, 0.4),
+    inset 0 -0.45rem 1rem rgba(218, 165, 32, 0.7),
+    0 1rem 2rem rgba(218, 165, 32, 0.35),
+    0 0.5rem 1rem -0.4rem rgba(0, 0, 0, 0.12);
+}
+
+.hubCardBtn:active {
+  transform: translateY(2px);
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 0.8rem 1rem;
+    gap: 0.6rem;
+  }
+  .titleArea h1 {
+    font-size: 0.95rem;
+  }
+  .backHomeBtn {
+    padding: 6px 12px;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+  }
+  .hubContainer {
+    padding: 1.5rem 0.75rem 3rem;
+    gap: 1.2rem;
+  }
+  .folderCard {
+    height: 290px;
+  }
+  .folderTab {
+    min-width: 90px;
+    height: 28px;
+    padding: 0 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  .folderTabText {
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+  }
+  .hubCard {
+    height: calc(100% - 28px);
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+  .cardContent {
+    padding: 0.6rem;
+  }
+  .hubCard h3 {
+    font-size: 0.85rem;
+  }
+  .hubCardBtn .btnWrap {
+    padding: 0.38rem 0.8rem;
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+  }
 }

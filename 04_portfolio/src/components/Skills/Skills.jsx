@@ -35,7 +35,14 @@ export default function Skills() {
   }, [])
 
   return (
-    <section className={styles.section} id="skills">
+    <motion.section
+      className={styles.section}
+      id="skills"
+      initial={{ opacity: 0, y: -30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className={styles.header}>
         <span className="section-label">✦ Expertise</span>
         <h2 className="section-title">Skills & Arsenal</h2>
@@ -82,6 +89,6 @@ export default function Skills() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }

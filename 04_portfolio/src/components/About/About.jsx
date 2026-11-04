@@ -121,13 +121,19 @@ export default function About({ profile }) {
     <motion.section
       className={styles.section}
       id="about"
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: -40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className={styles.inner}>
-        <div className={styles.left}>
+        <motion.div 
+          className={styles.left}
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        >
           <span className="section-label">✦ About Me</span>
           <h2 className="section-title">The Mind Behind the Code</h2>
           <div className="divider-interactive">
@@ -151,18 +157,24 @@ export default function About({ profile }) {
             When I'm not writing code, I'm exploring new tools, experimenting with AI
             pipelines, or diving deep into whatever problem sparks curiosity.
           </p>
-        </div>
+        </motion.div>
 
-        <div className={styles.right}>
+        <motion.div 
+          className={styles.right}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div className={styles.statsGrid}>
             {STATS.map((s, i) => (
               <motion.div
                 key={s.label}
                 className={styles.stat}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
+                transition={{ delay: 0.2 + i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               >
                 <span className={styles.statVal}>
                   <AnimatedCounter value={s.value} />
@@ -199,7 +211,7 @@ export default function About({ profile }) {
               </motion.div>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </motion.section>
   )

@@ -94,9 +94,52 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .sidebarContainer {
+    top: auto;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 8px 18px;
+    gap: 16px;
+    box-shadow: 0 10px 30px var(--shadow), 0 0 15px rgba(201, 168, 76, 0.08);
+  }
+
+  .lineTop,
+  .lineBottom {
     display: none;
-    /* Hide on mobile to avoid overlapping content */
+  }
+
+  .iconList {
+    flex-direction: row;
+    gap: 18px;
+  }
+
+  .iconLink {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebarContainer {
+    bottom: 12px;
+    padding: 7px 14px;
+    gap: 12px;
+  }
+
+  .iconList {
+    gap: 14px;
+  }
+
+  .iconLink {
+    width: 18px;
+    height: 18px;
   }
 }

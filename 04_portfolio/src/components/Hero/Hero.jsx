@@ -17,8 +17,14 @@ export default function Hero() {
     const darkVideo = darkVideoRef.current
     const lightVideo = lightVideoRef.current
 
-    if (darkVideo) darkVideo.pause()
-    if (lightVideo) lightVideo.pause()
+    if (darkVideo) {
+      darkVideo.pause()
+      darkVideo.currentTime = 0.05
+    }
+    if (lightVideo) {
+      lightVideo.pause()
+      lightVideo.currentTime = 0.05
+    }
 
     const handleScroll = () => {
       if (!heroRef.current) return
@@ -38,11 +44,17 @@ export default function Hero() {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
 
+    const handleMetadata = () => {
+      handleScroll()
+    }
+
     if (darkVideo) {
-      darkVideo.addEventListener('loadedmetadata', handleScroll)
+      darkVideo.addEventListener('loadedmetadata', handleMetadata)
+      darkVideo.addEventListener('loadeddata', handleMetadata)
     }
     if (lightVideo) {
-      lightVideo.addEventListener('loadedmetadata', handleScroll)
+      lightVideo.addEventListener('loadedmetadata', handleMetadata)
+      lightVideo.addEventListener('loadeddata', handleMetadata)
     }
 
     handleScroll()
@@ -50,10 +62,12 @@ export default function Hero() {
     return () => {
       window.removeEventListener('scroll', handleScroll)
       if (darkVideo) {
-        darkVideo.removeEventListener('loadedmetadata', handleScroll)
+        darkVideo.removeEventListener('loadedmetadata', handleMetadata)
+        darkVideo.removeEventListener('loadeddata', handleMetadata)
       }
       if (lightVideo) {
-        lightVideo.removeEventListener('loadedmetadata', handleScroll)
+        lightVideo.removeEventListener('loadedmetadata', handleMetadata)
+        lightVideo.removeEventListener('loadeddata', handleMetadata)
       }
     }
   }, [])
@@ -64,24 +78,53 @@ export default function Hero() {
       <div className={styles.left}>
         <motion.div
           className={styles.textBlock}
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: -25 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className={styles.eyebrow}>✦ Portfolio</span>
+          <motion.span
+            className={styles.eyebrow}
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            ✦ Portfolio
+          </motion.span>
 
-          <h1 className={styles.name}>
+          <motion.h1
+            className={styles.name}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
             Drona <br className={styles.mobileBreak} /> Bopche
-          </h1>
+          </motion.h1>
 
-          <div className={styles.titleRow}>
+          <motion.div
+            className={styles.titleRow}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
             <span className={styles.titleLine} />
             <p className={styles.role}>{role}</p>
-          </div>
+          </motion.div>
 
-          <p className={styles.tagline}>{tagline}</p>
+          <motion.p
+            className={styles.tagline}
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {tagline}
+          </motion.p>
 
-          <div className={styles.ctas}>
+          <motion.div
+            className={styles.ctas}
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
             <a
               href="#projects"
               className={styles.button}
@@ -105,9 +148,14 @@ export default function Hero() {
             >
               Get in Touch
             </SpecularButton>
-          </div>
+          </motion.div>
 
-          <div className={styles.scroll}>
+          <motion.div
+            className={styles.scroll}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+          >
             <motion.span
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -115,7 +163,7 @@ export default function Hero() {
               ↓
             </motion.span>
             <span>Scroll</span>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
 

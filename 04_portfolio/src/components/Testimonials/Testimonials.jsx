@@ -55,7 +55,14 @@ export default function Testimonials() {
   );
 
   return (
-    <section id="testimonials" className={styles.section}>
+    <motion.section
+      id="testimonials"
+      className={styles.section}
+      initial={{ opacity: 0, y: -30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="divider">
         <div className="divider-gem" />
       </div>
@@ -156,6 +163,6 @@ export default function Testimonials() {
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </motion.section>
   )
 }

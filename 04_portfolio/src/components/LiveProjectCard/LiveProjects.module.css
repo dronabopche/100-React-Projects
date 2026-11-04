@@ -358,19 +358,42 @@
 }
 
 @media (max-width: 540px) {
+  .section {
+    padding: 0 0.5rem;
+    height: 92vh;
+    height: 92dvh;
+  }
+  .viewportContainer {
+    height: calc(100% - 20px);
+    max-height: none;
+  }
   .columnsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
   .columnTrack {
     gap: 8px;
   }
-  .columnWrapper:nth-child(2),
   .columnWrapper:nth-child(3),
   .columnWrapper:nth-child(4) {
     display: none;
   }
   .card {
-    height: 180px;
+    height: 165px;
+  }
+  .cardOverlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(10, 6, 4, 0.9) 0%, rgba(10, 6, 4, 0.3) 50%, transparent 100%);
+    padding: 10px 8px;
+  }
+  :global([data-theme='light']) .cardOverlay {
+    background: linear-gradient(to top, rgba(253, 252, 247, 0.95) 0%, rgba(253, 252, 247, 0.4) 50%, transparent 100%);
+  }
+  .cardTitle {
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+  }
+  .knowMoreButton {
+    display: none;
   }
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useInView } from 'motion/react'
+import { motion, useInView } from 'motion/react'
 import styles from './ThreeSixtyViewer.module.css'
 
 export default function ThreeSixtyViewer({ theme }) {
@@ -95,7 +95,14 @@ export default function ThreeSixtyViewer({ theme }) {
   }
 
   return (
-    <section className={styles.section} ref={containerRef}>
+    <motion.section
+      className={styles.section}
+      ref={containerRef}
+      initial={{ opacity: 0, y: -30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+    >
       {/* Video Container Layout filling viewport */}
       <div className={styles.videoWrapper}>
         <video
@@ -135,6 +142,6 @@ export default function ThreeSixtyViewer({ theme }) {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }

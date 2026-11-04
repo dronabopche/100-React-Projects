@@ -4,22 +4,22 @@ import styles from './LiveProjects.module.css'
 
 const COLUMN_ONE = [
   { id: 'c1-1', title: 'Neural Networks', img: '/playground/nn.webp', link: '/playground/nn' },
-  { id: 'c1-2', title: 'Web Project Showcase', img: '/photo view/Screenshot 2026-09-02 at 15.47.39.png', link: '#' },
-  { id: 'c1-3', title: 'Prompt Studio', img: '/photo view/prompt.webp', link: '#' },
+  { id: 'c1-2', title: 'Cleaning Karigar', img: '/photo view/cleaning_karigar.png', link: '#' },
+  { id: 'c1-3', title: 'GrowDesk', img: '/photo view/growdesk.png', link: '#' },
   { id: 'c1-4', title: 'Gradient Descent', img: '/playground/gradient.webp', link: '/playground/gradient' },
 ]
 
 const COLUMN_TWO = [
   { id: 'c2-1', title: 'Quantum Compute', img: '/playground/quantum.webp', link: '/playground/quantum' },
   { id: 'c2-2', title: 'Vector RAG Pipeline', img: '/playground/rag.webp', link: '/playground/rag' },
-  { id: 'c2-3', title: 'Portfolio Architecture', img: '/photo view/Screenshot 2026-09-02 at 15.48.00.png', link: '#' },
-  { id: 'c2-4', title: 'Competitive Code', img: '/photo view/codeforce.webp', link: '#' },
+  { id: 'c2-3', title: 'WeShine Beauty & Salon', img: '/photo view/weshinebeautynsalon.png', link: '#' },
+  { id: 'c2-4', title: 'Stairways Tech', img: '/photo view/Stairways Tech.png', link: '#' },
 ]
 
 const COLUMN_THREE = [
   { id: 'c3-1', title: 'Git Visualizer', img: '/playground/git.webp', link: '/playground/git' },
   { id: 'c3-2', title: 'K-Means Clustering', img: '/playground/kmeans.webp', link: '/playground/kmeans' },
-  { id: 'c3-3', title: 'Data Analytics', img: '/photo view/data.webp', link: '#' },
+  { id: 'c3-3', title: 'SEHMR Platform', img: '/photo view/sehmr.png', link: '#' },
   { id: 'c3-4', title: 'Event Platform Host', img: '/visual-work/host.webp', link: '#' },
 ]
 

@@ -34,33 +34,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
           {isStandalone ? (
             <button
               onClick={() => navigate('/')}
-              style={{
-                background: theme === 'light' ? 'rgba(253, 252, 247, 0.6)' : 'rgba(12, 8, 6, 0.6)',
-                border: '1px solid var(--border2)',
-                color: 'var(--muted)',
-                padding: '10px 24px',
-                borderRadius: '2px',
-                fontFamily: "'Cinzel', serif",
-                fontSize: '0.75rem',
-                letterSpacing: '3px',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                backdropFilter: 'blur(4px)',
-                transition: 'all 0.3s',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.borderColor = 'var(--gold-dim)'
-                e.target.style.color = textColor
-                e.target.style.boxShadow = '0 0 15px rgba(192, 133, 14, 0.3)'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.borderColor = 'var(--border2)'
-                e.target.style.color = 'var(--muted)'
-                e.target.style.boxShadow = 'none'
-              }}
+              className={styles.backHomeBtn}
             >
               ◀ Back to Home
             </button>
@@ -91,7 +65,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>RAG Pipeline</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -109,7 +89,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Neural Network</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -127,7 +113,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>K-Means Clustering</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -145,7 +137,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Quantum Circuit</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -163,7 +161,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Git Sandbox</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -181,7 +185,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Gradient Descent</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -199,7 +209,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Equation Visualizer</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -217,7 +233,13 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
                 </div>
                 <div className={styles.cardContent}>
                   <h3>Fourier Visualizer</h3>
-                  <button className={styles.hubCardBtn}>Launch Simulator</button>
+                  <button className={styles.hubCardBtn}>
+                    <div className={styles.btnWrap}>
+                      <p>
+                        <span>Launch Simulator</span>
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>

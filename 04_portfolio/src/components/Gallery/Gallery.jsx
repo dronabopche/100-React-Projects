@@ -1,4 +1,5 @@
-import { motion } from 'motion/react'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import styles from './Gallery.module.css'
 
 export default function Gallery() {
@@ -6,6 +7,43 @@ export default function Gallery() {
     { src: '/visual-work/codefest.webp', subtitle: 'Runner UP in Offline Coding Competition' },
     { src: '/visual-work/host.webp', subtitle: 'Hosted Coding Competition at St. Edmund' },
   ]
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length)
+  }
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+  }
+
+  // Swipe detection for mobile touch
+  const [touchStart, setTouchStart] = useState(null)
+  const [touchEnd, setTouchEnd] = useState(null)
+
+  const minSwipeDistance = 40
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    if (isLeftSwipe) {
+      handleNext()
+    } else if (isRightSwipe) {
+      handlePrev()
+    }
+  }
 
   const container = {
     hidden: {},
@@ -17,7 +55,7 @@ export default function Gallery() {
   }
 
   const item = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: -25 },
     show: {
       opacity: 1,
       y: 0,
@@ -26,7 +64,14 @@ export default function Gallery() {
   }
 
   return (
-    <section className={styles.section} id="gallery">
+    <motion.section
+      className={styles.section}
+      id="gallery"
+      initial={{ opacity: 0, y: -30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className={styles.inner}>
         
         {/* Header */}
@@ -35,7 +80,7 @@ export default function Gallery() {
           <h2 className="section-title">Visual Work</h2>
         </div>
 
-        {/* Grid */}
+        {/* Desktop Grid Layout */}
         <motion.div
           className={styles.grid}
           variants={container}
@@ -51,20 +96,58 @@ export default function Gallery() {
               whileHover={{ y: -6 }}
             >
               <img src={img.src} alt={`gallery-${i}`} />
-
-              {/* Overlay */}
               <div className={styles.overlay} />
-
-              {/* Subtitle */}
               <div className={styles.subtitle}>
                 {img.subtitle}
               </div>
-
             </motion.div>
           ))}
         </motion.div>
 
+        {/* Mobile Carousel / Swipe Slider */}
+        <div 
+          className={styles.sliderWrapper}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          <div className={styles.sliderCard}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                className={styles.sliderImageContainer}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.35, ease: 'easeInOut' }}
+              >
+                <img 
+                  src={images[currentIndex].src} 
+                  alt={`gallery-${currentIndex}`} 
+                  className={styles.sliderImage}
+                />
+                <div className={styles.sliderOverlay} />
+                <div className={styles.sliderSubtitle}>
+                  {images[currentIndex].subtitle}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Dots Indicator */}
+          <div className={styles.dots}>
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                className={`${styles.dot} ${currentIndex === idx ? styles.activeDot : ''}`}
+                onClick={() => setCurrentIndex(idx)}
+                aria-label={`Go to photo ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
       </div>
-    </section>
+    </motion.section>
   )
 }

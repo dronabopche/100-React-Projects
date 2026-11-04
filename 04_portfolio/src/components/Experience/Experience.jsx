@@ -37,27 +37,33 @@ export default function Experience() {
     <motion.section
       className={styles.section}
       id="experience"
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: -30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.8 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className={styles.inner}>
-        <div className={styles.header}>
+        <motion.div 
+          className={styles.header}
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
           <span className="section-label">✦ Journey</span>
           <h2 className="section-title">Experience</h2>
           <div className="divider"><div className="divider-gem" /></div>
-        </div>
+        </motion.div>
 
         <div className={styles.timeline}>
           {TIMELINE.map((item, i) => (
             <motion.div
               key={i}
               className={styles.item}
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.12, duration: 0.6 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ delay: i * 0.14, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className={styles.yearCol}>
                 <span className={styles.year}>{item.year}</span>
