@@ -57,36 +57,9 @@ export default function LiveProjects() {
     >
       <img src={card.img} alt={card.title} className={styles.cardImage} loading="lazy" />
 
-      {/* On Hover Reveal: Name & Yellow Cosmic Glow Know More Button */}
+      {/* On Hover Reveal: Title */}
       <div className={styles.cardOverlay}>
         <span className={styles.cardTitle}>{card.title}</span>
-        <button
-          type="button"
-          className={styles.knowMoreButton}
-          aria-label={`Know more about ${card.title}`}
-          onClick={(e) => {
-            e.stopPropagation()
-            handleCardClick(card.link)
-          }}
-        >
-          <div className={styles.btnWrap}>
-            <p>
-              <span>Know More</span>
-              <svg
-                className={styles.btnIcon}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="7" y1="17" x2="17" y2="7" />
-                <polyline points="7 7 17 7 17 17" />
-              </svg>
-            </p>
-          </div>
-        </button>
       </div>
     </div>
   )

@@ -30,6 +30,11 @@
   min-width: 0;
 }
 
+.aboutTitle {
+  font-size: clamp(1.6rem, 3.2vw, 3rem) !important;
+  line-height: 1.15;
+}
+
 .right {
   width: 100%;
   min-width: 0;

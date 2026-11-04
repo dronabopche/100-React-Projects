@@ -135,7 +135,9 @@ export default function About({ profile }) {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="section-label">✦ About Me</span>
-          <h2 className="section-title">The Mind Behind the Code</h2>
+          <h2 className={`section-title ${styles.aboutTitle}`}>
+            The Mind <br /> Behind the Code
+          </h2>
           <div className="divider-interactive">
             <WavePath />
             <div className="divider-gem" />

@@ -138,28 +138,29 @@ export default function App() {
   }, [])
 
   return (
-    <Routes>
-      <Route path="/playground/nn" element={<NeuralNetworkPlayground theme={theme} isStandalone={true} />} />
-      <Route path="/playground/kmeans" element={<KMeansPlayground theme={theme} isStandalone={true} />} />
-      <Route path="/playground/rag" element={<PdfRagVisualizer theme={theme} isStandalone={true} />} />
-      <Route path="/playground/quantum" element={<QuantumPlayground theme={theme} isStandalone={true} />} />
-      <Route path="/playground/git" element={<GitSandbox theme={theme} isStandalone={true} />} />
-      <Route path="/playground/gradient" element={<GradientDescentPlayground theme={theme} isStandalone={true} />} />
-      <Route path="/playground/equation" element={<EquationVisualizerPlayground theme={theme} isStandalone={true} />} />
-      <Route path="/playground/fourier" element={<FourierVisualizerPlayground theme={theme} isStandalone={true} />} />
+    <>
+      {/* Global Custom Animated User Cursor (View Work specular style) */}
+      <UserCursor
+        name="Drona"
+        size={26}
+        showLabel={true}
+      />
 
-      <Route path="/playground" element={<AiVisualizerHub theme={theme} isStandalone={true} />} />
-      <Route path="/sitemap" element={<Sitemap />} />
-      <Route path="/" element={
-        <>
-          {/* Custom Animated User Cursor (View Work specular style) */}
-          <UserCursor
-            name="Drona"
-            size={26}
-            showLabel={true}
-          />
+      <Routes>
+        <Route path="/playground/nn" element={<NeuralNetworkPlayground theme={theme} isStandalone={true} />} />
+        <Route path="/playground/kmeans" element={<KMeansPlayground theme={theme} isStandalone={true} />} />
+        <Route path="/playground/rag" element={<PdfRagVisualizer theme={theme} isStandalone={true} />} />
+        <Route path="/playground/quantum" element={<QuantumPlayground theme={theme} isStandalone={true} />} />
+        <Route path="/playground/git" element={<GitSandbox theme={theme} isStandalone={true} />} />
+        <Route path="/playground/gradient" element={<GradientDescentPlayground theme={theme} isStandalone={true} />} />
+        <Route path="/playground/equation" element={<EquationVisualizerPlayground theme={theme} isStandalone={true} />} />
+        <Route path="/playground/fourier" element={<FourierVisualizerPlayground theme={theme} isStandalone={true} />} />
 
-          {/* Background Layer — Reliefwave WebGL Canvas */}
+        <Route path="/playground" element={<AiVisualizerHub theme={theme} isStandalone={true} />} />
+        <Route path="/sitemap" element={<Sitemap />} />
+        <Route path="/" element={
+          <>
+            {/* Background Layer — Reliefwave WebGL Canvas */}
           <div
             style={{
               position: 'fixed',
@@ -218,5 +219,6 @@ export default function App() {
         </>
       } />
     </Routes>
+    </>
   )
 }

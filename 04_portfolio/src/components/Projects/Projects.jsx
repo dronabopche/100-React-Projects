@@ -25,7 +25,7 @@ export default function Projects({ repos, loading, error }) {
     >
       <div className={styles.header}>
         <span className="section-label">✦ Work</span>
-        <h2 className="section-title">GitHub Projects</h2>
+        <h2 className={`section-title ${styles.singleLineTitle}`}>GitHub Projects</h2>
         <div className="divider"><div className="divider-gem" /></div>
       </div>
 

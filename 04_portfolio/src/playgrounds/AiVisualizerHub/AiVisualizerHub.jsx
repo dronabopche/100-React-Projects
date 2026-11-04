@@ -28,7 +28,7 @@ export default function AiVisualizerHub({ theme, onClose, isStandalone = false }
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.titleArea}>
-          <h1>AI/ML & DS Playground</h1>
+          <h1>Playground</h1>
         </div>
         <div className={styles.headerActions}>
           {isStandalone ? (

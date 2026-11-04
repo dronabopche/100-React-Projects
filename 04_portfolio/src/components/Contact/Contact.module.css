@@ -63,6 +63,11 @@
   width: 100%;
 }
 
+.contactTitle {
+  white-space: nowrap;
+  font-size: clamp(1.4rem, 3.2vw, 3rem) !important;
+}
+
 /* Subtext */
 .sub {
   font-family: var(--font-family-body);

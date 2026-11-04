@@ -11,7 +11,12 @@
   background: linear-gradient(to right, transparent, var(--border2), transparent);
 }
 
-.header { text-align: center; max-width: 600px; margin: 0 auto 3rem; }
+.header { text-align: center; max-width: 800px; margin: 0 auto 3rem; }
+
+.singleLineTitle {
+  white-space: nowrap;
+  font-size: clamp(1.4rem, 4vw, 3.2rem) !important;
+}
 
 .filters {
   display: flex; flex-wrap: wrap; gap: 0.5rem;

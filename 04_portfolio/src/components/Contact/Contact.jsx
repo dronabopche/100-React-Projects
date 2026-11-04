@@ -66,7 +66,7 @@ export default function Contact({ theme = 'dark' }) {
 
           <div className={styles.header}>
             <span className="section-label">✦ Reach Out</span>
-            <h2 className="section-title">Let's Work Together</h2>
+            <h2 className={`section-title ${styles.contactTitle}`}>Let's Work Together</h2>
           </div>
 
           <p className={styles.sub}>
