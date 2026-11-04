@@ -1,3 +1,19 @@
+/* Hide default OS cursor globally on non-touch devices so only custom cursor appears */
+@media (pointer: fine) {
+  *,
+  *::before,
+  *::after,
+  html,
+  body,
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    cursor: none !important;
+  }
+}
+
 *,
 *::before,
 *::after {

@@ -152,12 +152,10 @@ export default function App() {
       <Route path="/sitemap" element={<Sitemap />} />
       <Route path="/" element={
         <>
-          {/* Custom Animated User Cursor */}
+          {/* Custom Animated User Cursor (View Work specular style) */}
           <UserCursor
             name="Drona"
-            color={theme === 'light' ? '#b8860b' : '#eebb2f'}
-            textColor={theme === 'light' ? '#ffffff' : '#0c0806'}
-            size={28}
+            size={26}
             showLabel={true}
           />
 

@@ -7,16 +7,16 @@ import {
     useTransform,
     animate,
 } from "motion/react"
+import styles from "./UserCursor.module.css"
 
 const COMPONENT_DEFAULTS = {
     color: "#eebb2f",
     size: 26,
-    pressScale: 0.92,
+    pressScale: 0.9,
     offsetX: 0,
     offsetY: 0,
     showLabel: true,
     name: "Drona",
-    textColor: "#0c0806",
     labelTiltStrength: 25,
     labelOffsetUseDefault: true,
     labelOffsetX: 22,
@@ -25,7 +25,6 @@ const COMPONENT_DEFAULTS = {
 
 function CursorLayer(props) {
     const {
-        layerStyle,
         visible,
         arrowX,
         arrowY,
@@ -34,63 +33,75 @@ function CursorLayer(props) {
         labelRotation,
         scale,
         showLabel,
-        color,
         size,
-        arrowContent,
-        labelContent,
+        name,
     } = props
 
     return (
-        <div style={layerStyle}>
+        <div className={styles.cursorContainer}>
+            {/* View Work styled Specular Glow Pill Label */}
             {showLabel && (
                 <motion.div
+                    className={styles.labelPill}
                     style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
                         x: labelX,
                         y: labelY,
                         rotate: labelRotation,
                         scale,
-                        background: color,
-                        borderRadius: 999,
-                        padding: `${size * 0.18}px ${size * 0.36}px`,
-                        boxShadow:
-                            "0 4px 14px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2)",
                         opacity: visible ? 1 : 0,
-                        transformOrigin: "0% 50%",
-                        transition: "opacity 140ms ease",
-                        willChange: "transform, opacity",
-                        userSelect: "none",
-                        pointerEvents: "none",
-                        zIndex: 999999,
                     }}
                 >
-                    {labelContent}
+                    <span className={styles.labelText}>{name}</span>
                 </motion.div>
             )}
 
+            {/* Specular Styled Arrow */}
             <motion.div
+                className={styles.cursorArrow}
                 style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
                     x: arrowX,
                     y: arrowY,
                     scale,
                     width: size,
                     height: size,
                     opacity: visible ? 1 : 0,
-                    transformOrigin: "0% 0%",
-                    transition: "opacity 140ms ease",
-                    willChange: "transform, opacity",
-                    pointerEvents: "none",
-                    zIndex: 999999,
                 }}
             >
-                <div style={{ width: size, height: size }}>
-                    {arrowContent}
-                </div>
+                <svg
+                    width={size}
+                    height={size}
+                    viewBox="0 0 28 28"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{ display: "block", overflow: "visible" }}
+                >
+                    <defs>
+                        <linearGradient id="cursorGoldGrad" x1="5" y1="3" x2="23" y2="24" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stopColor="#fff3db" />
+                            <stop offset="40%" stopColor="#ffd700" />
+                            <stop offset="100%" stopColor="#c8870c" />
+                        </linearGradient>
+                        <filter id="cursorSpecularGlow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#ffd700" floodOpacity="0.6" />
+                        </filter>
+                    </defs>
+                    <path
+                        d="M5 3 L23 14 L14 16 L11 24 Z"
+                        fill="url(#cursorGoldGrad)"
+                        stroke="#140d07"
+                        strokeWidth={1.2}
+                        strokeLinejoin="round"
+                        filter="url(#cursorSpecularGlow)"
+                    />
+                    {/* Inner highlight line on the arrow crest */}
+                    <path
+                        d="M6.5 5.5 L19 13.5 L13.5 14.8 L11.2 21 Z"
+                        stroke="rgba(255, 255, 255, 0.7)"
+                        strokeWidth={0.8}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                </svg>
             </motion.div>
         </div>
     )
@@ -100,10 +111,6 @@ export default function UserCursor(rawProps) {
     const props = { ...COMPONENT_DEFAULTS, ...rawProps }
     const {
         name,
-        arrow,
-        label,
-        color,
-        textColor,
         size,
         labelTiltStrength,
         showLabel,
@@ -135,11 +142,11 @@ export default function UserCursor(rawProps) {
     const [pressed, setPressed] = useState(false)
 
     const arrowSpring = useMemo(
-        () => ({ stiffness: 420, damping: 32, mass: 0.5 }),
+        () => ({ stiffness: 480, damping: 32, mass: 0.45 }),
         []
     )
     const labelSpringCfg = useMemo(
-        () => ({ stiffness: 220, damping: 26, mass: 0.7 }),
+        () => ({ stiffness: 240, damping: 26, mass: 0.65 }),
         []
     )
 
@@ -272,67 +279,10 @@ export default function UserCursor(rawProps) {
         (v) => v + resolvedLabelOffset.y
     )
 
-    const arrowContent = useMemo(() => {
-        if (typeof arrow === "function") {
-            try {
-                return arrow(color)
-            } catch {
-                return null
-            }
-        }
-        if (arrow !== undefined && arrow !== null) return arrow
-        return (
-            <svg
-                width={size}
-                height={size}
-                viewBox="0 0 28 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ display: "block", overflow: "visible" }}
-            >
-                <path
-                    d="M5 3 L23 14 L14 16 L11 24 Z"
-                    fill={color}
-                    stroke="rgba(0,0,0,0.25)"
-                    strokeWidth={0.7}
-                    strokeLinejoin="round"
-                />
-            </svg>
-        )
-    }, [arrow, color, size])
-
-    const labelContent = useMemo(() => {
-        if (label !== undefined && label !== null) return label
-        return (
-            <div
-                style={{
-                    color: textColor,
-                    fontSize: Math.max(9, size * 0.42),
-                    lineHeight: 1.1,
-                    fontWeight: 700,
-                    fontFamily:
-                        'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                    whiteSpace: "nowrap",
-                    letterSpacing: 0.2,
-                }}
-            >
-                {name}
-            </div>
-        )
-    }, [label, name, textColor, size])
-
     if (isTouchDevice) return null
-
-    const layerStyle = {
-        position: "fixed",
-        inset: 0,
-        pointerEvents: "none",
-        zIndex: 999999,
-    }
 
     return (
         <CursorLayer
-            layerStyle={layerStyle}
             visible={visible}
             arrowX={arrowX}
             arrowY={arrowY}
@@ -341,11 +291,8 @@ export default function UserCursor(rawProps) {
             labelRotation={labelRotation}
             scale={scaleMV}
             showLabel={showLabel}
-            color={color}
             size={size}
-            arrowContent={arrowContent}
-            labelContent={labelContent}
+            name={name}
         />
     )
 }
-

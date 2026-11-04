@@ -4,6 +4,13 @@ import styles from './Experience.module.css'
 const TIMELINE = [
   {
     year: '2026 — Present',
+    role: 'AI Product Lead',
+    place: 'Prompt Vista ML',
+    logo: '/experience/prompt_vista_ml.png',
+    desc: 'Leading product vision, architecture, and machine learning development. Guiding intelligent prompt engineering platforms and scalable AI workflows from ideation to production.',
+  },
+  {
+    year: '2026 — Present',
     role: 'AI/ML Execution Internship',
     place: 'Stairways Techonlogies LLP.',
     logo: '/experience/stairways.webp',
